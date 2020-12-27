@@ -1,0 +1,44 @@
+extends base
+block Indexcss
+block content
+
+    section
+        .container.mb-5(style= 'margin-top: 150px;')
+            .card.my-5(style= 'background-color: white; height: 50rem;')
+                .row.mt-5.mx-lg-5.mx-1
+                    .col-3
+                        #v-pills-tab.nav.flex-column.nav-pills(role='tablist', aria-orientation='vertical')
+                            a#settings-pills-profile-tab.nav-link.active(data-toggle='pill', href='#settings-pills-profile', role='tab', aria-controls='settings-pills-profile', aria-selected='true') Profile
+                            a#settings-pills-pixel-tab.nav-link(data-toggle='pill', href='#settings-pills-pixel', role='tab', aria-controls='settings-pills-pixel', aria-selected='false') Pixel
+
+                    .col-9.col-lg-6
+                        #v-pills-tabContent.tab-content
+                            #settings-pills-profile.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='settings-pills-profile-tab') Nothing to see here
+                            #settings-pills-pixel.tab-pane.fade(role='tabpanel', aria-labelledby='settings-pills-pixel-tab')
+                                form#business-pixel-form
+                                    .form-group.mx-3
+                                        b.my-2 Facebook Pixel     
+
+                                    .form-group.mx-2.mb-2
+
+                                        .row.mx-1.my-2
+                                            .col
+                                                input#bussiness-pixelId.form-control( type='Number', value=businessUser.facebookPixelId, placeholder='Pixel ID' )
+                                        .row.mx-1.my-2
+                                            .col
+                                                select#bussiness-pixel-currency.form-control(required='' value=`${businessUser.facebookCurrency}`)
+                                                    option( value='USD') USD
+                                                    option( value='NGN') NGN
+                                                    option( value='GBP') GBP
+                                                    option( value='EUR') EUR                                               
+                                        .row.mx-1.my-2
+                                            .col
+                                                input#bussiness-pixel-value.form-control( type='Number', value=businessUser.facebookValue, placeholder='Value')
+                                    .text-center 
+                                        button.btn.btn-lg.btn-primary.ml-3(type='submit') Update
+                                    .text-center
+                                        a(href=`/purchasepixel/${businessUser.id}`) Test your Pixel
+
+                        script.
+                            let fbcurrency =!{JSON.stringify(businessUser.facebookCurrency)}                          
+                            $('#bussiness-pixel-currency').val(fbcurrency)

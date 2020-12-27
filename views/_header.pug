@@ -1,0 +1,35 @@
+html
+    body
+
+        if businessUser
+            section.headline-section
+                nav.navbar.navbar-expand-lg.navbar-light.fixed-top.navbar--true(style='background-color: white; padding-top: 20px;')
+                    .container
+                        a#navbarr.navbar-brand(href='/dashboard') RiraPay
+                        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
+                            span.navbar-toggler-icon
+                        
+                        #navbarNav.collapse.collapse.navbar-collapse.justify-content-end
+                            ul#first.navbar-nav
+                                li.nav-item.active
+                                a#navbarr.nav-link(href='/dashboard')
+                                    | Dashboard 
+                                span.sr-only (current)
+                                li.nav-item.active
+                                a#navbarr.nav-link(href='/allorders') Orders
+
+                                li.nav-item.active
+                                a#navbarr.nav-link(href='/allproducts') Products
+                                
+                                li.nav-item.active
+                                a#navbarr.nav-link(href='/settings') Settings
+                                        
+                            ul.navbar-nav
+                                li.nav-item.active
+                                    .logout_bus_btn
+                                        a#navbarr.nav-link(href='#') Logout
+        else
+
+            
+
+

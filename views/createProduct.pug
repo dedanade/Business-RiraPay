@@ -1,0 +1,133 @@
+extends base
+block Indexcss
+block content
+block script
+        
+
+    section
+        .form-container(style= 'margin-top: 150px;')
+            form.create-product-form(method='post')
+                .text-center.py-4
+                    h3.pt-3 Create a New Product
+                .row.mx-2.py-3
+                    .col
+                        input#productName.form-control(type='text', placeholder='Product Name' required='')
+                .row.mx-2.py-3
+                    .col
+                        input#productStock.form-control(type='number', placeholder='Quantity Available' required='')
+                .row.mx-2.py-3
+                    .col
+                        textarea#additionalInfo.form-control(name='editordata',placeholder='Product Description' )
+                p.mx-3.mt-4 
+                    b Pricing:
+                p.mx-4.mt-3.mb-2
+                    b Type:
+                .row.mx-2.py-3
+                    .col-8
+                        select#productPriceType.form-control
+                            option#oneProductPrice(selected='', value='onePriceForm') One Price
+                            option#varientProductPrice( value='promoPriceForm') Varient Prices
+                #onePriceForm
+                    .row.mx-2.py-3
+                        .col-8
+                            .input-group
+                                .input-group-prepend
+                                    .input-group-text ₦
+                                input#productPrice.form-control(type='number', placeholder='Price')
+                #promoPriceForm(style= 'display: none;')
+                    .row.mx-2.py-3
+                        .col-7
+                            input#promoQty.form-control(type='text', placeholder='Quantity 1')
+                        .col-5
+                            .input-group
+                                .input-group-prepend
+                                    .input-group-text ₦
+                                input#promoPrice.form-control(type='number', placeholder='Price 1' )
+                    .row.mx-2.py-3
+                        .col-7
+                            input#promoQty2.form-control(type='text', placeholder='Quanity 2' )
+                        .col-5
+                            .input-group
+                                .input-group-prepend
+                                    .input-group-text ₦
+                                input#promoPrice2.form-control(type='number', placeholder='Price 2')
+                    .row.mx-2.py-3
+                        .col-7
+                            input#promoQty3.form-control(type='text', placeholder='Quanity 3')
+                        .col-5
+                            .input-group
+                                .input-group-prepend
+                                    .input-group-text ₦
+                                input#promoPrice3.form-control(type='number', placeholder='Price 3')
+                    .row.mx-2.py-3
+                        .col-7
+                            input#promoQty4.form-control(type='text', placeholder='Quanity 4')
+                        .col-5
+                            .input-group
+                                .input-group-prepend
+                                    .input-group-text ₦
+                                input#promoPrice4.form-control(type='number', placeholder='Price 4')
+                .row.mx-3.py-3
+                    .col
+                        | Discount for RiraPay orders
+                        .input-group.w-50
+                            input#inputDiscount.form-control(type='number', placeholder='eg: 20')
+                            .input-group-append
+                                .input-group-text %
+                        small.form-text We reconmend giving out more than 10% discount for order placed with RiraPay.
+                .panel.panel-info.mx-2.my-3
+                    .panel-heading.collapsed(data-toggle='collapse', data-target='#createproduct-color-size' style = "background-color: lightgrey;" )
+                        .ml-2.py-2
+                            i.fa.fa-fw.fa-chevron-down
+                            i.fa.fa-fw.fa-chevron-right
+                            | Color/Size(Optional)
+                    .panel-body
+                        // The inside div eliminates the 'jumping' animation.
+                        #createproduct-color-size.collapse
+                            .row.mx-3.my-2
+                                .col
+                                    | Color
+                                    input#color-tags.form-control(style= 'width: 25rem; height: 4rem;' type='text', value=''  data-role='tagsinput' )
+                                    small.form-text Seperate each color with comma. eg blue, green, purple. Click 'x' to remove colour. 
+                            .row.mx-3.mb-3
+                                .col
+                                    | Size
+                                    input#size-tags.form-control( type='text', value='' data-role='tagsinput',)
+                                    small.form-text Seperate each size with comma. eg large, medium, extra large. Click 'x' to remove colour 
+
+                .panel.panel-info.mx-2.my-2
+                    .panel-heading.collapsed(data-toggle='collapse', data-target='#createproduct-fbpixelaccord' style = "background-color: lightgrey;" )
+                        .ml-2.py-2
+                            i.fa.fa-fw.fa-chevron-down
+                            i.fa.fa-fw.fa-chevron-right
+                            | Facebook Pixel(Optional)
+                    .panel-body
+                        // The inside div eliminates the 'jumping' animation.
+                        #createproduct-fbpixelaccord.collapse
+                            .row.mx-3.my-2
+                                .col
+                                    input#product-pixel-id.form-control( type='Number', value=businessUser.facebookPixelId, placeholder='Pixel ID' )
+                            .row.mx-3.my-2
+                                .col
+                                    select#product-pixel-currency.form-control
+                                        option(selected='', value='USD') USD
+                                        option( value='NGN') NGN
+                                        option( value='GBP') GBP
+                                        option( value='EUR') EUR
+                            .row.mx-3.my-2
+                                .col
+                                    input#product-pixel-value.form-control( type='Number', value=businessUser.facebookValue, placeholder='Value')                 
+                .row.mx-3.mb-5.mt-4
+                    .col.ml-3(style = 'font-size: 1rem')
+                        input#cod_Check_Option.form-check-input(type='checkbox')
+                        | I don't want COD option
+
+                .text-center
+                    button#sign-up-button.btn.btn-lg.my-1.mx-auto.d-block(type='submit') Create Product
+                
+
+            //- script.
+            //-     $(document).ready(function() {
+            //-         $('#additionalInfo').summernote();
+            //-         });
+                

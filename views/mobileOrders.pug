@@ -1,0 +1,47 @@
+extends base
+block Indexcss
+block content
+    
+    section(style="margin-top: 150px;")
+        .small-container-mobile-orders
+            ul.list-group.my-4
+                li.d-flex.justify-content-between
+                    h4.d-flex.justify-content-between Your Orders:
+                    h6
+                        a#sign-up-button.btn(href='/allorders') Desktop Mode
+            - const busOrder = businessUser.orders;
+            if (busOrder.length)
+                each orders in businessUser.orders.reverse().slice(0, 200)
+                    each product in orders.product
+                        -const orderTotal = orders.total.toLocaleString()
+                        -const mobiledate = moment(orders.createdAt).format('MMM DD');
+                        -const shtOrderName = orders.name.split(" ").splice(0,2).join(" ")
+                        -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
+                        -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
+
+                        .mini-table(data-href=`/myorder/${product.id}/${orders._id}`)
+                            .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top.border-bottom
+                                .col-9
+                                    p.m-0 
+                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)
+                                            b= `₦${orderTotal}`
+                                    p.m-0 
+                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderName
+                                    
+                                    p.m-0 
+                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtProductName
+                                .col-3
+                                    p.m-0 
+                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= orders.status
+                                    p.m-0 
+                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= mobiledate
+                                    p.m-0 
+                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderState
+                .text-center.my-3
+                    h6
+                        a#sign-up-button.btn(href='/allbusorders') View All orders in Descktop View
+            if (!busOrder.length)
+                .text-center
+                    p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
+                .text-center
+                    a#sign-up-button.btn(href='/createproduct') Create your first Product
