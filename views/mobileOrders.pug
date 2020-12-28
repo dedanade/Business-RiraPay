@@ -17,7 +17,7 @@ block content
                         -const mobiledate = moment(orders.createdAt).format('MMM DD');
                         -const shtOrderName = orders.name.split(" ").splice(0,2).join(" ")
                         -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
-                        -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
+                        -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
 
                         .mini-table(data-href=`/myorder/${product.id}/${orders._id}`)
                             .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top.border-bottom

@@ -22,14 +22,6 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
   const startToday = moment().startOf('day').toDate(); // set to 12:00 am today
   const endToday = moment().endOf('day').toDate(); // set to 23:59 pm today
 
-  // This Week
-  const startWeek = moment().startOf('isoWeek').toDate(); // set to 12:00am of Monday according to ISO 8601
-  const endWeek = moment().endOf('isoWeek').toDate(); // set to 23:59 pm of Sunday
-
-  // This Month
-  const startMonth = moment().startOf('month').toDate(); // set to 12:00 for the first day of th month
-  const endMonth = moment().endOf('month').toDate(); // set to 23:59 pm of the last day of the week
-
   // Sales Today Calculation
   const salesorders = await Order.find({
     _id: businessUser.orders,
@@ -45,62 +37,6 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
   });
 
   const sumOfCartSalesToday = arraySalesOrder
-    .reduce((a, b) => a + b, 0)
-    .toLocaleString();
-
-  // Sales This week
-
-  const salesOrdersWeek = await Order.find({
-    _id: businessUser.orders,
-    createdAt: {
-      $gte: startWeek,
-      $lte: endWeek,
-    },
-  });
-
-  const arraySalesWeek = [];
-
-  salesOrdersWeek.forEach((e) => {
-    arraySalesWeek.push(e.total);
-  });
-
-  const sumOfCartSalesWeek = arraySalesWeek
-    .reduce((a, b) => a + b, 0)
-    .toLocaleString();
-
-  //Sales This Month
-
-  const salesOrdersMonth = await Order.find({
-    _id: businessUser.orders,
-    createdAt: {
-      $gte: startMonth,
-      $lte: endMonth,
-    },
-  });
-
-  const arraySalesMonth = [];
-
-  salesOrdersMonth.forEach((e) => {
-    arraySalesMonth.push(e.total);
-  });
-
-  const sumOfCartSalesMonth = arraySalesMonth
-    .reduce((a, b) => a + b, 0)
-    .toLocaleString();
-
-  // Sales Lifetime
-
-  const salesOrdersLifetime = await Order.find({
-    _id: businessUser.orders,
-  });
-
-  const arraySalesLifetime = [];
-
-  salesOrdersLifetime.forEach((e) => {
-    arraySalesLifetime.push(e.total);
-  });
-
-  const sumOfCartSalesLifetime = arraySalesLifetime
     .reduce((a, b) => a + b, 0)
     .toLocaleString();
 
@@ -126,66 +62,6 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     0
   ).toLocaleString();
 
-  // Transactions This Week
-
-  const transactionWeek = await Order.find({
-    _id: businessUser.orders,
-    status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
-    paidAt: {
-      $gte: startWeek,
-      $lte: endWeek,
-    },
-  });
-
-  const ArrayTranWeek = [];
-
-  transactionWeek.forEach((e) => {
-    ArrayTranWeek.push(e.total);
-  });
-
-  const sumOfcartTranWeek = ArrayTranWeek.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
-
-  // Transactions This Month
-  const transactionMonth = await Order.find({
-    _id: businessUser.orders,
-    status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
-    paidAt: {
-      $gte: startMonth,
-      $lte: endMonth,
-    },
-  });
-
-  const ArrayTranMonth = [];
-
-  transactionMonth.forEach((e) => {
-    ArrayTranMonth.push(e.total);
-  });
-
-  const sumOfcartTranMonth = ArrayTranMonth.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
-
-  //SalesLifetime
-  const transactionLifetime = await Order.find({
-    _id: businessUser.orders,
-    status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
-  });
-
-  const ArrayTranLifetime = [];
-
-  transactionLifetime.forEach((e) => {
-    ArrayTranLifetime.push(e.total);
-  });
-
-  const sumOfcartTranLifetime = ArrayTranLifetime.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
-
   res.status(200).render('busDashBoard', {
     title: 'Business DashBoard',
     product,
@@ -193,13 +69,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     cart,
     businessUser,
     salesToday: sumOfCartSalesToday,
-    salesWeek: sumOfCartSalesWeek,
-    salesMonth: sumOfCartSalesMonth,
-    salesLifetime: sumOfCartSalesLifetime,
     transToday: sumOfcartTranToday,
-    transWeek: sumOfcartTranWeek,
-    transMonth: sumOfcartTranMonth,
-    transLifetime: sumOfcartTranLifetime,
   });
 });
 

@@ -14,9 +14,26 @@ import {
 import { showAlert } from './alert';
 import { busLoginInput, busSignupInput } from './signup_login';
 import { busForgotPassInput, busResetPassInput } from './forgot_resetPass';
+import {
+  salesThisMonth,
+  salesThisWeek,
+  salesToday,
+  salesLifeTime,
+  transToday,
+  transThisWeek,
+  transThisMonth,
+  transLifeTime,
+} from './salesTransAPI';
 
 export const busToken = (document.getElementById('forgotBusPassToken') || {})
   .value;
+
+export const salesTransBusinessUserID = (
+  document.getElementById('salesTransBusinessUserID') || {}
+).value;
+export const sumOfSalesResult = document.getElementById('sumOfSalesResult');
+
+export const sumOfTransResult = document.getElementById('sumOfTransResult');
 
 export const orderId = (document.getElementById('orderid') || {}).value;
 
@@ -46,6 +63,83 @@ const updateDeliveryForm = document.getElementById('deliveryForm');
 const selectColorOptions = document.querySelector('.selectColorOptions');
 const selectSizeOptions = document.querySelector('.selectSizeOptions');
 const selectPriceOptions = document.querySelector('.selectPriceOptions');
+
+//// FETCH DAILY, LIFETIME AND MONTHLY SALES
+
+// DISPLAY SALESTRANS LOADIND ANIMATION
+const salesLoader = document.getElementById('loading-Sales-Result');
+const salesToday_btn = document.getElementById('salesToday_btn');
+const salesWeekly_btn = document.getElementById('salesWeekly_btn');
+const salesMonthly_btn = document.getElementById('salesMonthly_btn');
+const salesLifeTime_btn = document.getElementById('salesLifeTime_btn');
+
+function displaySalesLoading() {
+  salesLoader.classList.add('display');
+  // to stop loading after some time
+  setTimeout(() => {
+    salesLoader.classList.remove('display');
+  }, 20000);
+}
+
+export const hideSalesLoading = function hideLoading() {
+  salesLoader.classList.remove('display');
+};
+
+//Sales!
+if (salesToday_btn)
+  salesToday_btn.addEventListener('click', () => {
+    displaySalesLoading(), salesToday();
+  });
+if (salesWeekly_btn)
+  salesWeekly_btn.addEventListener('click', () => {
+    displaySalesLoading(), salesThisWeek();
+  });
+if (salesMonthly_btn)
+  salesMonthly_btn.addEventListener('click', () => {
+    displaySalesLoading(), salesThisMonth();
+  });
+
+if (salesLifeTime_btn)
+  salesLifeTime_btn.addEventListener('click', () => {
+    displaySalesLoading(), salesLifeTime();
+  });
+
+//Transactions
+
+const transLoader = document.getElementById('loading-Trans-Result');
+const transToday_btn = document.getElementById('transToday_btn');
+const transWeekly_btn = document.getElementById('transWeekly_btn');
+const transMonthly_btn = document.getElementById('transMonthly_btn');
+const transLifeTime_btn = document.getElementById('transLifeTime_btn');
+
+function displayTransLoading() {
+  transLoader.classList.add('display');
+  // to stop loading after some time
+  setTimeout(() => {
+    transLoader.classList.remove('display');
+  }, 20000);
+}
+
+export const hideTransLoading = function hideLoading() {
+  transLoader.classList.remove('display');
+};
+
+if (transToday_btn)
+  transToday_btn.addEventListener('click', () => {
+    displayTransLoading(), transToday();
+  });
+if (transWeekly_btn)
+  transWeekly_btn.addEventListener('click', () => {
+    displayTransLoading(), transThisWeek();
+  });
+if (transMonthly_btn)
+  transMonthly_btn.addEventListener('click', () => {
+    displayTransLoading(), transThisMonth();
+  });
+if (transLifeTime_btn)
+  transLifeTime_btn.addEventListener('click', () => {
+    displayTransLoading(), transLifeTime();
+  });
 
 if (busloginForm) busloginForm.addEventListener('submit', busLoginInput);
 
@@ -211,18 +305,12 @@ $(document).ready(function () {
 
 $('.sales-today a').click(function (e) {
   e.preventDefault();
-  $('.sales-toggle').hide();
   $('#button-sales').html($(this).text());
-  var toShow = $(this).attr('href');
-  $(toShow).show();
 });
 
 $('.trans-today a').click(function (e) {
   e.preventDefault();
   $('#button-trans').html($(this).text());
-  $('.trans-toggle').hide();
-  var toShow = $(this).attr('href');
-  $(toShow).show();
 });
 
 $('.toggle-password').click(function () {
