@@ -35,7 +35,7 @@ export const salesThisWeek = async () => {
     });
 
     if (res.data.status === 'success') {
-      const weeklyResult = res.data.data.sumOfCartSalesWeek;
+      const weeklyResult = res.data.data.sumOfCartSalesToday;
       sumOfSalesResult.innerHTML = `₦ ${weeklyResult}`;
       hideSalesLoading();
     }
