@@ -3,6 +3,7 @@
 import '@babel/polyfill';
 import { createProductInput, editProductInput } from './product';
 import { busLogout } from './loginAPI';
+import { busSendVerifyEmail } from './signupAPI';
 
 import {
   updatePixel,
@@ -64,9 +65,21 @@ const selectColorOptions = document.querySelector('.selectColorOptions');
 const selectSizeOptions = document.querySelector('.selectSizeOptions');
 const selectPriceOptions = document.querySelector('.selectPriceOptions');
 
+const request_Verify_Email_btn = document.getElementById(
+  'request-verify-email_btn'
+);
+
+if (request_Verify_Email_btn)
+  request_Verify_Email_btn.addEventListener('click', () => {
+    busSendVerifyEmail();
+  });
+
 //// FETCH DAILY, LIFETIME AND MONTHLY SALES
 
 // DISPLAY SALESTRANS LOADIND ANIMATION
+
+//Sales!
+
 const salesLoader = document.getElementById('loading-Sales-Result');
 const salesToday_btn = document.getElementById('salesToday_btn');
 const salesWeekly_btn = document.getElementById('salesWeekly_btn');
@@ -85,7 +98,6 @@ export const hideSalesLoading = function hideLoading() {
   salesLoader.classList.remove('display');
 };
 
-//Sales!
 if (salesToday_btn)
   salesToday_btn.addEventListener('click', () => {
     displaySalesLoading(), salesToday();

@@ -62,6 +62,10 @@ class BusEmail {
     );
   }
 
+  async sendVerifyEmail() {
+    await this.send('busVerifyEmail', 'Kindly Verify Your Email');
+  }
+
   async sendPasswordReset() {
     await this.send(
       'busForgotPassEmail',

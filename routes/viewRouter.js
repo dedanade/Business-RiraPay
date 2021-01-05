@@ -64,6 +64,8 @@ router.get(
 
 router.get('/purchasepixel/:businessUserId', viewController.purchasePixel);
 
-router.route('/mobileorders/:businessUserId').get(viewController.OrdersPage);
+router.get('/mobileorders/:businessUserId', viewController.OrdersPage);
+
+router.get('/verify-email/:emailtoken', authBusinessController.verifyEmail);
 
 module.exports = router;

@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { showAlert } from './alert';
-import { token, busToken } from './index';
+import { busToken, salesTransBusinessUserID } from './index';
 
 export const busSignup = async (
   businessName,
@@ -74,5 +74,22 @@ export const busResetPassword = async (businessPassword) => {
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
+  }
+};
+export const busSendVerifyEmail = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `/api/v1/businessUsers/sendverifyemail/${salesTransBusinessUserID}`,
+    });
+    if (res.data.status === 'success') {
+      showAlert('success', `Verify Email Sent`);
+      window.setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', 'Unable to Send Email. Kindly Retry');
+    console.log(err);
   }
 };

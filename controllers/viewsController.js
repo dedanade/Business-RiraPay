@@ -230,3 +230,19 @@ exports.OrdersPage = catchAsync(async (req, res, next) => {
     orders,
   });
 });
+
+exports.OrdersPage = catchAsync(async (req, res, next) => {
+  const businessUser = await BusinessUser.findById({
+    _id: req.params.businessUserId,
+  }).populate('orders');
+  const product = await Product.find();
+
+  const orders = await Order.find();
+
+  res.status(200).render('mobileOrders', {
+    title: 'Check purchase Pixel',
+    businessUser,
+    product,
+    orders,
+  });
+});

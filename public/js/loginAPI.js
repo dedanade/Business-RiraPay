@@ -29,7 +29,7 @@ export const busLogout = async () => {
   try {
     const res = await axios({
       method: 'Get',
-      url: '/api/v1/users/logout',
+      url: '/api/v1/businessUsers/logout',
     });
 
     if (res.data.status === 'success') {
@@ -41,5 +41,5 @@ export const busLogout = async () => {
   } catch (err) {
     showAlert('error', 'Unable to Log out right now. Try again later');
   }
-  console.log(`🔥🔥 ${err.response.data.message}`);
+  console.log(`🔥🔥 ${err}`);
 };

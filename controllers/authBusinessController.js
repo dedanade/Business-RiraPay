@@ -11,8 +11,8 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createSendToken = (user, statusCode, req, res) => {
-  const token = signToken(user._id);
+const createSendToken = (businessUser, statusCode, req, res) => {
+  const token = signToken(businessUser._id);
   res.cookie('jwt', token, {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -21,13 +21,13 @@ const createSendToken = (user, statusCode, req, res) => {
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   });
   // Remove password from output
-  user.password = undefined;
+  businessUser.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      BusinessUser,
+      businessUser,
     },
   });
 };
@@ -39,12 +39,49 @@ exports.businesssignup = catchAsync(async (req, res, next) => {
     businessEmail: req.body.businessEmail,
     businessPassword: req.body.businessPassword,
     facebookPixel: req.body.facebookPixel,
+    emailToken: crypto.randomBytes(64).toString('hex'),
+    isEmailVerified: false,
   });
-  const url = `${req.protocol}://${req.get('host')}/busdashboard`;
+  const url = `${req.protocol}://${req.get('host')}/verify-email/${
+    newBusinessUser.emailToken
+  }`;
   // console.log(url);
   await new AllBusEmail.BusEmail(newBusinessUser, url).sendBusWelcome();
 
   createSendToken(newBusinessUser, 201, req, res);
+});
+
+exports.verifyEmail = catchAsync(async (req, res, next) => {
+  const businessUser = await BusinessUser.findOne({
+    emailToken: req.params.emailtoken,
+  });
+
+  if (!businessUser) {
+    return next(
+      new AppError(`We can't verify this Email. Kindly Request a New One`, 401)
+    );
+  }
+
+  businessUser.emailToken = null;
+  businessUser.isEmailVerified = true;
+  await businessUser.save();
+
+  res.redirect('/dashboard');
+});
+
+exports.sendNewVerifyEmail = catchAsync(async (req, res, next) => {
+  const businessUser = await BusinessUser.findById({
+    _id: req.params.businessUserId,
+  });
+  const url = `${req.protocol}://${req.get('host')}/verify-email/${
+    businessUser.emailToken
+  }`;
+  // console.log(url);
+  await new AllBusEmail.BusEmail(businessUser, url).sendVerifyEmail();
+
+  res.status(200).json({
+    status: 'success',
+  });
 });
 
 exports.businesslogin = catchAsync(async (req, res, next) => {
@@ -73,6 +110,14 @@ exports.businesslogin = catchAsync(async (req, res, next) => {
   createSendToken(businessUser, 200, req, res);
 });
 
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: 'success' });
+};
+
 exports.protectBusiness = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
   let token;
@@ -86,7 +131,7 @@ exports.protectBusiness = catchAsync(async (req, res, next) => {
   }
 
   if (!token) {
-    res.redirect('/buslogin');
+    res.redirect('/login');
   }
 
   // 2) Verification token
@@ -97,7 +142,7 @@ exports.protectBusiness = catchAsync(async (req, res, next) => {
 
   if (!currentBusinessUser) {
     if (process.env.NODE_ENV === 'production') {
-      res.redirect('/buslogin');
+      res.redirect('/login');
     } else
       return next(
         new AppError('You need to Login before creating a Product!', 401)

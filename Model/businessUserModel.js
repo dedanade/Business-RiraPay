@@ -45,6 +45,8 @@ const businessUserSchema = new mongoose.Schema({
     select: true,
   },
   date: { type: Date, default: Date.now },
+  emailToken: String,
+  isEmailVerified: Boolean,
 
   passwordChangedAt: {
     type: Date,

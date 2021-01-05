@@ -12,6 +12,8 @@ router.use('/:businessUserId/products', productRouter);
 router.post('/signup', authBusinessController.businesssignup);
 router.post('/login', authBusinessController.businesslogin);
 
+router.get('/logout', authBusinessController.logout);
+
 router.post('/forgotPassword', authBusinessController.forgotBusinessPassword);
 router.post(
   '/resetPassword/:token',
@@ -23,6 +25,10 @@ router.get(
   authBusinessController.protectBusiness,
   BusinessuserController.getMe,
   BusinessuserController.getBusinessUser
+);
+router.get(
+  '/sendverifyemail/:businessUserId',
+  authBusinessController.sendNewVerifyEmail
 );
 
 router.get(
