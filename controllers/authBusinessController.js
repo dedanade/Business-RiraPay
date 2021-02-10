@@ -1,9 +1,18 @@
+/* eslint-disable block-scoped-var */
+/* eslint-disable no-var */
+/* eslint-disable vars-on-top */
 const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const BusinessUser = require('../Model/businessUserModel');
+const BusinessAccount = require('../Model/businessAccount');
+const Order = require('../Model/orderModel');
+// const factory = require('./handlerFactory');
+
+const Product = require('../Model/productModel');
+
 const AllBusEmail = require('../utils/busEmail');
 
 const signToken = (id) =>
@@ -33,15 +42,29 @@ const createSendToken = (businessUser, statusCode, req, res) => {
 };
 
 exports.businesssignup = catchAsync(async (req, res, next) => {
-  const newBusinessUser = await BusinessUser.create({
+  const newBusinessAccount = await BusinessAccount.create({
     businessName: req.body.businessName,
     businessPhoneNumber: req.body.businessPhoneNumber,
-    businessEmail: req.body.businessEmail,
-    businessPassword: req.body.businessPassword,
-    facebookPixel: req.body.facebookPixel,
-    emailToken: crypto.randomBytes(64).toString('hex'),
-    isEmailVerified: false,
+    businessAccountEmail: req.body.businessEmail,
   });
+
+  try {
+    var newBusinessUser = await BusinessUser.create({
+      fullName: req.body.fullName,
+      businessEmail: req.body.businessEmail,
+      businessPassword: req.body.businessPassword,
+      businessAccount: newBusinessAccount.id,
+      role: 'Business Owner',
+      emailToken: crypto.randomBytes(64).toString('hex'),
+      isEmailVerified: false,
+    });
+  } catch (err) {
+    if (err)
+      await BusinessAccount.deleteOne({
+        _id: newBusinessAccount.id,
+      });
+    return next(err);
+  }
   const url = `${req.protocol}://${req.get('host')}/verify-email/${
     newBusinessUser.emailToken
   }`;
@@ -118,6 +141,38 @@ exports.logout = (req, res) => {
   res.status(200).json({ status: 'success' });
 };
 
+exports.addNewBusinessUser = catchAsync(async (req, res, next) => {
+  const businessUser = await BusinessUser.findById({
+    _id: req.businessUser.id,
+  });
+
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
+  });
+
+  const newlyAddedBusinessUser = await BusinessUser.create({
+    fullName: req.body.fullName,
+    businessEmail: req.body.businessEmail,
+    businessPassword: req.body.businessPassword,
+    businessAccount: businessAccount.id,
+    role: req.body.role,
+    emailToken: crypto.randomBytes(64).toString('hex'),
+    isEmailVerified: false,
+  });
+
+  const url = `${req.protocol}://${req.get('host')}/verify-email/${
+    newlyAddedBusinessUser.emailToken
+  }`;
+  // console.log(url);
+  await new AllBusEmail.BusEmail(newlyAddedBusinessUser, url).sendBusWelcome();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      newlyAddedBusinessUser,
+    },
+  });
+});
 exports.protectBusiness = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
   let token;
@@ -144,9 +199,7 @@ exports.protectBusiness = catchAsync(async (req, res, next) => {
     if (process.env.NODE_ENV === 'production') {
       res.redirect('/login');
     } else
-      return next(
-        new AppError('You need to Login before creating a Product!', 401)
-      );
+      return next(new AppError('You need to Login to Access this Page', 401));
   }
 
   // 4) Check if user changed password after the token was issued
@@ -160,6 +213,45 @@ exports.protectBusiness = catchAsync(async (req, res, next) => {
   req.businessUser = currentBusinessUser;
   res.locals.businessUser = currentBusinessUser;
 
+  next();
+});
+
+exports.restrictTo = (...roles) => (req, res, next) => {
+  if (!roles.includes(req.businessUser.role)) {
+    return next(
+      new AppError('You do not have permission to perform this action', 403)
+    );
+  }
+  next();
+};
+
+exports.restrictProductView = catchAsync(async (req, res, next) => {
+  const product = await Product.findById(req.params.productId);
+
+  if (!product) {
+    return next(new AppError('No product found with that ID', 404));
+  }
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+
+  if (
+    String(product.businessAccount) !== String(businessUser.businessAccount)
+  ) {
+    return next(new AppError(`You don't have access to this page`, 403));
+  }
+  next();
+});
+
+exports.restrictOrderView = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.orderId);
+
+  if (!order) {
+    return next(new AppError('No order found with that ID', 404));
+  }
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+
+  if (String(order.businessAccount) !== String(businessUser.businessAccount)) {
+    return next(new AppError(`You don't have access to this page`, 403));
+  }
   next();
 });
 

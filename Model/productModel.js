@@ -42,12 +42,10 @@ const productSchema = new mongoose.Schema(
       default: Date.now(),
       select: false,
     },
-    businessUser: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'BusinessUser',
-      },
-    ],
+    businessAccount: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'BusinessAccount',
+    },
 
     date: { type: Date, default: Date.now },
   },

@@ -8,10 +8,10 @@ block content
                 li.d-flex.justify-content-between
                     h4.d-flex.justify-content-between Your Orders:
                     h6
-                        a#sign-up-button.btn(href='/allorders') Desktop Mode
-            - const busOrder = businessUser.orders;
+                        a.rira-color-btn.btn(href='/allorders') Desktop Mode
+            - const busOrder = businessAccount.orders;
             if (busOrder.length)
-                each orders in businessUser.orders.reverse().slice(0, 200)
+                each orders in businessAccount.orders.reverse().slice(0, 200)
                     each product in orders.product
                         -const orderTotal = orders.total.toLocaleString()
                         -const mobiledate = moment(orders.createdAt).format('MMM DD');
@@ -39,9 +39,9 @@ block content
                                         a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderState
                 .text-center.my-3
                     h6
-                        a#sign-up-button.btn(href='/allorders') View All orders in Descktop View
+                        a.rira-color-btn.btn(href='/allorders') View All orders in Descktop View
             if (!busOrder.length)
                 .text-center
                     p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
                 .text-center
-                    a#sign-up-button.btn(href='/createproduct') Create your first Product
+                    a.rira-color-btn.btn(href='/createproduct') Create your first Product

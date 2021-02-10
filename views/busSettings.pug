@@ -3,42 +3,206 @@ block Indexcss
 block content
 
     section
-        .container.mb-5(style= 'margin-top: 150px;')
-            .card.my-5(style= 'background-color: white; height: 50rem;')
+        .max60rem-container.mb-5(style= 'margin-top: 150px;')
+            .card.my-5.border-0(style= 'background-color: white; height: 50rem;')
                 .row.mt-5.mx-lg-5.mx-1
-                    .col-3
-                        #v-pills-tab.nav.flex-column.nav-pills(role='tablist', aria-orientation='vertical')
-                            a#settings-pills-profile-tab.nav-link.active(data-toggle='pill', href='#settings-pills-profile', role='tab', aria-controls='settings-pills-profile', aria-selected='true') Profile
-                            a#settings-pills-pixel-tab.nav-link(data-toggle='pill', href='#settings-pills-pixel', role='tab', aria-controls='settings-pills-pixel', aria-selected='false') Pixel
-
-                    .col-9.col-lg-6
-                        #v-pills-tabContent.tab-content
-                            #settings-pills-profile.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='settings-pills-profile-tab') Nothing to see here
-                            #settings-pills-pixel.tab-pane.fade(role='tabpanel', aria-labelledby='settings-pills-pixel-tab')
+                    .col-12
+                        ul#pills-tab.nav.nav-pills.mb-3.mx-2(role='tablist')
+                            li.nav-item
+                                a#pills-profile-tab.nav-link.btn.btn-sm.active(data-toggle='pill', href='#pills-profile', role='tab', aria-controls='pills-profile', aria-selected='true') Profile
+                            li.nav-item
+                                a#pills-pixel-tab.nav-link.btn.btn-sm(data-toggle='pill', href='#pills-pixel', role='tab', aria-controls='pills-pixel', aria-selected='false') Pixel
+                            li.nav-item
+                                a#pills-team-tab.nav-link.btn.btn-sm(data-toggle='pill', href='#pills-team', role='tab', aria-controls='pills-team', aria-selected='false') Team
+                            li.nav-item
+                                a#pills-bank-account-tab.nav-link.btn.btn-sm(data-toggle='pill', href='#pills-bank-account', role='tab', aria-controls='pills-bank-account', aria-selected='false') Bank Account
+                    .col-12
+                        #pills-tabContent.tab-content
+                            #pills-profile.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='pills-profile-tab') This is the first tab for people evenenejfur ufjfjfnf fjffufjfjfosos....
+                            #pills-pixel.tab-pane.fade(role='tabpanel', aria-labelledby='pills-pixel-tab') 
                                 form#business-pixel-form
                                     .form-group.mx-3
                                         b.my-2 Facebook Pixel     
 
                                     .form-group.mx-2.mb-2
-
                                         .row.mx-1.my-2
-                                            .col
-                                                input#bussiness-pixelId.form-control( type='Number', value=businessUser.facebookPixelId, placeholder='Pixel ID' )
+                                            .col-lg-6
+                                                input#business-pixelId.form-control( type='Number', value=businessAccount.facebookPixelId, placeholder='Pixel ID' )
                                         .row.mx-1.my-2
-                                            .col
-                                                select#bussiness-pixel-currency.form-control(required='' value=`${businessUser.facebookCurrency}`)
+                                            .col-lg-6
+                                                select#business-pixel-currency.form-control(required='' value=`${businessAccount.facebookCurrency}`)
                                                     option( value='USD') USD
                                                     option( value='NGN') NGN
                                                     option( value='GBP') GBP
                                                     option( value='EUR') EUR                                               
                                         .row.mx-1.my-2
-                                            .col
-                                                input#bussiness-pixel-value.form-control( type='Number', value=businessUser.facebookValue, placeholder='Value')
-                                    .text-center 
-                                        button.btn.btn-lg.btn-primary.ml-3(type='submit') Update
-                                    .text-center
-                                        a(href=`/purchasepixel/${businessUser.id}`) Test your Pixel
+                                            .col-lg-6
+                                                input#business-pixel-value.form-control( type='Number', value=businessAccount.facebookValue, placeholder='Value')
+                                    .row
+                                        .col-lg-6
+                                            .text-center 
+                                                button.btn.btn-lg.rira-color-btn.ml-3(type='submit') Update
+                                            .text-center
+                                                a(href=`/purchasepixel/${businessAccount.id}`) Test your Pixel
+
+
+                                //- TEAM PILLS TAB
+
+                    
+                            #pills-team.tab-pane.fade(role='tabpanel', aria-labelledby='pills-team-tab')
+                                ul.list-group.my-2(style="font-size: 1rem;")
+                                    li.d-flex.justify-content-between
+                                        p.d-flex.justify-content-between Team Members:  
+                                        a.add-new-member-btn.btn.rira-color-btn.text-white(type='button', data-toggle='modal', data-target='#addNewMemberModal') Add New Member
+                                table.table.table-responsive.table-hover.mx-lg-5
+                                    thead
+                                        tr
+                                            th(scope='col') Name
+                                            th(scope='col') Email
+                                            th(scope='col') Role
+                                            th(scope='col') Last Login
+                                            th(scope='col') Action
+                                    tbody
+                                        each memberUser in businessAccount.businessUsers
+                                            tr(style="font-size: 1rem;")
+                                                td= memberUser.fullName
+                                                td= memberUser.businessEmail
+                                                td= memberUser.role
+                                                td 12/19/2020 8:15pm
+                                                if (memberUser.role === "Admin" ||  memberUser.role === "Customer Support")
+                                                    td                                                            
+                                                        button#remove-member-btn.btn(data-toggle='modal', data-target=`#removeUser${memberUser.id}`) Remove
+                                                        div(id=`removeUser${memberUser.id}` tabindex='-1', role='dialog', aria-labelledby=`removeUser${memberUser.id}Title`, aria-hidden='true').modal.fade
+                                                            .modal-dialog.modal-dialog-centered(role='document')
+                                                                .modal-content
+                                                                    .modal-header
+                                                                        h5#exampleModalLongTitle.modal-title Remove a Member
+                                                                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                                                        span(aria-hidden='true') &times;
+                                                                    .modal-body
+                                                                        = `By doing this, ${memberUser.fullName} will not have access to this Business Anymore. Do you want to Continue?`
+                                                                    .modal-footer
+                                                                        button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+                                                                        -const memberId = memberUser.id;
+                                                                        button.btn.rira-color-btn(id=memberId type="button" onclick="return removeMemberFuction(this.id)") Remove  
+                                                                                                                                                      
+                            #pills-bank-account.tab-pane.fade(role='tabpanel', aria-labelledby='pills-bank-account-tab')
+                                
+                                if (businessAccount.bankName && businessAccount.accountNumber && businessAccount.bankCode)
+                                    table.table.table-responsive.table-hover.mx-lg-5
+                                        thead
+                                            tr
+                                                th(scope='col') Bank Name
+                                                th(scope='col') Account Number
+                                                th(scope='col') Account Name
+                                                th(scope='col') Action
+                                        tbody
+                                            tr(style="font-size: 1rem;")
+                                                td= businessAccount.bankName
+                                                td= businessAccount.accountNumber
+                                                td= businessAccount.bankAccountName
+                                                if (businessUser.role === "Business Owner")
+                                                    td                                                            
+                                                        button#remove-member-btn.btn(data-toggle='modal', data-target=`#removeUser`) Edit
+                                                        
+
+                                else
+                                    form#businessAccount-bank-form
+                                        .form-group
+                                            .row.mx-2.py-2
+                                                .col-lg-6
+                                                    select#bank_code_businessAccount.form-control(required='')
+                                                        option(selected='', disabled='' value='') Bank Name
+                                                        option(value='044') Access Bank
+                                                        option(value='063') Access Bank (Diamond)
+                                                        option(value='035A') ALAT by WEMA
+                                                        option(value='401') ASO Saving and Loans
+                                                        option(value='023') Citibank
+                                                        option(value='050') Ecobank
+                                                        option(value='562') Ekondo Microfinamce Bank
+                                                        option(value='070') Fidelity Bank
+                                                        option(value='011') First Bank
+                                                        option(value='214') First City Monument Bank (FCMB)
+                                                        option(value='058') Guaranty Trust Bank (GTB)
+                                                        option(value='030') Heritage Bank
+                                                        option(value='301') Jaiz Bank
+                                                        option(value='082') Keystone Bank
+                                                        option(value='50211') Kuda Bank
+                                                        option(value='526') Parallex Bank
+                                                        option(value='076') Polaris Bank
+                                                        option(value='101') Providus Bank
+                                                        option(value='221') Stanbic IBTC Bank
+                                                        option(value='068') Standard Chartered Bank
+                                                        option(value='232') Sterling Bank
+                                                        option(value='100') Suntrust Bank
+                                                        option(value='032') Union Bank
+                                                        option(value='033') United Bank for Africa (UBA)
+                                                        option(value='215') Unity Bank
+                                                        option(value='035') Wema Bank
+                                                        option(value='057') Zenith Bank
+
+                                            .row.mx-2.py-2
+                                                .col-lg-6
+                                                    input#account_number_businessAccount.form-control(type='number', placeholder='Account Number' required='')
+                                                    .justify-left
+                                                        #loading-animation.my-2
+                                                        #business-accountNumber-result.my-2.ml-1
+                                        .text-center  
+                                            .row.mx-2.py-2
+                                                .col-lg-6                                       
+                                                    button#save-bank-details-btn.rira-color-btn.btn.btn-lg.my-1.mx-auto.d-block.px-2.py-1(type='submit' disabled='') Save
+                                            
+
+                                    
+                    // Modal
+                    #addNewMemberModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addNewMemberModalTitle', aria-hidden='true')
+                        .modal-dialog.modal-dialog-centered(role='document')
+                            .modal-content
+                                .modal-header
+                                    h5#exampleModalLongTitle.modal-title Add New Member
+                                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                    span(aria-hidden='true') &times;
+                                .modal-body
+                                    section.add-new-member-section
+                                            form.add-new-member-form
+                                                .row.mx-1.py-3
+                                                    .col
+                                                        select#input-new-staff-role.form-control(required = '')
+                                                            option(selected='', disabled='', value='') Choose Staff Role
+                                                            option( value='Admin') Admin
+                                                            option( value='Customer Support') Customer Support Rep
+                                                        p.m-0.p-0(style= "font-size: 0.8rem") Please Note an Admin has access to removing other admins and Customer Support roles
+                                                .row.mx-1.py-3
+                                                    .col
+                                                        | Staff Name
+                                                        input#input-new-staff-fullname.form-control(type='text', placeholder='Firstname Lastname' required='')
+                                                .row.mx-1.py-3
+                                                    .col
+                                                        | Email Address
+                                                        input#input-new-staff-emailAddress.form-control(type='email', placeholder='eg: rirapayenterprise@gmail.com' required='')
+                                                .row.mx-1.py-3
+                                                    .col
+                                                        | Password
+                                                        input#input-new-staff-password.form-control(type='password', placeholder='Minimum of 6 words' minlength= '6' required='')
+                                                        span.fa.fa-fw.fa-eye.view-password-icon.toggle-password(toggle='#input-bus-password')
+                                                .modal-footer
+                                                    button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                                                    button.rira-color-btn.btn.btn(type='submit') Add Member
+
+
 
                         script.
-                            let fbcurrency =!{JSON.stringify(businessUser.facebookCurrency)}                          
-                            $('#bussiness-pixel-currency').val(fbcurrency)
+                            let fbcurrency =!{JSON.stringify(businessAccount.facebookCurrency)}                          
+                            $('#business-pixel-currency').val(fbcurrency)
+
+                            $(function(){
+                                var hash = window.location.hash;
+                                hash && $('ul.nav.nav-pills a[href="' + hash + '"]').tab('show'); 
+                                $('ul.nav.nav-pills a').click(function (e) {
+                                    $(this).tab('show');
+                                    var scrollmem = $('body').scrollTop();
+                                    window.location.hash = this.hash;
+                                });
+                                });
+
+                            

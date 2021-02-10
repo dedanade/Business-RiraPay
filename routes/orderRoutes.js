@@ -16,30 +16,30 @@ router.route('/:OrderId').patch(orderController.updateOrder);
 //Sales!
 
 router
-  .route('/salestoday/:businessUserId')
+  .route('/salestoday')
   .get(authBusinessController.protectBusiness, orderController.salesToday);
 router
-  .route('/salesweek/:businessUserId')
+  .route('/salesweek')
   .get(authBusinessController.protectBusiness, orderController.salesThisWeek);
 router
-  .route('/salesmonth/:businessUserId')
+  .route('/salesmonth')
   .get(authBusinessController.protectBusiness, orderController.salesThisMonth);
 router
-  .route('/saleslifetime/:businessUserId')
+  .route('/saleslifetime')
   .get(authBusinessController.protectBusiness, orderController.salesLifeTime);
 
 //Transaction
 router
-  .route('/transtoday/:businessUserId')
+  .route('/transtoday')
   .get(authBusinessController.protectBusiness, orderController.TransToday);
 router
-  .route('/transweek/:businessUserId')
+  .route('/transweek')
   .get(authBusinessController.protectBusiness, orderController.TransThisWeek);
 router
-  .route('/transmonth/:businessUserId')
+  .route('/transmonth')
   .get(authBusinessController.protectBusiness, orderController.TransThisMonth);
 router
-  .route('/translifetime/:businessUserId')
+  .route('/translifetime')
   .get(authBusinessController.protectBusiness, orderController.TransLifeTime);
 
 module.exports = router;

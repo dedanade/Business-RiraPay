@@ -3,7 +3,11 @@
 import '@babel/polyfill';
 import { createProductInput, editProductInput } from './product';
 import { busLogout } from './loginAPI';
-import { busSendVerifyEmail } from './signupAPI';
+import {
+  account_Lookup_UpdateBankAccount,
+  accountNamepaystackLookup,
+} from './updateBankAccount';
+import { busSendVerifyEmail, removeBusMember } from './signupAPI';
 
 import {
   updatePixel,
@@ -13,7 +17,7 @@ import {
   updateDelivery,
 } from './update';
 import { showAlert } from './alert';
-import { busLoginInput, busSignupInput } from './signup_login';
+import { busLoginInput, busSignupInput, addNewbusInput } from './signup_login';
 import { busForgotPassInput, busResetPassInput } from './forgot_resetPass';
 import {
   salesThisMonth,
@@ -26,27 +30,21 @@ import {
   transLifeTime,
 } from './salesTransAPI';
 
-export const busToken = (document.getElementById('forgotBusPassToken') || {})
-  .value;
-
-export const salesTransBusinessUserID = (
-  document.getElementById('salesTransBusinessUserID') || {}
-).value;
 export const sumOfSalesResult = document.getElementById('sumOfSalesResult');
 
 export const sumOfTransResult = document.getElementById('sumOfTransResult');
 
-export const orderId = (document.getElementById('orderid') || {}).value;
-
-export const DelOrderId = (document.getElementById('DelOrderId') || {}).value;
-
-export const productId = (document.getElementById('productId') || {}).value;
+export const remove_member_businessID = (
+  document.getElementById('remove-member-businessID') || {}
+).value;
 
 const busloginForm = document.querySelector('.bus-login-form');
 
 const logoutBus = document.querySelector('.logout_bus_btn');
 
 const busSignupForm = document.querySelector('.signup-bus-form');
+
+const addNewBusForm = document.querySelector('.add-new-member-form');
 
 const busForgotForm = document.querySelector('.bus-forgot-form');
 const resetBusPassForm = document.querySelector('.reset-bus-pass-form');
@@ -56,10 +54,17 @@ const editProductForm = document.querySelector('.edit-product-form');
 
 const business_pixel_Form = document.getElementById('business-pixel-form');
 const tagsForm = document.getElementById('tagsform');
+const bankAccountForm = document.getElementById('businessAccount-bank-form');
 const updateForm = document.getElementById('updateorderform');
 const updateFormmobile = document.getElementById('updateFormmobile');
 const updateShipingForm = document.getElementById('shippingForm');
 const updateDeliveryForm = document.getElementById('deliveryForm');
+
+const remove_member_ID = (
+  document.getElementById('remove-member-businessID') || {}
+).value;
+
+const remove_member_btn = document.querySelector(`.remove-member-form`);
 
 const selectColorOptions = document.querySelector('.selectColorOptions');
 const selectSizeOptions = document.querySelector('.selectSizeOptions');
@@ -73,6 +78,34 @@ if (request_Verify_Email_btn)
   request_Verify_Email_btn.addEventListener('click', () => {
     busSendVerifyEmail();
   });
+
+const loading_Animation = document.getElementById('loading-animation');
+
+function displayLoadingAnimation() {
+  loading_Animation.classList.add('display');
+  // to stop loading after some time
+  setTimeout(() => {
+    loading_Animation.classList.remove('display');
+  }, 20000);
+}
+
+export const hideLoadingAnimation = function hideLoading() {
+  loading_Animation.classList.remove('display');
+};
+
+export function loadingBtnSpinner(submitButton) {
+  submitButton.classList.add('btnLoadingSpiner');
+  submitButton.disabled = true;
+
+  setTimeout(() => {
+    submitButton.classList.remove('btnLoadingSpiner');
+  }, 20000);
+}
+
+export function stopLoadingBtnSpinner(submitButton) {
+  submitButton.classList.remove('btnLoadingSpiner');
+  submitButton.disabled = false;
+}
 
 //// FETCH DAILY, LIFETIME AND MONTHLY SALES
 
@@ -153,11 +186,25 @@ if (transLifeTime_btn)
     displayTransLoading(), transLifeTime();
   });
 
+if (remove_member_btn)
+  remove_member_btn.addEventListener('submit', () => {
+    console.log(document.getElementById('remove-member-businessID').value);
+    console.log('Got it');
+  });
+
+function removeMemberFuction(id) {
+  const remove_businessId = id;
+  removeBusMember(remove_businessId);
+}
+window.removeMemberFuction = removeMemberFuction;
+
 if (busloginForm) busloginForm.addEventListener('submit', busLoginInput);
 
 if (logoutBus) logoutBus.addEventListener('click', busLogout);
 
 if (busSignupForm) busSignupForm.addEventListener('submit', busSignupInput);
+
+if (addNewBusForm) addNewBusForm.addEventListener('submit', addNewbusInput);
 
 if (busForgotForm) busForgotForm.addEventListener('submit', busForgotPassInput);
 
@@ -173,20 +220,69 @@ if (editProductForm)
 if (business_pixel_Form)
   business_pixel_Form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const facebookPixelId = document.getElementById('bussiness-pixelId').value;
+    const submitButton = e.submitter;
+    loadingBtnSpinner(submitButton);
+    const facebookPixelId = document.getElementById('business-pixelId').value;
     const facebookPixelCurrency = document.getElementById(
-      'bussiness-pixel-currency'
+      'business-pixel-currency'
     ).value;
-    const facebookPixelValue = document.getElementById('bussiness-pixel-value')
+    const facebookPixelValue = document.getElementById('business-pixel-value')
       .value;
-    updatePixel(facebookPixelId, facebookPixelCurrency, facebookPixelValue);
+
+    updatePixel(
+      facebookPixelId,
+      facebookPixelCurrency,
+      facebookPixelValue,
+      submitButton
+    );
+  });
+
+const inputAccountNumber = document.getElementById(
+  'account_number_businessAccount'
+);
+
+if (inputAccountNumber)
+  inputAccountNumber.addEventListener('blur', () => {
+    const account_number = inputAccountNumber.value;
+    const bankIdOptions = document.getElementById('bank_code_businessAccount');
+    const saveBankDetailsbtn = document.getElementById('save-bank-details-btn');
+    const accountNameDisplay = document.getElementById(
+      'business-accountNumber-result'
+    );
+    accountNameDisplay.innerHTML = '';
+    displayLoadingAnimation();
+
+    const bankId = bankIdOptions.value;
+
+    accountNamepaystackLookup(
+      account_number,
+      bankId,
+      accountNameDisplay,
+      saveBankDetailsbtn
+    );
+  });
+
+if (bankAccountForm)
+  bankAccountForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const accountNumber = document.getElementById(
+      'account_number_businessAccount'
+    ).value;
+    const bankIdOptions = document.getElementById('bank_code_businessAccount');
+    const bankId = bankIdOptions.value;
+    const bankName = bankIdOptions.options[bankIdOptions.selectedIndex].text;
+
+    account_Lookup_UpdateBankAccount(accountNumber, bankId, bankName);
   });
 
 if (tagsForm)
   tagsForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const tags = document.getElementById('order-tags').value;
-    updateTags(tags);
+    const orderId = document.getElementById('orderid').value;
+    const submitButton = e.submitter;
+    loadingBtnSpinner(submitButton);
+    updateTags(tags, orderId, submitButton);
   });
 
 if (updateForm)
@@ -215,7 +311,8 @@ if (updateShipingForm)
 if (updateDeliveryForm)
   updateDeliveryForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    updateDelivery();
+    const delOrderId = document.getElementById('orderid').value;
+    updateDelivery(delOrderId);
   });
 if (selectPriceOptions) {
   const selectPromoPrice = document.getElementById('selectPromoPrice');

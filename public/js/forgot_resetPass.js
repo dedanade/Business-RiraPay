@@ -10,10 +10,11 @@ export const busForgotPassInput = (e) => {
 
 export const busResetPassInput = (e) => {
   e.preventDefault();
+  const busToken = document.getElementById('forgotBusPassToken').value;
   const businessPassword = document.getElementById('reset-bus-password').value;
   const confirmPassword = document.getElementById('reset-bus-confirm-password')
     .value;
   if (businessPassword != confirmPassword) {
     alert('New and confirm password must be the same');
-  } else busResetPassword(businessPassword);
+  } else busResetPassword(businessPassword, busToken);
 };

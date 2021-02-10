@@ -45,9 +45,8 @@ body {
   background-color: #eb4d4b;
 }
 
-.hideAlert {
-  font-weight: bold;
-  margin-left: 1rem;
+#hideAlertNotification {
+  margin-left: 20px;
 }
 
 .error_title {
@@ -220,16 +219,14 @@ label {
   padding-bottom: 30px;
 }
 
-#sign-up-button,
-#copyclipboardbtn {
+.rira-color-btn {
   background-color: #01afee;
   color: white;
 }
-
-#checkout1-button {
+#thin-rira-btn {
   background-color: #01afee;
-  color: white;
-  width: 12em;
+  height: fit-content;
+  padding: 0.3rem;
 }
 
 #place_order_float_btn {
@@ -307,7 +304,6 @@ label {
 
 .checkout1-button {
   background-color: #01afee;
-  color: white;
   width: 12em;
 }
 @media (max-width: 400.98px) {
@@ -345,6 +341,16 @@ label {
   margin-right: auto;
   margin-left: auto;
   max-width: 40rem;
+}
+
+.max60rem-container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 60rem;
+  background-color: white;
+  font-size: 1em;
 }
 .small-container {
   background-color: white;
@@ -490,6 +496,20 @@ table {
     display: none;
   }
 }
+/* Loading Animation */
+#loading-animation {
+  width: 2rem;
+  height: 2rem;
+  border: 5px solid #f3f3f3;
+  border-top: 6px solid #01afee;
+  border-radius: 100%;
+  margin: auto;
+  display: none;
+  animation: spin 1s infinite linear;
+}
+#loading-animation.display {
+  display: block;
+}
 
 /* Sales and Trans Loading Animation */
 
@@ -533,5 +553,52 @@ table {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Button Loading Spinner */
+.btn:hover {
+  color: white;
+}
+
+.btnLoadingSpiner {
+  position: relative;
+  text-decoration: none;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px transparent;
+  border-radius: 0.3rem;
+  font-weight: 500;
+  transition: all ease-in-out 0.2s;
+  color: transparent;
+  opacity: 1;
+}
+
+.btnLoadingSpiner:after {
+  content: '';
+  animation: spin 500ms linear infinite;
+  position: absolute;
+  top: calc(50% - 0.5rem);
+  left: calc(50% - 0.5rem);
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-radius: 50%;
+  opacity: 1;
+}
+.btnLoadingSpiner:hover {
+  color: transparent;
+}
+.btnLoadingSpiner:disabled {
+  filter: brightness(75%);
+  color: transparent;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
   }
 }

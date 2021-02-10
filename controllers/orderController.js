@@ -2,10 +2,12 @@ const moment = require('moment');
 const Order = require('../Model/orderModel');
 const Product = require('../Model/productModel');
 const AllEmail = require('../utils/email');
-const BusinessUser = require('../Model/businessUserModel');
+// const BusinessUser = require('../Model/businessUserModel');
 // const User = require('./../Model/userModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+const BusinessAccount = require('../Model/businessAccount');
+const BusinessUser = require('../Model/businessUserModel');
 
 //Today
 const startToday = moment().startOf('day').toDate(); // set to 12:00 am today
@@ -109,9 +111,12 @@ exports.getAllOrders = factory.getAll(Order);
 // Sale
 
 exports.salesToday = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
   const salesOrdersToday = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
     createdAt: {
       $gte: startToday,
       $lte: endToday,
@@ -136,10 +141,13 @@ exports.salesToday = catchAsync(async (req, res, next) => {
 });
 
 exports.salesThisWeek = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
 
   const salesOrdersWeek = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
     createdAt: {
       $gte: startWeek,
       $lte: endWeek,
@@ -163,9 +171,13 @@ exports.salesThisWeek = catchAsync(async (req, res, next) => {
   });
 });
 exports.salesThisMonth = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
+
   const salesOrdersMonth = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
     createdAt: {
       $gte: startMonth,
       $lte: endMonth,
@@ -190,9 +202,12 @@ exports.salesThisMonth = catchAsync(async (req, res, next) => {
 });
 
 exports.salesLifeTime = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
   const salesOrdersLifeTime = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
   });
 
   const arraySalesLifeTime = [];
@@ -215,9 +230,13 @@ exports.salesLifeTime = catchAsync(async (req, res, next) => {
 // TRANSACTION!!
 
 exports.TransToday = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
+
   const TransOrdersToday = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
     paidAt: {
       $gte: startToday,
@@ -244,9 +263,13 @@ exports.TransToday = catchAsync(async (req, res, next) => {
   });
 });
 exports.TransThisWeek = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
+
   const TransOrdersWeek = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
     paidAt: {
       $gte: startWeek,
@@ -273,9 +296,13 @@ exports.TransThisWeek = catchAsync(async (req, res, next) => {
   });
 });
 exports.TransThisMonth = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
+
   const TransOrdersMonth = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
     paidAt: {
       $gte: startMonth,
@@ -302,9 +329,13 @@ exports.TransThisMonth = catchAsync(async (req, res, next) => {
   });
 });
 exports.TransLifeTime = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.params.businessUserId);
+  const businessUser = await BusinessUser.findById(req.businessUser.id);
+  const businessAccount = await BusinessAccount.findById(
+    businessUser.businessAccount
+  );
+
   const TransOrdersLifeTime = await Order.find({
-    orders: businessUser.orders,
+    _id: businessAccount.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
   });
 

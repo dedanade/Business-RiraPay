@@ -10,9 +10,22 @@ const router = express.Router();
 router.use('/:businessUserId/products', productRouter);
 
 router.post('/signup', authBusinessController.businesssignup);
+router.post(
+  '/addnew',
+  authBusinessController.protectBusiness,
+  authBusinessController.restrictTo('Business Owner', 'Admin'),
+  authBusinessController.addNewBusinessUser
+);
+
 router.post('/login', authBusinessController.businesslogin);
 
 router.get('/logout', authBusinessController.logout);
+router.delete(
+  '/delete/:businessUserId',
+  authBusinessController.protectBusiness,
+  authBusinessController.restrictTo('Business Owner', 'Admin'),
+  BusinessuserController.deleteBusinessUser
+);
 
 router.post('/forgotPassword', authBusinessController.forgotBusinessPassword);
 router.post(
@@ -43,6 +56,12 @@ router.patch(
   authBusinessController.updateBusinessPassword
 );
 router.patch(
+  '/updatebank',
+  authBusinessController.protectBusiness,
+  authBusinessController.restrictTo('Business Owner'),
+  BusinessuserController.updateBusBankAccount
+);
+router.patch(
   '/updateMyBusiness',
   authBusinessController.protectBusiness,
   BusinessuserController.updateMyBusiness
@@ -64,5 +83,9 @@ router
   .get(BusinessuserController.getBusinessUser)
   .patch(BusinessuserController.updateBusinessUser)
   .delete(BusinessuserController.deleteBusinessUser);
+
+router.route('/account').get(BusinessuserController.getAllBusinessAccount);
+
+router.route('/account/:id').get(BusinessuserController.getBusinessAccount);
 
 module.exports = router;

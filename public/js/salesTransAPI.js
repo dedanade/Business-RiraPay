@@ -3,7 +3,6 @@
 import axios from 'axios';
 import { showAlert } from './alert';
 import {
-  salesTransBusinessUserID,
   sumOfSalesResult,
   sumOfTransResult,
   hideSalesLoading,
@@ -14,7 +13,7 @@ export const salesToday = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/salestoday/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/salestoday`,
     });
 
     if (res.data.status === 'success') {
@@ -23,7 +22,9 @@ export const salesToday = async () => {
       hideSalesLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideSalesLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };
 
@@ -31,7 +32,7 @@ export const salesThisWeek = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/salesWeek/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/salesWeek`,
     });
 
     if (res.data.status === 'success') {
@@ -40,14 +41,16 @@ export const salesThisWeek = async () => {
       hideSalesLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideSalesLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };
 export const salesThisMonth = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/salesmonth/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/salesmonth`,
     });
 
     if (res.data.status === 'success') {
@@ -56,7 +59,9 @@ export const salesThisMonth = async () => {
       hideSalesLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideSalesLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };
 
@@ -64,7 +69,7 @@ export const salesLifeTime = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/saleslifetime/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/saleslifetime`,
     });
 
     if (res.data.status === 'success') {
@@ -73,7 +78,9 @@ export const salesLifeTime = async () => {
       hideSalesLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideSalesLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };
 //TRANSACTIONS
@@ -82,7 +89,7 @@ export const transToday = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/transtoday/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/transtoday`,
     });
 
     if (res.data.status === 'success') {
@@ -91,14 +98,16 @@ export const transToday = async () => {
       hideTransLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideTransLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };
 export const transThisWeek = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/transweek/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/transweek`,
     });
 
     if (res.data.status === 'success') {
@@ -107,14 +116,16 @@ export const transThisWeek = async () => {
       hideTransLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideTransLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };
 export const transThisMonth = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/transmonth/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/transmonth`,
     });
 
     if (res.data.status === 'success') {
@@ -123,14 +134,16 @@ export const transThisMonth = async () => {
       hideTransLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideTransLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };
 export const transLifeTime = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/translifetime/${salesTransBusinessUserID}`,
+      url: `/api/v1/orders/translifetime`,
     });
 
     if (res.data.status === 'success') {
@@ -139,6 +152,8 @@ export const transLifeTime = async () => {
       hideTransLoading();
     }
   } catch (err) {
-    showAlert('error', err);
+    hideTransLoading();
+    showAlert('error', 'Unable to check this right now. Try again Later');
+    console.log(err);
   }
 };

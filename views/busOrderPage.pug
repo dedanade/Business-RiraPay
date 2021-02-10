@@ -1,6 +1,7 @@
 extends base
 block Indexcss
 block content
+block script
     
     section
         .larger-container(style='margin-top: 150px;')
@@ -80,7 +81,7 @@ block content
                                 medium.form-text.mt-3.mx-1
                                     | Add tags that stand as a reminder
                                 input#orderid(type='hidden', name='orderid', value= order.id) 
-                                button#checkout1-button.btn.btn-sm.my-2( type='submit') Create Tag
+                                button.btn.rira-color-btn.my-2( type='submit') Create Tag
 
                                 
                     nav
@@ -129,7 +130,7 @@ block content
                                             style='background-color: #01afee; color: white;')
                                                 | Copy Everything
                                         .text-center.my-3
-                                            button#checkout1-button.btn.my-2(data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`) Share on Whatsapp
+                                            button.btn.rira-color-btn.my-2(data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`) Share on Whatsapp
                             #nav-order-details.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='nav-order-tab')
                                 if (order.status === 'Incomplete')
                                     p.mx-3.text-center

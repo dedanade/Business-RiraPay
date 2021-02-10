@@ -11,7 +11,7 @@ block script
             .container
                 .row
                     .col-6
-                        h4= `Hello, ${businessUser.businessName}`
+                        h4= `Hello, ${businessAccount.businessName}`
                         a.mx-1(href='#') View and Edit Profile
                 .col-6
         .container
@@ -63,7 +63,7 @@ block script
                                 ul.list-group
                                         li.d-flex.justify-content-between
                                             h4.d-flex.justify-content-between Latest Orders:
-                                - const busOrder = businessUser.orders;
+                                - const busOrder = businessAccount.orders;
                                 if (busOrder.length)
                                     table.table.table-condensed.table-hover                       
                                         thead
@@ -77,14 +77,12 @@ block script
                                                 th Tags
 
                                         tbody
-                                            each orders in businessUser.orders.reverse().slice(0, 10)
+                                            each orders in businessAccount.orders.reverse().slice(0, 10)
                                                 each product in orders.product
-                                                
+                                                    //- -console.log(orders.product);
 
                                                     -const Date = moment(orders.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a');
                                                     -const orderTotal = orders.total.toLocaleString()
-
-                                                
 
                                                     tr.table-row(style= 'height: 65px' data-href=`/myorder/${product.id}/${orders._id}`)
                                                     
@@ -135,8 +133,7 @@ block script
                                             th Amount
 
                                     tbody
-                                        each product in businessUser.products.reverse().slice(0, 10)
-
+                                        each product in businessAccount.products.reverse().slice(0, 10)
                                             - const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
                                             -const productprice = product.price.toLocaleString()
 
@@ -161,7 +158,7 @@ block script
                     li.d-flex.justify-content-between
                     h4.d-flex.justify-content-between Latest Orders:
                 if (busOrder.length)
-                    each orders in businessUser.orders.slice(0, 10)
+                    each orders in businessAccount.orders.slice(0, 10)
                         each product in orders.product
                             -const orderTotal = orders.total.toLocaleString()
                             -const mobiledate = moment(orders.createdAt).format('DD/MMM/YY');
@@ -181,23 +178,24 @@ block script
                                         a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= mobiledate
                     .text-center.my-3
                         h6
-                            a#sign-up-button.btn(href=`/mobileorders/${businessUser.id}`) View All orders
+                            button.btn.btn-lg.rira-color-btn(href=`/mobileorders`) View all orders
+
                 if (!busOrder.length)
                     .text-center
                         p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
                     .text-center
-                        a#sign-up-button.btn(href='/createproduct') Create your first Product
+                        a.rira-color-btn.btn(href='/createproduct') Create your first Product
 
 
         section(style = 'margin-top: 150px;')
             .small-container
-                - const busproducts = businessUser.products;
+                - const busproducts = businessAccount.products;
                 if (busproducts.length)
                     ul.list-group.my-4
                         li.d-flex.justify-content-between
                             h4.d-flex.justify-content-between Latest Product:
-                            a#sign-up-button.btn(href='/createproduct') Create New Product
-                    each product in businessUser.products.slice(0, 10)
+                            a.rira-color-btn.btn(href='/createproduct') Create New Product
+                    each product in businessAccount.products.slice(0, 10)
                         -const productprice = product.price.toLocaleString()
                         - const mobiledate = moment(product.date).format('DD/MMM/YY');
 
@@ -216,11 +214,12 @@ block script
                                     a(target='_blank' href=`/myproduct/${product.slug}/${product._id}`)= mobiledate
                     .text-center.my-3
                         h6
-                            a#sign-up-button.btn(href='/allproducts') View All Products
+                            a.rira-color-btn.btn(href='/allproducts') View All Products
                 if (!busproducts.length)
                     .text-center
                         p.mt-2(style='font-size: 1.2rem;') Create your first product and share to your social media buyers
                     .text-center
-                        a#sign-up-button.btn(href='/createproduct') Create your first Product
+                        a.rira-color-btn.btn(href='/createproduct') Create your first Product
             
-            input#salesTransBusinessUserID(type="text", hidden="", value=`${businessUser.id}`)
+            input#salesTransBusinessAccountID(type="text", hidden="", value=`${businessAccount.id}`)
+            

@@ -2,13 +2,15 @@
 
 import axios from 'axios';
 import { showAlert } from './alert';
-import { busToken, salesTransBusinessUserID } from './index';
+import { salesTransBusinessUserID, stopLoadingBtnSpinner } from './index';
 
 export const busSignup = async (
   businessName,
+  fullName,
   businessEmail,
   businessPhoneNumber,
-  businessPassword
+  businessPassword,
+  submitButton
 ) => {
   try {
     const res = await axios({
@@ -16,6 +18,7 @@ export const busSignup = async (
       url: '/api/v1/businessUsers/signup',
       data: {
         businessName,
+        fullName,
         businessEmail,
         businessPhoneNumber,
         businessPassword,
@@ -23,13 +26,52 @@ export const busSignup = async (
     });
 
     if (res.data.status === 'success') {
+      console.log('successsss');
       showAlert('success', 'Signup Successfully!');
       window.setTimeout(() => {
         location.assign('/dashboard');
       }, 1500);
     }
   } catch (err) {
-    showAlert('error', err.response.data.message);
+    if (err.response.data.error._message) {
+      if (
+        err.response.data.error._message ===
+          'BusinessAccount validation failed' ||
+        'BusinessUser validation failed'
+      ) {
+        const dataErrors = err.response.data.error.errors;
+        const rawErrorMsg = {};
+        const keys = Object.keys(dataErrors);
+
+        keys.forEach((key) => {
+          let message = dataErrors[key].message;
+
+          if (
+            dataErrors[key].properties &&
+            dataErrors[key].properties.message
+          ) {
+            message = dataErrors[key].properties.message.replace(
+              '`{PATH}`',
+              key
+            );
+          }
+
+          message = message.replace('Path ', '').replace(key, '').trim();
+          rawErrorMsg[key] = message;
+        });
+
+        var validationErrorMessage = [];
+
+        for (const [key, value] of Object.entries(rawErrorMsg)) {
+          validationErrorMessage.push(value);
+        }
+        showAlert('error', validationErrorMessage);
+        stopLoadingBtnSpinner(submitButton);
+      }
+    } else {
+      showAlert('error', err.response.data.message);
+      stopLoadingBtnSpinner(submitButton);
+    }
   }
 };
 
@@ -56,7 +98,7 @@ export const busForgotPassword = async (businessEmail) => {
   }
 };
 
-export const busResetPassword = async (businessPassword) => {
+export const busResetPassword = async (businessPassword, busToken) => {
   try {
     const res = await axios({
       method: 'POST',
@@ -90,6 +132,55 @@ export const busSendVerifyEmail = async () => {
     }
   } catch (err) {
     showAlert('error', 'Unable to Send Email. Kindly Retry');
+    console.log(err);
+  }
+};
+
+export const addNewBus = async (
+  fullName,
+  businessEmail,
+  businessPassword,
+  role,
+  submitButton
+) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: '/api/v1/businessUsers/addnew',
+      data: {
+        fullName,
+        businessEmail,
+        businessPassword,
+        role,
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Signup Successfully!');
+      window.setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }
+  } catch (err) {
+    stopLoadingBtnSpinner(submitButton);
+    showAlert('error', err.response.data.message);
+  }
+};
+
+export const removeBusMember = async (remove_businessID) => {
+  try {
+    const res = await axios({
+      method: 'DELETE',
+      url: `/api/v1/businessUsers/delete/${remove_businessID}`,
+    });
+    if (res.data.status === 'success') {
+      showAlert('success', `Member Removed`);
+      window.setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', 'Unable remove Member. Kindly Retry');
     console.log(err);
   }
 };

@@ -22,7 +22,7 @@ block content
                                         th Amount
 
                                 tbody
-                                    each product in businessUser.products
+                                    each product in businessAccount.products
                                         -const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
                                         -const productprice = product.price.toLocaleString()
 

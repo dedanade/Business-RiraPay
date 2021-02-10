@@ -8,7 +8,7 @@ const htmlToText = require('html-to-text');
 class BusEmail {
   constructor(busUser, url) {
     this.to = busUser.businessEmail;
-    this.businessName = busUser.businessName;
+    this.fullName = busUser.fullName;
     this.url = url;
     this.from = `RiraPay for Business <${process.env.BUSEMAIL_FROM}>`;
   }
@@ -38,7 +38,7 @@ class BusEmail {
   async send(template, subject) {
     // 1) Render HTML based on a pug template
     const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
-      businessName: this.businessName,
+      fullName: this.fullName,
       url: this.url,
       subject,
     });

@@ -58,7 +58,7 @@ html
 
     block script
       script.
-        pixel= #{businessUser.facebookPixelId}
+        pixel= #{businessAccount.facebookPixelId}
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
         n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -83,7 +83,7 @@ html
     // Optional JavaScript
     //- script(src= '/js/dashBoard.js')
     script(src= '/js/bundle.js')
-    script(src= '/js/bootstrap-tagsinput.js')
+    script( src= '/js/bootstrap-tagsinput.js')
     script(src='https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js')
 
     // jQuery first, then Popper.js, then Bootstrap JS

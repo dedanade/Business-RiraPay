@@ -2,8 +2,13 @@
 
 import axios from 'axios';
 import { showAlert } from './alert';
+import { stopLoadingBtnSpinner } from './index';
 
-export const busLogin = async (businessEmail, businessPassword) => {
+export const busLogin = async (
+  businessEmail,
+  businessPassword,
+  submitButton
+) => {
   try {
     const res = await axios({
       method: 'POST',
@@ -21,6 +26,7 @@ export const busLogin = async (businessEmail, businessPassword) => {
       }, 1500);
     }
   } catch (err) {
+    stopLoadingBtnSpinner(submitButton);
     showAlert('error', err.response.data.message);
   }
 };

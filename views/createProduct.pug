@@ -106,7 +106,7 @@ block script
                         #createproduct-fbpixelaccord.collapse
                             .row.mx-3.my-2
                                 .col
-                                    input#product-pixel-id.form-control( type='Number', value=businessUser.facebookPixelId, placeholder='Pixel ID' )
+                                    input#product-pixel-id.form-control( type='Number', value=businessAccount.facebookPixelId, placeholder='Pixel ID' )
                             .row.mx-3.my-2
                                 .col
                                     select#product-pixel-currency.form-control
@@ -116,14 +116,14 @@ block script
                                         option( value='EUR') EUR
                             .row.mx-3.my-2
                                 .col
-                                    input#product-pixel-value.form-control( type='Number', value=businessUser.facebookValue, placeholder='Value')                 
+                                    input#product-pixel-value.form-control( type='Number', value=businessAccount.facebookValue, placeholder='Value')                 
                 .row.mx-3.mb-5.mt-4
                     .col.ml-3(style = 'font-size: 1rem')
                         input#cod_Check_Option.form-check-input(type='checkbox')
                         | I don't want COD option
 
                 .text-center
-                    button#sign-up-button.btn.btn-lg.my-1.mx-auto.d-block(type='submit') Create Product
+                    button.rira-color-btn.btn.btn-lg.my-1.mx-auto.d-block(type='submit') Create Product
                 
 
             //- script.

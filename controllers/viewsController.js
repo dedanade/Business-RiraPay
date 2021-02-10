@@ -2,6 +2,7 @@ const moment = require('moment');
 // const newEscape = require('escape-html');
 const Product = require('../Model/productModel');
 const BusinessUser = require('../Model/businessUserModel');
+const BusinessAccount = require('../Model/businessAccount');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Cart = require('../Model/cart');
@@ -10,7 +11,12 @@ const Order = require('../Model/orderModel');
 exports.getBusDashboard = catchAsync(async (req, res, next) => {
   const businessUser = await BusinessUser.findById({
     _id: req.businessUser.id,
-  }).populate('orders');
+  });
+
+  const businessAccount = await BusinessAccount.findOne(
+    businessUser.businessAccount
+  ).populate('orders');
+
   const product = await Product.find();
 
   const orders = await Order.find();
@@ -24,7 +30,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
 
   // Sales Today Calculation
   const salesorders = await Order.find({
-    _id: businessUser.orders,
+    _id: businessAccount.orders,
     createdAt: {
       $gte: startToday,
       $lte: endToday,
@@ -43,7 +49,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
   // Transactions Today
 
   const transactionToday = await Order.find({
-    _id: businessUser.orders,
+    _id: businessAccount.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
     paidAt: {
       $gte: startToday,
@@ -68,6 +74,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     orders,
     cart,
     businessUser,
+    businessAccount,
     salesToday: sumOfCartSalesToday,
     transToday: sumOfcartTranToday,
   });
@@ -106,24 +113,42 @@ exports.busSignup = catchAsync(async (req, res, next) => {
 });
 
 exports.createProduct = catchAsync(async (req, res, next) => {
+  const businessUser = await BusinessUser.findById({
+    _id: req.businessUser.id,
+  });
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
+  });
   res.status(200).render('createProduct', {
     title: 'Create a new Product',
+    businessAccount,
   });
 });
 
 exports.allProducts = catchAsync(async (req, res, next) => {
+  const businessUser = await BusinessUser.findById({
+    _id: req.businessUser.id,
+  });
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
+  }).populate('orders');
   res.status(200).render('allProducts', {
     title: 'All Products',
+    businessAccount,
   });
 });
 
 exports.allBusOrders = catchAsync(async (req, res, next) => {
   const businessUser = await BusinessUser.findById({
     _id: req.businessUser.id,
+  });
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
   }).populate('orders');
+
   res.status(200).render('allbusorders', {
     title: 'All Orders',
-    businessUser,
+    businessAccount,
   });
 });
 
@@ -131,9 +156,13 @@ exports.busSettings = catchAsync(async (req, res, next) => {
   const businessUser = await BusinessUser.findById({
     _id: req.businessUser.id,
   });
+
+  const businessAccount = await BusinessAccount.findOne(
+    businessUser.businessAccount
+  );
   res.status(200).render('busSettings', {
     title: `Settings| ${businessUser.businessName}`,
-    businessUser,
+    businessAccount,
   });
 });
 
@@ -143,7 +172,11 @@ exports.getMyProduct = catchAsync(async (req, res, next) => {
   });
   const businessUser = await BusinessUser.findOne({
     _id: req.businessUser.id,
-  }).populate('orders');
+  });
+
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
+  });
 
   const protocol = `${req.protocol}://${req.get('host')}`;
 
@@ -156,7 +189,7 @@ exports.getMyProduct = catchAsync(async (req, res, next) => {
   res.status(200).render('getMyProduct', {
     title: `${product.productName}`,
     product,
-    businessUser,
+    businessAccount,
     protocol,
   });
 });
@@ -186,6 +219,10 @@ exports.getMyorder = catchAsync(async (req, res, next) => {
   });
   const businessUser = await BusinessUser.findOne({
     _id: req.businessUser.id,
+  });
+
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
   }).populate('orders');
 
   const order = await Order.findOne({ _id: req.params.orderId });
@@ -196,7 +233,7 @@ exports.getMyorder = catchAsync(async (req, res, next) => {
   }
 
   res.status(200).render('busOrderPage', {
-    title: `OrderPage | ${businessUser.businessName}`,
+    title: `OrderPage | ${businessAccount.businessName}`,
     product,
     businessUser,
     order,
@@ -205,44 +242,26 @@ exports.getMyorder = catchAsync(async (req, res, next) => {
 });
 
 exports.purchasePixel = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById({
-    _id: req.params.businessUserId,
+  const businessAccount = await BusinessAccount.findById({
+    _id: req.params.businessAccountId,
   });
 
   res.status(200).render('purchasePixel', {
     title: 'Check purchase Pixel',
-    businessUser,
+    businessAccount,
   });
 });
 
-exports.OrdersPage = catchAsync(async (req, res, next) => {
+exports.mobileOrdersPage = catchAsync(async (req, res, next) => {
   const businessUser = await BusinessUser.findById({
-    _id: req.params.businessUserId,
-  }).populate('orders');
-  const product = await Product.find();
-
-  const orders = await Order.find();
-
-  res.status(200).render('mobileOrders', {
-    title: 'Check purchase Pixel',
-    businessUser,
-    product,
-    orders,
+    _id: req.businessUser.id,
   });
-});
-
-exports.OrdersPage = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById({
-    _id: req.params.businessUserId,
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
   }).populate('orders');
-  const product = await Product.find();
-
-  const orders = await Order.find();
 
   res.status(200).render('mobileOrders', {
     title: 'Check purchase Pixel',
-    businessUser,
-    product,
-    orders,
+    businessAccount,
   });
 });

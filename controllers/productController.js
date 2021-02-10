@@ -1,17 +1,21 @@
 const Product = require('../Model/productModel');
+const BusinessUser = require('../Model/businessUserModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
 exports.createNewProduct = catchAsync(async (req, res, next) => {
-  if (!req.body.businessUser) req.body.businessUser = req.businessUser.id;
+  const businessUser = await BusinessUser.findById({
+    _id: req.businessUser.id,
+  });
+  const businessAccountID = businessUser.businessAccount;
+
+  if (!req.body.businessAccount) req.body.businessAccount = businessAccountID;
 
   const newProduct = await Product.create(req.body);
 
   res.status(201).json({
     status: 'success',
-    data: {
-      newProduct,
-    },
+    data: { newProduct },
   });
 });
 

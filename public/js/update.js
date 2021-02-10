@@ -2,12 +2,13 @@
 
 import axios from 'axios';
 import { showAlert } from './alert';
-import { orderId, DelOrderId, productId } from './index';
+import { stopLoadingBtnSpinner } from './index';
 
 export const updatePixel = async (
   facebookPixelId,
   facebookCurrency,
-  facebookValue
+  facebookValue,
+  submitButton
 ) => {
   try {
     const res = await axios({
@@ -20,6 +21,7 @@ export const updatePixel = async (
       },
     });
     if (res.data.status === 'success') {
+      stopLoadingBtnSpinner(submitButton);
       showAlert(
         'success',
         'Your Pixel has been Updated. Refresh this page and check your facebook pixel Helper Extention'
@@ -29,12 +31,13 @@ export const updatePixel = async (
       }, 1500);
     }
   } catch (err) {
+    stopLoadingBtnSpinner(submitButton);
     showAlert('success', 'Something is wrong somewhere. Try again later');
     console.log(err.response.data.message);
   }
 };
 
-export const updateTags = async (tags) => {
+export const updateTags = async (tags, orderId, submitButton) => {
   try {
     const res = await axios({
       method: 'PATCH',
@@ -45,13 +48,15 @@ export const updateTags = async (tags) => {
     });
 
     if (res.data.status === 'success') {
+      stopLoadingBtnSpinner(submitButton);
       showAlert('success', 'Tags Created');
       window.setTimeout(() => {
         location.reload();
       }, 1500);
     }
   } catch (err) {
-    showAlert('error', err.response.data.message);
+    showAlert('error', 'Unable to update tags. Try again');
+    console.log(err);
   }
 };
 
@@ -124,7 +129,9 @@ export const updateProduct = async (
   promoPriceQty,
   facebookPixelId,
   facebookCurrency,
-  facebookValue
+  facebookValue,
+  productId,
+  submitButton
 ) => {
   try {
     const res = await axios({
@@ -150,11 +157,13 @@ export const updateProduct = async (
     const updateproductid = res.data.data.data._id;
     if (res.data.status === 'success') {
       showAlert('success', 'Product Updated!');
+      stopLoadingBtnSpinner(submitButton);
       window.setTimeout(() => {
         location.assign(`/myproduct/${productSlug}/${updateproductid}`);
       }, 1500);
     }
   } catch (err) {
+    stopLoadingBtnSpinner(submitButton);
     showAlert(
       'error',
       'Opps! Unable to update product. Try again later. If the error persist, kindly contact us ASAP'
@@ -163,17 +172,15 @@ export const updateProduct = async (
   }
 };
 
-export const updateDelivery = async (getupdatedorder) => {
+export const updateDelivery = async (DelOrderId) => {
   try {
     const res = await axios({
       method: 'GET',
       url: `/api/v1/orders/deliver/${DelOrderId}`,
-      data: {
-        getupdatedorder,
-      },
     });
 
     if (res.data.status === 'success') {
+      // stopLoadingBtnSpinner(submitButton);
       showAlert('success', 'Order has been marked as Delivered');
       window.setTimeout(() => {
         location.reload();

@@ -1,10 +1,12 @@
 /* eslint-disable */
 import { createProduct } from './create';
 import { updateProduct } from './update';
+import { loadingBtnSpinner } from './index';
 
 export const createProductInput = (e) => {
   e.preventDefault();
 
+  const submitButton = e.submitter;
   const productName = document.getElementById('productName').value;
   const price = document.getElementById('productPrice').value || 0;
   const stock = document.getElementById('productStock').value;
@@ -37,27 +39,32 @@ export const createProductInput = (e) => {
   }
   if (price > 0 && promoPriceQty.split(',')[0] != '0 = 0 Naira') {
     alert(`You can't use one Price and Varient at the same time`);
+    return false;
   } else if (price === 0 && promoPriceQty.split(',')[0] === '0 = 0 Naira') {
     alert(`Kindly use one of the pricing type. The two options can't be empty`);
-  } else
-    createProduct(
-      productName,
-      price,
-      stock,
-      additionalInfo,
-      discount,
-      codOption,
-      colours,
-      sizes,
-      promoPriceQty,
-      facebookPixelId,
-      facebookCurrency,
-      facebookValue
-    );
+    return false;
+  } else loadingBtnSpinner(submitButton);
+
+  createProduct(
+    productName,
+    price,
+    stock,
+    additionalInfo,
+    discount,
+    codOption,
+    colours,
+    sizes,
+    promoPriceQty,
+    facebookPixelId,
+    facebookCurrency,
+    facebookValue,
+    submitButton
+  );
 };
 
 export const editProductInput = (e) => {
   e.preventDefault();
+  const submitButton = e.submitter;
   const productName = document.getElementById('editproductName').value;
   const editprice = document.getElementById('editproductPrice').value || 0;
   const stock = document.getElementById('editproductStock').value;
@@ -65,6 +72,7 @@ export const editProductInput = (e) => {
   const discount = document.getElementById('editinputDiscount').value;
   const colours = document.getElementById('edit-color-tags').value;
   const sizes = document.getElementById('edit-size-tags').value;
+  const productId = document.getElementById('productId').value;
 
   const promoQty = document.getElementById('editPromoQty').value || 0;
   const promoPrice = document.getElementById('editPromoPrice').value || 0;
@@ -98,22 +106,27 @@ export const editProductInput = (e) => {
   }
   if (editprice > 0 && promoPriceQty.split(',')[0] != '0 = 0 Naira') {
     alert(`You can't use one Price and Varient at the same time`);
+    return false;
   } else if (editprice === 0 && promoPriceQty.split(',')[0] === '0 = 0 Naira') {
     alert(`Kindly use one of the pricing type. The two options can't be empty`);
-  } else
-    updateProduct(
-      productName,
-      editprice,
-      stock,
-      additionalInfo,
-      discount,
-      editCodOption,
-      colours,
-      sizes,
-      promoPriceQty,
-      promoPriceQty,
-      facebookPixelId,
-      facebookCurrency,
-      facebookValue
-    );
+    return false;
+  } else loadingBtnSpinner(submitButton);
+
+  updateProduct(
+    productName,
+    editprice,
+    stock,
+    additionalInfo,
+    discount,
+    editCodOption,
+    colours,
+    sizes,
+    promoPriceQty,
+    promoPriceQty,
+    facebookPixelId,
+    facebookCurrency,
+    facebookValue,
+    productId,
+    submitButton
+  );
 };

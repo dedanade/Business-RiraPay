@@ -6,8 +6,8 @@ block footer
 block content
 
     script.
-        let fbcurrency =!{JSON.stringify(businessUser.facebookCurrency)}
-        value= #{businessUser.facebookValue}
+        let fbcurrency =!{JSON.stringify(businessAccount.facebookCurrency)}
+        value= #{businessAccount.facebookValue}
         fbq('track', 'Purchase', {
         value: `${value}.00`,
         currency: fbcurrency

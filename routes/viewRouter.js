@@ -39,14 +39,22 @@ router.get(
 );
 
 router.get(
+  '/mobileorders',
+  authBusinessController.protectBusiness,
+  viewController.mobileOrdersPage
+);
+
+router.get(
   '/myorder/:productId/:orderId',
   authBusinessController.protectBusiness,
+  authBusinessController.restrictOrderView,
   viewController.getMyorder
 );
 
 router.get(
   '/myproduct/:slug/:productId',
   authBusinessController.protectBusiness,
+  authBusinessController.restrictProductView,
   viewController.getMyProduct
 );
 
@@ -59,12 +67,11 @@ router.get(
 router.get(
   '/edit/:slug/:productId',
   authBusinessController.protectBusiness,
+  authBusinessController.restrictProductView,
   viewController.editProduct
 );
 
-router.get('/purchasepixel/:businessUserId', viewController.purchasePixel);
-
-router.get('/mobileorders/:businessUserId', viewController.OrdersPage);
+router.get('/purchasepixel/:businessAccountId', viewController.purchasePixel);
 
 router.get('/verify-email/:emailtoken', authBusinessController.verifyEmail);
 
