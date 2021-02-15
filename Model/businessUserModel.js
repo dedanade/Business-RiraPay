@@ -24,6 +24,11 @@ const businessUserSchema = new mongoose.Schema({
     minlength: [6, 'Minimum lenght of your password should be 6'],
     select: true,
   },
+  phone: {
+    type: String,
+    minlength: [6, 'Minimum lenght of your password should be 6'],
+    select: true,
+  },
   role: {
     type: String,
     required: [true, 'We need to know your role'],

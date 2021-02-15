@@ -128,6 +128,7 @@ exports.salesToday = catchAsync(async (req, res, next) => {
   salesOrdersToday.forEach((e) => {
     arraySalesToday.push(e.total);
   });
+
   const sumOfCartSalesToday = arraySalesToday
     .reduce((a, b) => a + b, 0)
     .toLocaleString();

@@ -18,7 +18,41 @@ block content
                                 a#pills-bank-account-tab.nav-link.btn.btn-sm(data-toggle='pill', href='#pills-bank-account', role='tab', aria-controls='pills-bank-account', aria-selected='false') Bank Account
                     .col-12
                         #pills-tabContent.tab-content
-                            #pills-profile.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='pills-profile-tab') This is the first tab for people evenenejfur ufjfjfnf fjffufjfjfosos....
+                            #pills-profile.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='pills-profile-tab') 
+                            
+                                form
+                                    .form-group.row
+                                        label.col-4.col-lg-4.col-form-label(for='staticEmail') Email
+                                        .col-8.col-lg-6
+                                            input#staticEmail.form-control-plaintext(type='text', readonly='', value=`${businessUser.businessEmail}`)
+                                    .form-group.row
+                                        label.col-4.col-lg-4.col-form-label(for='inputPassword') Full Name
+                                        .col-8.col-lg-6
+                                            input#inputPassword.form-control(type='text', value=`${businessUser.fullName}`)
+                                    .form-group.row
+                                        label.col-4.col-lg-4.col-form-label(for='inputPassword') Phone Number
+                                        .col-8.col-lg-6
+                                            .input-group
+                                                .input-group-prepend
+                                                .input-group-text +234
+                                                if (businessUser.phone)
+                                                    input#inputPassword.form-control(type='tel', value=`${businessUser.phone}`)
+                                                else
+                                                    input#inputPassword.form-control(type='tel', value=``)
+                                    .form-group.row
+                                        label.col-4.col-lg-4.col-form-label(for='inputPassword') Password
+                                        .col-8.col-lg-6
+                                            button#inputPassword.form-control(type='button', disabled='') Change password
+                                    .form-group.row    
+                                        label.col-4.col-lg-4.col-form-label(for='staticEmail') Role
+                                        .col-8.col-lg-6                                
+                                            input#staticEmail.form-control-plaintext(type='text', readonly='', value=`${businessUser.role}`)
+                                    .text-right
+                                        button.btn.btn-secondary.btn-lg( type='submit' disabled='') Save changes
+
+
+                            
+                            
                             #pills-pixel.tab-pane.fade(role='tabpanel', aria-labelledby='pills-pixel-tab') 
                                 form#business-pixel-form
                                     .form-group.mx-3
