@@ -394,11 +394,29 @@ $('td > a').on('click', function (e) {
   e.stopPropagation();
 });
 
+//COpy Tooltip Notification
+
+$('.clipboard-btn').tooltip({
+  trigger: 'click',
+  placement: 'bottom',
+});
+
+function setTooltip(btn, message) {
+  btn.tooltip('hide').attr('data-original-title', message).tooltip('show');
+}
+
+function hideTooltip(btn) {
+  setTimeout(function () {
+    btn.tooltip('hide');
+  }, 1000);
+}
+
 const clipboard = new ClipboardJS('.clipboard-btn');
 
 clipboard.on('success', function (e) {
-  showAlert('success', 'copied Successfully');
-
+  var btn = $(e.trigger);
+  setTooltip(btn, 'Copied');
+  hideTooltip(btn);
   e.clearSelection();
 });
 
