@@ -19,9 +19,15 @@ block content
                         -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
                         -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
 
+                        if (orders.altPhone)
+                            -var copiedInfo= `Product Name: ${product.productName}\nName: ${orders.name}\nAddress: ${orders.address}\nState: ${orders.state}\nArea: ${orders.area}\nQuantity: ${orders.qty}\nAmount Receiving: ₦${orderTotal}\nPhone Number: ${orders.phone}\nAlternative Number: ${orders.altPhone}`;
+                        else
+                            -var copiedInfo= `Product Name: ${product.productName}\nName: ${orders.name}\nAddress: ${orders.address}\nState: ${orders.state}\nArea: ${orders.area}\nQuantity: ${orders.qty}\nAmount Receiving: ₦${orderTotal}\nPhone Number: ${orders.phone}`;
+
+
                         .mini-table(data-href=`/myorder/${product.id}/${orders._id}`)
-                            .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top.border-bottom
-                                .col-9
+                            .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top
+                                .col-8
                                     p.m-0 
                                         a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)
                                             b= `₦${orderTotal}`
@@ -30,13 +36,27 @@ block content
                                     
                                     p.m-0 
                                         a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtProductName
-                                .col-3
+                                .col-4
                                     p.m-0 
                                         a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= orders.status
+                                        
                                     p.m-0 
                                         a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= mobiledate
                                     p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderState
+                                       a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderState
+                        .row.border-bottom(style='font-weight: 500;')
+                            .col-3
+                                .ml-5
+                                    a(style='color: black;' href=`tel:${orders.phone}`) 
+                                        i.lni.lni-phone
+                            .col-3
+                                .ml-5
+                                    button( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                        i.far.fa-share-square
+                            .col-3
+                                .ml-5
+                                    button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
+                                        i.far.fa-copy
                 .text-center.my-3
                     h6
                         a.rira-color-btn.btn(href='/allorders') View All orders in Descktop View

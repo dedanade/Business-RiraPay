@@ -18,36 +18,102 @@ block content
                                         th Date
                                         th Product Name
                                         th Status
+                                        th Order No
                                         th Customer
                                         th State
+                                        th Phone
                                         th Amount
                                         th Tags
+                                        th Action
 
                                 tbody
                                     each orders in businessAccount.orders
                                         each product in orders.product
 
-                                                -const Date = moment(orders.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a');
-                                                -const orderTotal = orders.total.toLocaleString()                                                    
+                                                -const ordersDate = moment(orders.createdAt).format('dddd, DD/MMM/YY, h:mma');
+                                                -const orderTotal = orders.total.toLocaleString()
+                                                -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
+                                                -const shtOrderName = orders.name.split(" ").splice(0,2).join(" ")
+                                                -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
+                                                -const tags = orders.tags.join(",");
+                                                -var OrderId = orders.id;
 
-                                                    tr.table-row(style= 'height: 65px' data-href=`/myorder/${product.id}/${orders._id}`)
+                                                if (orders.altPhone)
+                                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${orders.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}\n\nAlternative Number: ${orders.altPhone}`;
+                                                else
+                                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${orders.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}`;
+
+
+
+                                                    tr.table-row(style= 'height: 65px')
                                                     
                                                         td
-                                                            a(href=`/myorder/${product.id}/${orders._id}`)=Date
+                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=ordersDate
                                                                                                 
                                                         td
-                                                            a(href=`/myorder/${product.id}/${orders._id}`)= product.productName
+                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)= shtProductName
                                                         td
-                                                            a(href=`/myorder/${product.id}/${orders._id}`)= orders.status
+                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)= orders.status
                                                         td
-                                                            a(href=`/myorder/${product.id}/${orders._id}`)=orders.name
+                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)= orders.orderNum
                                                         td
-                                                            a(href=`/myorder/${product.id}/${orders._id}`)=orders.state
+                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=shtOrderName
                                                         td
-                                                            a(href=`/myorder/${product.id}/${orders._id}`)=`₦${orderTotal}`
-                                                        td(colspan='2')
-                                                            a(href=`/myorder/${product.id}/${orders._id}`)=orders.tags
+                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=shtOrderState
+                                                        td
+                                                            a.py-3(style='color: #007bff;' onmouseover="mouseover()" onmouseout="mouseout()" name='orderPhonea' href=`tel:${orders.phone}`)= orders.phone
+                                                        td
+                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=`₦${orderTotal}`
+                                                        td
+                                                            .tag-edit-btn(style='position: relative;')
+                                                                button( id = `${orders.id}` style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
+                                                                    i.lni.lni-pencil(id = `${orders.id}`)
+                                                            a(id=`p-order-tags-${orders.id}` style='font-size: 1rem;')=orders.tags
+
+                                                            form(id=`order-form-tags-${orders.id}` style='font-size: 1rem; display: none;')
+                                                                input.form-control( id=`order-tags-${orders.id}` type='text', value=tags data-role='tagsinput',)
+                                                                input(id=`tags-orderId-${orders.id}` type='hidden', name='orderid', value= orders.id)
+                                                                
+                                                                button.btn.btn-secondary.my-2.mr-2(id=`tags-${orders.id}` type='button' onclick="removetaginput()") cancel
+                                                                button.btn.rira-color-btn.my-2(type='submit') save
+
+                                                        td
+                                                            .d-flex
+                                                                button(style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                                                    i.far.fa-share-square
+                                                                button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
+                                                                    i.far.fa-copy
 
                             //- .text-center.mb-3
                             //-     h6
                             //-         a(href='/allbusorders') View All orders
+
+        script.
+            function mouseover(e){
+                if (!e) var e = window.event;
+                var target = e.target || e.srcElement;
+                target.style.textDecoration= 'underline';
+            //-  document.getElementsByName('orderPhonea').style.color = 'red'
+             }
+            function mouseout (){
+            if (!e) var e = window.event;
+                var target = e.target || e.srcElement;
+                target.style.textDecoration= 'none';
+            }
+            function showtaginput (){
+            if (!e) var e = window.event;
+            var target = e.target || e.srcElement;
+             const tagInput = document.getElementById(`order-form-tags-${target.id}`)
+             const tagP = document.getElementById(`p-order-tags-${target.id}`)
+                tagP.style.display = 'none';
+              tagInput.style.display = 'block';
+            }
+            function removetaginput (){
+            if (!e) var e = window.event;
+            var target = e.target || e.srcElement;
+             const tagInput = document.getElementById(`order-form-${target.id}`)
+             const tagP = document.getElementById(`p-order-${target.id}`)
+                tagP.style.display = 'block';
+              tagInput.style.display = 'none';
+            }
+            

@@ -38,6 +38,12 @@ export const remove_member_businessID = (
   document.getElementById('remove-member-businessID') || {}
 ).value;
 
+// function mouseover(){
+//   for (var e = document.getElementsByName('a')){
+
+//   }
+// };
+
 const busloginForm = document.querySelector('.bus-login-form');
 
 const logoutBus = document.querySelector('.logout_bus_btn');
@@ -388,7 +394,7 @@ $('td > a').on('click', function (e) {
   e.stopPropagation();
 });
 
-const clipboard = new ClipboardJS('.btn');
+const clipboard = new ClipboardJS('.clipboard-btn');
 
 clipboard.on('success', function (e) {
   showAlert('success', 'copied Successfully');
@@ -401,7 +407,7 @@ clipboard.on('error', function (e) {
 });
 
 $(document).ready(function () {
-  $.fn.dataTable.moment('dddd, MMMM Do YYYY, h:mm:ss a');
+  $.fn.dataTable.moment('dddd, DD/MMM/YY, h:mma');
   $('#all-table').DataTable({
     paging: true,
     ordering: true,

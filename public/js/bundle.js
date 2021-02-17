@@ -10409,7 +10409,11 @@ var sumOfSalesResult = document.getElementById('sumOfSalesResult');
 exports.sumOfSalesResult = sumOfSalesResult;
 var sumOfTransResult = document.getElementById('sumOfTransResult');
 exports.sumOfTransResult = sumOfTransResult;
-var remove_member_businessID = (document.getElementById('remove-member-businessID') || {}).value;
+var remove_member_businessID = (document.getElementById('remove-member-businessID') || {}).value; // function mouseover(){
+//   for (var e = document.getElementsByName('a')){
+//   }
+// };
+
 exports.remove_member_businessID = remove_member_businessID;
 var busloginForm = document.querySelector('.bus-login-form');
 var logoutBus = document.querySelector('.logout_bus_btn');
@@ -10684,7 +10688,7 @@ $('tr[data-href]').on('click', function () {
 $('td > a').on('click', function (e) {
   e.stopPropagation();
 });
-var clipboard = new ClipboardJS('.btn');
+var clipboard = new ClipboardJS('.clipboard-btn');
 clipboard.on('success', function (e) {
   (0, _alert.showAlert)('success', 'copied Successfully');
   e.clearSelection();
@@ -10693,7 +10697,7 @@ clipboard.on('error', function (e) {
   (0, _alert.showAlert)('error', 'Unable to Copy, try again later');
 });
 $(document).ready(function () {
-  $.fn.dataTable.moment('dddd, MMMM Do YYYY, h:mm:ss a');
+  $.fn.dataTable.moment('dddd, DD/MMM/YY, h:mma');
   $('#all-table').DataTable({
     paging: true,
     ordering: true,
@@ -10749,7 +10753,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58603" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64367" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

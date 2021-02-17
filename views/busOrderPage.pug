@@ -126,7 +126,7 @@ block script
                                             -var copiedInfo= `Product Name: ${product.productName}\nName: ${order.name}\nAddress: ${order.address}\nState: ${order.state}\nArea: ${order.area}\nQuantity: ${order.qty}\nAmount Receiving: ₦${ordertotal}\nPhone Number: ${order.phone}`;
                                             
                                         .text-center
-                                            button.btn(data-clipboard-text=`${copiedInfo}`
+                                            button.clipboard-btn(data-clipboard-text=`${copiedInfo}`
                                             style='background-color: #01afee; color: white;')
                                                 | Copy Everything
                                         .text-center.my-3

@@ -158,27 +158,55 @@ block script
                     li.d-flex.justify-content-between
                     h4.d-flex.justify-content-between Latest Orders:
                 if (busOrder.length)
-                    each orders in businessAccount.orders.slice(0, 10)
+                    each orders in businessAccount.orders.slice(0, 13)
                         each product in orders.product
                             -const orderTotal = orders.total.toLocaleString()
-                            -const mobiledate = moment(orders.createdAt).format('DD/MMM/YY');
+                            -const mobiledate = moment(orders.createdAt).format('MMM DD');
+                            -const shtOrderName = orders.name.split(" ").splice(0,2).join(" ")
+                            -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
+                            -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
+
+                            if (orders.altPhone)
+                                -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${orders.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}\n\nAlternative Number: ${orders.altPhone}`;
+                            else
+                                -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${orders.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}`;
+
 
                             .mini-table(data-href=`/myorder/${product.id}/${orders._id}`)
-                                .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top.border-bottom
-                                    .col-9
+                                .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top
+                                    .col-8
                                         p.m-0 
                                             a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)
                                                 b= `₦${orderTotal}`
                                         p.m-0 
-                                            a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= orders.name
-                                    .col-3
+                                            a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderName
+                                        
                                         p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= orders.status
+                                            a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtProductName
+                                    .col-4
                                         p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= mobiledate
+                                            a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= orders.status
+                                            
+                                        p.m-0 
+                                            a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= mobiledate
+                                        p.m-0 
+                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderState
+                            .row.border-bottom(style='font-weight: 500;')
+                                .col-3
+                                    .ml-5
+                                        a(style='color: black;' href=`tel:${orders.phone}`) 
+                                            i.lni.lni-phone
+                                .col-3
+                                    .ml-5
+                                        button( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                            i.far.fa-share-square
+                                .col-3
+                                    .ml-5
+                                        button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
+                                            i.far.fa-copy
                     .text-center.my-3
                         h6
-                            button.btn.btn-lg.rira-color-btn(href=`/mobileorders`) View all orders
+                            a.btn.btn-lg.rira-color-btn(href='/mobileorders') View all orders
 
                 if (!busOrder.length)
                     .text-center
