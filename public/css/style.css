@@ -78,6 +78,12 @@ h6 {
   color: black;
   text-decoration: none;
 }
+.call-orders-number:focus {
+  outline: 2px solid #01afee;
+}
+button:focus {
+  outline: 2px solid #01afee;
+}
 
 #dropdownbtn a:hover {
   cursor: pointer;

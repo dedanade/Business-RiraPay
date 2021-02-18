@@ -291,6 +291,22 @@ if (tagsForm)
     updateTags(tags, orderId, submitButton);
   });
 
+$('.create-tags-pencil').on('click', function (e) {
+  const target = e.target || e.srcElement;
+  const orderId = target.id;
+  const allOrdersTagsForm = document.getElementById(
+    `order-form-tags-${orderId}`
+  );
+  allOrdersTagsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    console.log(e);
+    const tags = document.getElementById(`input-order-tags-${orderId}`).value;
+    const submitButton = e.submitter;
+    loadingBtnSpinner(submitButton);
+    updateTags(tags, orderId, submitButton);
+  });
+});
+
 if (updateForm)
   updateForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -433,6 +449,7 @@ $(document).ready(function () {
     searching: true,
     order: [0, 'desc'],
     bInfo: true,
+    stateSave: true,
   });
 });
 

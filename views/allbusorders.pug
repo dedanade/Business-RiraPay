@@ -66,16 +66,15 @@ block content
                                                             a.py-3(href=`/myorder/${product.id}/${orders._id}`)=`₦${orderTotal}`
                                                         td
                                                             .tag-edit-btn(style='position: relative;')
-                                                                button( id = `${orders.id}` style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
+                                                                button( id = `${orders.id}` class='create-tags-pencil' style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
                                                                     i.lni.lni-pencil(id = `${orders.id}`)
                                                             a(id=`p-order-tags-${orders.id}` style='font-size: 1rem;')=orders.tags
 
-                                                            form(id=`order-form-tags-${orders.id}` style='font-size: 1rem; display: none;')
-                                                                input.form-control( id=`order-tags-${orders.id}` type='text', value=tags data-role='tagsinput',)
-                                                                input(id=`tags-orderId-${orders.id}` type='hidden', name='orderid', value= orders.id)
-                                                                
-                                                                button.btn.btn-secondary.my-2.mr-2(id=`tags-${orders.id}` type='button' onclick="removetaginput()") cancel
-                                                                button.btn.rira-color-btn.my-2(type='submit') save
+                                                            form(class='allorders-tags-form' id=`order-form-tags-${orders.id}` style='font-size: 1rem; display: none;')
+                                                                input.form-control( id=`input-order-tags-${orders.id}` type='text', value=tags data-role='tagsinput')
+                                                        
+                                                                button.btn.rira-color-btn.my-2.mr-2(type='submit') save
+                                                                button.btn.btn-secondary.my-2(id=`tags-${orders.id}` type='button' onclick="removetaginput()") cancel
 
                                                         td
                                                             .d-flex
