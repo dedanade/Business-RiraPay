@@ -58,7 +58,7 @@ block content
                             .d-flex.mx-2.my-3
                                 p.font-weight-bold Product link
                                 .mx-2
-                                    button.clipboard-btn(data-clipboard-text=`https://rirapay.com/buy/${product.slug}/${product.id}`, style='background-color: #01afee; color: white;')
+                                    button.clipboard-btn.btn.rira-color-btn(data-clipboard-text=`https://rirapay.com/buy/${product.slug}/${product.id}`, style='background-color: #01afee; color: white;')
                                         | Copy Link
                                     a(href= `https://rirapay.com/buy/${product.slug}/${product.id}` target="_blank")
                                         input.btn.ml-1( type='button' value='Preview' style='background-color: #01afee; color: white;')
@@ -68,7 +68,7 @@ block content
                                     .mx-2.w-100.h-50
                                         textarea#embedCodeTextArea.form-control.ml-1(type='text' readonly='' style= 'width: 100%; height: 200px;' onclick='this.focus();this.select()')=embedCode
                                 .text-center
-                                    button.clipboard-btn(data-clipboard-text=embedCode, style='background-color: #01afee; color: white;')
+                                    button.clipboard-btn.btn.rira-color-btn(data-clipboard-text=embedCode, style='background-color: #01afee; color: white;')
                                         | Copy Embed Code
                         h6.text-center.py-3
                             a(href=`/edit/${product.slug}/${product._id}`) Edit Product

@@ -17,6 +17,11 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     businessUser.businessAccount
   ).populate('orders');
 
+  const busAccountOrders = await Order.find({ _id: businessAccount.orders })
+    .sort({ _id: -1 })
+    .limit(15);
+
+  console.log(busAccountOrders);
   const product = await Product.find();
 
   const orders = await Order.find();
@@ -73,6 +78,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     product,
     orders,
     cart,
+    busAccountOrders,
     businessUser,
     businessAccount,
     salesToday: sumOfCartSalesToday,
