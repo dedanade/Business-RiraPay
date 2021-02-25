@@ -12,8 +12,8 @@ block script
                         a.rira-color-btn.btn(href='/allorders') Desktop Mode
             form.form-inline.justify-content-center(action=`` method="GET")
                 label.sr-only(for='inlineFormInputName2') Name
-                input#inlineFormInputName2.form-control.mb-2.mr-sm-2(type='text', name='search' placeholder='Searh Orders')
-                button.btn.btn-primary.mb-2(type='submit') Search
+                input#inlineFormInputName2.form-control.mb-2.mr-sm-2(type='text', name='search' placeholder='Search Orders' required='')
+                button.btn.rira-color-btn.mb-2(type='submit') Search
             if (orders.length)
                 each order in orders
                     each product in order.product
@@ -51,10 +51,10 @@ block script
                                     p.m-0 
                                        a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= shtOrderState
                         
-                            div(id =`p-order-tags-${order._id}` class='row no-gutters dflex mx-2' style='font-size: 1rem;')
-                                if (orderTags.length)                             
-                                    b.m-0 Tags:
-                                    p.m-0.ml-1=order.tags
+                                div(id =`p-order-tags-${order._id}` class='row no-gutters dflex mx-2' style='font-size: 1rem;')
+                                    if (orderTags.length)                             
+                                        b.m-0 Tags:
+                                        p.m-0.ml-1=order.tags
 
                         .row.text-center(style='font-weight: 500;')
                             .col-3
@@ -63,7 +63,7 @@ block script
                                         i.lni.lni-phone
                             .col-3
                                 .ml-3
-                                    button( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                    button.btn-focus-rira( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
                                         i.far.fa-share-square
                             .col-3
                                 .ml-3
@@ -73,7 +73,7 @@ block script
                                 .ml-3
                                     .btn-group.dropleft
                                         button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                            i.lni.lni-line-dotted
+                                            i.lni.lni-menu
                                         .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
                                             a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
                                             a.dropdown-item( type='button' data-orderid=`${order._id}` onClick="openTagsForm()") Add Tag

@@ -165,6 +165,8 @@ block script
                             -const shtOrderName = orders.name.split(" ").splice(0,2).join(" ")
                             -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
                             -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
+                            -const orderTags = orders.tags
+                            -const tags = orders.tags.join(",");
 
                             if (orders.altPhone)
                                 -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${orders.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}\n\nAlternative Number: ${orders.altPhone}`;
@@ -191,19 +193,39 @@ block script
                                             a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= mobiledate
                                         p.m-0 
                                         a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderState
-                            .row.border-bottom(style='font-weight: 500;')
+                                    div(id =`p-order-tags-${orders._id}` class='row no-gutters dflex mx-2' style='font-size: 1rem;')
+                                        if (orderTags.length)                             
+                                            b.m-0 Tags:
+                                            p.m-0.ml-1=orders.tags
+
+                            .row.text-center(style='font-weight: 500;')
                                 .col-3
-                                    .ml-5
-                                        a.call-orders-number(style='color: black;' href=`tel:${orders.phone}` tabindex="0") 
+                                    .ml-3
+                                        a.call-order-number(style='color: black;' href=`tel:${orders.phone}` tabindex="0")
                                             i.lni.lni-phone
                                 .col-3
-                                    .ml-5
-                                        button( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                    .ml-3
+                                        button.btn-focus-rira( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
                                             i.far.fa-share-square
                                 .col-3
-                                    .ml-5
+                                    .ml-3
                                         button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
                                             i.far.fa-copy
+                                .col-3
+                                    .ml-3
+                                        .btn-group.dropleft
+                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                i.lni.lni-menu
+                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                                a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${orders._id}` data-name=`${orders.name}`) Mark as Canceled
+                                                a.dropdown-item( type='button' data-orderid=`${orders._id}` onClick="openTagsForm()") Add Tag
+                            .row.border-bottom
+                                .col-10.mx-auto
+                                    form(id=`order-form-tags-${orders._id}` class='mobileOrders-tags-form' data-orderid=`${orders._id}` style='font-size: 1rem; display: none;')
+                                        input.form-control( id=`input-order-tags-${orders._id}` type='text', value=tags data-role='tagsinput' placeholder='Type your tags here')
+                                        .text-center                                        
+                                            button.btn.btn-secondary.my-2.mr-2(data-orderid=`${orders._id}` type='button' onclick="closeTagsForm()") cancel
+                                            button.btn.rira-color-btn.my-2(type='submit') save
                     .text-center.my-3
                         h6
                             a.btn.btn-lg.rira-color-btn(href='/mobileorders') View all orders
@@ -251,3 +273,24 @@ block script
             
             input#salesTransBusinessAccountID(type="text", hidden="", value=`${businessAccount.id}`)
             
+
+        script.
+            function openTagsForm (){
+            if (!e) var e = window.event;
+            var target = e.target || e.srcElement;
+            const orderId = target.dataset.orderid
+            const tagForm = document.getElementById(`order-form-tags-${orderId}`)
+            const tagP = document.getElementById(`p-order-tags-${orderId}`)
+            tagP.style.display = 'none';
+            tagForm.style.display = 'block';
+            }
+            function closeTagsForm (){
+                if (!e) var e = window.event;
+                var target = e.target || e.srcElement;
+                const orderId = target.dataset.orderid
+                const tagForm = document.getElementById(`order-form-tags-${orderId}`)
+                const tagP = document.getElementById(`p-order-tags-${orderId}`)
+                tagForm.style.display = 'none';
+                tagP.style.display = 'block';
+                
+                }

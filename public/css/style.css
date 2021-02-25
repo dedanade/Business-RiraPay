@@ -78,13 +78,13 @@ h6 {
   color: black;
   text-decoration: none;
 }
-.call-orders-number:focus {
+.call-order-number:focus {
   outline: 2px solid #01afee;
 }
 button:focus {
-  outline: 2px solid #01afee;
+  outline: 2px solid transparent;
 }
-a:focus {
+.btn-focus-rira:focus {
   outline: 2px solid #01afee;
 }
 

@@ -25,9 +25,8 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
 
   const busAccountOrders = await Order.find({ _id: businessAccount.orders })
     .sort({ _id: -1 })
-    .limit(15);
+    .limit(10);
 
-  console.log(busAccountOrders);
   const product = await Product.find();
 
   const orders = await Order.find();
