@@ -84,6 +84,9 @@ h6 {
 button:focus {
   outline: 2px solid #01afee;
 }
+a:focus {
+  outline: 2px solid #01afee;
+}
 
 #dropdownbtn a:hover {
   cursor: pointer;

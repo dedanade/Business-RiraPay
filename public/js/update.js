@@ -52,7 +52,7 @@ export const updateTags = async (tags, orderId, submitButton) => {
       showAlert('success', 'Tags Created');
       window.setTimeout(() => {
         location.reload();
-      }, 1500);
+      }, 100);
     }
   } catch (err) {
     showAlert('error', 'Unable to update tags. Try again');
@@ -103,6 +103,30 @@ export const updateShippingOrder = async (
 
     if (res.data.status === 'success') {
       showAlert('success', 'Order has been marked as shipped');
+      window.setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert(
+      'error',
+      'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
+    );
+    console.log(`🔥🔥🔥 ${err.response.data.message}`);
+  }
+};
+export const updateCancelOrder = async (OrderId) => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `/api/v1/orders/cancel/${OrderId}`,
+      data: {
+        OrderId,
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Order has been marked as Canceled');
       window.setTimeout(() => {
         location.reload();
       }, 1500);

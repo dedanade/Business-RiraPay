@@ -103,6 +103,19 @@ exports.updateDelivery = catchAsync(async (req, res, next) => {
     },
   });
 });
+exports.updateCancel = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.orderId);
+
+  order.status = 'Canceled';
+  await order.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      order,
+    },
+  });
+});
 
 exports.getAllOrders = factory.getAll(Order);
 

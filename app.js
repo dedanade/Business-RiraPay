@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const paginate = require('express-paginate');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -77,6 +78,7 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+app.use(paginate.middleware(10, 50));
 
 // 3) ROUTES
 

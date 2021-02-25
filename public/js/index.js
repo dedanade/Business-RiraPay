@@ -15,6 +15,7 @@ import {
   updateOrderEmails,
   updateShippingOrder,
   updateDelivery,
+  updateCancelOrder,
 } from './update';
 import { showAlert } from './alert';
 import { busLoginInput, busSignupInput, addNewbusInput } from './signup_login';
@@ -299,12 +300,37 @@ $('.create-tags-pencil').on('click', function (e) {
   );
   allOrdersTagsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    console.log(e);
     const tags = document.getElementById(`input-order-tags-${orderId}`).value;
     const submitButton = e.submitter;
     loadingBtnSpinner(submitButton);
     updateTags(tags, orderId, submitButton);
   });
+});
+
+$('.mobileOrders-tags-form').on('submit', (e) => {
+  e.preventDefault();
+  const orderId = e.target.dataset.orderid;
+  const tags = document.getElementById(`input-order-tags-${orderId}`).value;
+  const submitButton = e.originalEvent.submitter;
+  loadingBtnSpinner(submitButton);
+  updateTags(tags, orderId, submitButton);
+});
+
+$('.cancel-mobile-order').on('click', function (e) {
+  e.preventDefault();
+  const target = e.target || e.srcElement;
+  const orderId = target.dataset.orderid;
+  const orderName = target.dataset.name;
+  if (
+    confirm(
+      `Are you sure you want to cancel ${orderName}'s order? Click Ok to confirm`
+    )
+  ) {
+    showAlert('success', 'Processing...');
+    updateCancelOrder(orderId);
+  } else {
+    return false;
+  }
 });
 
 if (updateForm)

@@ -1,0 +1,22 @@
+html
+    body
+
+        if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+            nav
+                ul.pagination.pagination-lg.justify-content-center
+                        if paginate.hasPreviousPages
+                            li.page-item
+                                a.page-link(href=paginate.href(true))
+                                    i.lni.lni-angle-double-left
+                                    |  Previous
+                        if pages
+                            //- a.page-link.active() 11
+                            each page in pages
+                                li.page-item
+                                    a.page-link(href=page.url)= page.number
+                        
+                        if paginate.hasNextPages(pageCount)
+                            li.page-item
+                                a.page-link(href=paginate.href()).next
+                                    | Next
+                                    i.lni.lni-angle-double-right

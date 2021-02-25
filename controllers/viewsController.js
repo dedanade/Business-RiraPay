@@ -1,3 +1,9 @@
+/* eslint-disable no-undef-init */
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-redeclare */
+/* eslint-disable block-scoped-var */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
 const moment = require('moment');
 // const newEscape = require('escape-html');
 const Product = require('../Model/productModel');
@@ -152,9 +158,28 @@ exports.allBusOrders = catchAsync(async (req, res, next) => {
     _id: businessUser.businessAccount,
   }).populate('orders');
 
+  const results = await Order.find({ _id: businessAccount.orders })
+    .limit(req.query.limit)
+    .sort({ _id: -1 })
+    .skip(req.skip)
+    .lean()
+    .exec();
+  const itemCount = await Order.countDocuments({ _id: businessAccount.orders });
+
+  const { paginate } = res.locals;
+  const pageCount = Math.ceil(itemCount / req.query.limit);
+
+  const currentPage = req.query.page;
+  const pages = paginate.getArrayPages(10, pageCount, req.query.page);
+
   res.status(200).render('allbusorders', {
     title: 'All Orders',
     businessAccount,
+    orders: results,
+    pageCount,
+    itemCount,
+    currentPage,
+    pages,
   });
 });
 
@@ -262,12 +287,49 @@ exports.mobileOrdersPage = catchAsync(async (req, res, next) => {
   const businessUser = await BusinessUser.findById({
     _id: req.businessUser.id,
   });
-  const businessAccount = await BusinessAccount.findById({
+  var mobileOrdersBusinessAccount = await BusinessAccount.findById({
     _id: businessUser.businessAccount,
   }).populate('orders');
 
+  if (req.query.search) {
+    var querySearch = req.query.search;
+    var mobileOrdersResult = await Order.find({
+      _id: mobileOrdersBusinessAccount.orders,
+      $text: { $search: `\"${req.query.search}\"` },
+    })
+      .sort({ _id: -1 })
+      .skip(req.skip)
+      .lean()
+      .exec();
+    var mobileOrdersCount = await Order.countDocuments({
+      _id: mobileOrdersResult,
+    });
+    // console.log(mobileOrdersResult);
+  } else {
+    var mobileOrdersResult = await Order.find({
+      _id: mobileOrdersBusinessAccount.orders,
+    })
+      .limit(req.query.limit)
+      .sort({ _id: -1 })
+      .skip(req.skip)
+      .lean()
+      .exec();
+    var mobileOrdersCount = await Order.countDocuments({
+      _id: mobileOrdersBusinessAccount.orders,
+    });
+  }
+  const { paginate } = res.locals;
+  const pageCount = Math.ceil(mobileOrdersCount / req.query.limit);
+
+  const currentPage = req.query.page;
+  const pages = paginate.getArrayPages(10, pageCount, req.query.page);
   res.status(200).render('mobileOrders', {
-    title: 'Check purchase Pixel',
-    businessAccount,
+    title: 'All Orders',
+    orders: mobileOrdersResult,
+    pageCount,
+    mobileOrdersCount,
+    currentPage,
+    pages,
+    querySearch,
   });
 });

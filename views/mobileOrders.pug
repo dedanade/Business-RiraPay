@@ -1,6 +1,7 @@
 extends base
 block Indexcss
 block content
+block script
     
     section(style="margin-top: 150px;")
         .small-container-mobile-orders
@@ -9,59 +10,119 @@ block content
                     h4.d-flex.justify-content-between Your Orders:
                     h6
                         a.rira-color-btn.btn(href='/allorders') Desktop Mode
-            - const busOrder = businessAccount.orders;
-            if (busOrder.length)
-                each orders in businessAccount.orders.reverse().slice(0, 200)
-                    each product in orders.product
-                        -const orderTotal = orders.total.toLocaleString()
-                        -const mobiledate = moment(orders.createdAt).format('MMM DD');
-                        -const shtOrderName = orders.name.split(" ").splice(0,2).join(" ")
-                        -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
+            form.form-inline.justify-content-center(action=`` method="GET")
+                label.sr-only(for='inlineFormInputName2') Name
+                input#inlineFormInputName2.form-control.mb-2.mr-sm-2(type='text', name='search' placeholder='Searh Orders')
+                button.btn.btn-primary.mb-2(type='submit') Search
+            if (orders.length)
+                each order in orders
+                    each product in order.product
+                        -const orderTotal = order.total.toLocaleString()
+                        -const mobiledate = moment(order.createdAt).format('MMM DD');
+                        -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
+                        -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
                         -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
+                        -const orderTags = order.tags
+                        -const tags = order.tags.join(",");
 
-                        if (orders.altPhone)
-                            -var copiedInfo= `Product Name: ${product.productName}\nName: ${orders.name}\nAddress: ${orders.address}\nState: ${orders.state}\nArea: ${orders.area}\nQuantity: ${orders.qty}\nAmount Receiving: ₦${orderTotal}\nPhone Number: ${orders.phone}\nAlternative Number: ${orders.altPhone}`;
+                        if (order.altPhone)
+                            -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}\n\nAlternative Number: ${orders.altPhone}`;
                         else
-                            -var copiedInfo= `Product Name: ${product.productName}\nName: ${orders.name}\nAddress: ${orders.address}\nState: ${orders.state}\nArea: ${orders.area}\nQuantity: ${orders.qty}\nAmount Receiving: ₦${orderTotal}\nPhone Number: ${orders.phone}`;
+                            -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}`;
 
 
-                        .mini-table(data-href=`/myorder/${product.id}/${orders._id}`)
-                            .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top
+                        .mini-table(data-href=`/myorder/${product._id}/${order._id}`)
+                            .row.clickable-row.no-gutter.mx-3.py-2.px-2.border-top
                                 .col-8
                                     p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)
+                                        a(target='_blank' href=`/myorder/${product._id}/${order._id}`)
                                             b= `₦${orderTotal}`
                                     p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderName
+                                        a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= shtOrderName
                                     
                                     p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtProductName
+                                        a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= shtProductName
                                 .col-4
                                     p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= orders.status
+                                        a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= order.status
                                         
                                     p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= mobiledate
+                                        a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= mobiledate
                                     p.m-0 
-                                       a(target='_blank' href=`/myorder/${product.id}/${orders._id}`)= shtOrderState
-                        .row.border-bottom(style='font-weight: 500;')
+                                       a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= shtOrderState
+                        
+                            div(id =`p-order-tags-${order._id}` class='row no-gutters dflex mx-2' style='font-size: 1rem;')
+                                if (orderTags.length)                             
+                                    b.m-0 Tags:
+                                    p.m-0.ml-1=order.tags
+
+                        .row.text-center(style='font-weight: 500;')
                             .col-3
-                                .ml-5
-                                    a.call-orders-number(style='color: black;' href=`tel:${orders.phone}` tabindex="0")
+                                .ml-3
+                                    a.call-order-number(style='color: black;' href=`tel:${order.phone}` tabindex="0")
                                         i.lni.lni-phone
                             .col-3
-                                .ml-5
+                                .ml-3
                                     button( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
                                         i.far.fa-share-square
                             .col-3
-                                .ml-5
+                                .ml-3
                                     button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
                                         i.far.fa-copy
-                .text-center.my-3
-                    h6
-                        a.rira-color-btn.btn(href='/allorders') View All orders in Descktop View
-            if (!busOrder.length)
+                            .col-3
+                                .ml-3
+                                    .btn-group.dropleft
+                                        button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                            i.lni.lni-line-dotted
+                                        .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                            a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
+                                            a.dropdown-item( type='button' data-orderid=`${order._id}` onClick="openTagsForm()") Add Tag
+                        .row.border-bottom
+                            .col-10.mx-auto
+                                form(id=`order-form-tags-${order._id}` class='mobileOrders-tags-form' data-orderid=`${order._id}` style='font-size: 1rem; display: none;')
+                                    input.form-control( id=`input-order-tags-${order._id}` type='text', value=tags data-role='tagsinput' placeholder='Type your tags here')
+                                    .text-center                                        
+                                        button.btn.btn-secondary.my-2.mr-2(data-orderid=`${order._id}` type='button' onclick="closeTagsForm()") cancel
+                                        button.btn.rira-color-btn.my-2(type='submit') save
+            
+                if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+                    nav.my-3
+                        ul.pagination.pagination-sm.justify-content-center
+                                if pages
+                                    //- a.page-link.active() 11
+                                    each page in pages
+                                        li.page-item
+                                            a.page-link(href=page.url)= page.number
+            if (!orders.length && querySearch)
                 .text-center
-                    p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
+                    p.mt-2(style='font-size: 1.2rem;')= `Unable to get result for ${querySearch}. Kindly check and try again`
+            if (!orders.length && !querySearch)
+                .text-center
+                    p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customer to pay through RiraPay
                 .text-center
                     a.rira-color-btn.btn(href='/createproduct') Create your first Product
+
+    script.
+        currentPages= #{currentPage};
+        $('ul.pagination a').filter(function() {
+                    return $(this).text() == currentPages;
+                }).parent().addClass('active');
+        function openTagsForm (){
+            if (!e) var e = window.event;
+            var target = e.target || e.srcElement;
+            const orderId = target.dataset.orderid
+            const tagForm = document.getElementById(`order-form-tags-${orderId}`)
+            const tagP = document.getElementById(`p-order-tags-${orderId}`)
+            tagP.style.display = 'none';
+            tagForm.style.display = 'block';
+            }
+        function closeTagsForm (){
+            if (!e) var e = window.event;
+            var target = e.target || e.srcElement;
+            const orderId = target.dataset.orderid
+            const tagForm = document.getElementById(`order-form-tags-${orderId}`)
+            const tagP = document.getElementById(`p-order-tags-${orderId}`)
+            tagForm.style.display = 'none';
+            tagP.style.display = 'block';
+            
+            }

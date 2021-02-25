@@ -6,6 +6,9 @@ const router = express.Router();
 
 router.route('/').get(orderController.getAllOrders);
 router.route('/deliver/:OrderId').get(orderController.updateDelivery);
+router
+  .route('/cancel/:orderId')
+  .get(authBusinessController.protectBusiness, orderController.updateCancel);
 
 router.route('/ship').patch(orderController.updateShiping);
 

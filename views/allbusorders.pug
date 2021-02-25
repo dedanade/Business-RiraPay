@@ -12,7 +12,9 @@ block content
                                         h4.d-flex.justify-content-between All Orders:
                                         h6
                                             a.rira-color-btn.btn(href=`/mobileorders`) Mobile Mode
-                            table#all-table.table.table-condensed.table-hover                       
+
+                                
+                            table.table.table-condensed.table-hover                       
                                 thead
                                     tr
                                         th Date
@@ -27,54 +29,54 @@ block content
                                         th Action
 
                                 tbody
-                                    each orders in businessAccount.orders
-                                        each product in orders.product
+                                    each order in orders
+                                        each product in order.product
 
-                                                -const ordersDate = moment(orders.createdAt).format('dddd, DD/MMM/YY, h:mma');
-                                                -const orderTotal = orders.total.toLocaleString()
-                                                -const shtOrderState = orders.state.split(" ").splice(0,1).join(" ")
-                                                -const shtOrderName = orders.name.split(" ").splice(0,2).join(" ")
+                                                -const ordersDate = moment(order.createdAt).format('dddd, DD/MMM/YY, h:mma');
+                                                -const orderTotal = order.total.toLocaleString()
+                                                -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
+                                                -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
                                                 -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
-                                                -const tags = orders.tags.join(",");
-                                                -var OrderId = orders.id;
+                                                -const tags = order.tags.join(",");
+                                                -var OrderId = order._id;
 
-                                                if (orders.altPhone)
-                                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${orders.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}\n\nAlternative Number: ${orders.altPhone}`;
+                                                if (order.altPhone)
+                                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}`;
                                                 else
-                                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${orders.name}\n\nAddress: ${orders.address}\n\nState: ${orders.state}\n\nArea: ${orders.area}\n\nQuantity: ${orders.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${orders.phone}`;
+                                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}`;
 
 
 
                                                     tr.table-row(style= 'height: 65px')
                                                     
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=ordersDate
+                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=ordersDate
                                                                                                 
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)= shtProductName
+                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)= shtProductName
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)= orders.status
+                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)= order.status
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)= orders.orderNum
+                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)= order.orderNum
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=shtOrderName
+                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=shtOrderName
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=shtOrderState
+                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=shtOrderState
                                                         td
-                                                            a.py-3(style='color: #007bff;' onmouseover="mouseover()" onmouseout="mouseout()" name='orderPhonea' href=`tel:${orders.phone}`)= orders.phone
+                                                            a.py-3(style='color: #007bff;' onmouseover="mouseover()" onmouseout="mouseout()" name='orderPhonea' href=`tel:${order.phone}`)= order.phone
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${orders._id}`)=`₦${orderTotal}`
+                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=`₦${orderTotal}`
                                                         td
                                                             .tag-edit-btn(style='position: relative;')
-                                                                button( id = `${orders.id}` class='create-tags-pencil' style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
-                                                                    i.lni.lni-pencil(id = `${orders.id}`)
-                                                            a(id=`p-order-tags-${orders.id}` style='font-size: 1rem;')=orders.tags
+                                                                button( id = `${order._id}` class='create-tags-pencil' style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
+                                                                    i.lni.lni-pencil(id = `${order._id}`)
+                                                            a(id=`p-order-tags-${order._id}` style='font-size: 1rem;')=order.tags
 
-                                                            form(class='allorders-tags-form' id=`order-form-tags-${orders.id}` style='font-size: 1rem; display: none;')
-                                                                input.form-control( id=`input-order-tags-${orders.id}` type='text', value=tags data-role='tagsinput')
+                                                            form(id=`order-form-tags-${order._id}` class='allorders-tags-form' style='font-size: 1rem; display: none;')
+                                                                input.form-control( id=`input-order-tags-${order._id}` type='text', value=tags data-role='tagsinput')
                                                         
                                                                 button.btn.rira-color-btn.my-2.mr-2(type='submit') save
-                                                                button.btn.btn-secondary.my-2(id=`tags-${orders.id}` type='button' onclick="removetaginput()") cancel
+                                                                button.btn.btn-secondary.my-2(id=`tags-${order._id}` type='button' onclick="removetaginput()") cancel
 
                                                         td
                                                             .d-flex
@@ -82,12 +84,11 @@ block content
                                                                     i.far.fa-share-square
                                                                 button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
                                                                     i.far.fa-copy
-
-                            //- .text-center.mb-3
-                            //-     h6
-                            //-         a(href='/allbusorders') View All orders
+                            
+                            include _paginate
 
         script.
+            currentPages= #{currentPage};
             function mouseover(e){
                 if (!e) var e = window.event;
                 var target = e.target || e.srcElement;
@@ -115,4 +116,8 @@ block content
                 tagP.style.display = 'block';
               tagInput.style.display = 'none';
             }
-            
+                $('ul.pagination a').filter(function() {
+                return $(this).text() == currentPages;
+            }).parent().addClass('active');
+
+                        
