@@ -84,6 +84,13 @@ block content
                                                                     i.far.fa-share-square
                                                                 button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
                                                                     i.far.fa-copy
+                                                                .btn-group.dropleft
+                                                                    button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                                        i.lni.lni-menu
+                                                                    .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                                                        a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
+            
+                                                                
                             
                             include _paginate
 

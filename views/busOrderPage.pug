@@ -121,13 +121,12 @@ block script
                                                 a(href=`tel:${order.altphone}`)= order.altPhone
                                         
                                         if (order.altPhone)
-                                            -var copiedInfo= `Product Name: ${product.productName}\nName: ${order.name}\nAddress: ${order.address}\nState: ${order.state}\nArea: ${order.area}\nQuantity: ${order.qty}\nAmount Receiving: ₦${ordertotal}\nPhone Number: ${order.phone}\nAlternative Number: ${order.altPhone}`;
+                                            -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${ordertotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}`;
                                         else
-                                            -var copiedInfo= `Product Name: ${product.productName}\nName: ${order.name}\nAddress: ${order.address}\nState: ${order.state}\nArea: ${order.area}\nQuantity: ${order.qty}\nAmount Receiving: ₦${ordertotal}\nPhone Number: ${order.phone}`;
+                                            -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${ordertotal}\n\nPhone Number: ${order.phone}`;
                                             
                                         .text-center
-                                            button.clipboard-btn(data-clipboard-text=`${copiedInfo}`
-                                            style='background-color: #01afee; color: white;')
+                                            button.btn.rira-color-btn.clipboard-btn(data-clipboard-text=`${copiedInfo}`)
                                                 | Copy Everything
                                         .text-center.my-3
                                             button.btn.rira-color-btn.my-2(data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`) Share on Whatsapp
