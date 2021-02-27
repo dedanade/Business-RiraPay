@@ -8,6 +8,11 @@ block footer
         nav.navbar.navbar-expand-lg.navbar-dark.fixed-top.py-2.navbar--true(style='background-color: rgb(33, 118, 141);')
           .container
             a#navbarr.navbar-brand(href='/') RiraPay
+            .d-flex.d-lg-none.ml-auto
+              a.btn.rira-color-btn.btn-md.mr-2(href='/signup') Signup
+              a.btn.btn-light.btn-md(href='/Login') Login
+              
+
             button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
               span.navbar-toggler-icon
             #navbarNav.collapse.navbar-collapse.justify-content-end
@@ -24,7 +29,7 @@ block footer
                   a.nav-link(href='/') Personal
               ul.navbar-nav
                 a(href='/Login' type='button')#navbar-button-login.btn.btn-lg Login
-                a(href='/signup' type='button')#navbar-button-Get-Started.btn.btn-lg Get Started
+                a(href='/signup' type='button')#navbar-button-Get-Started.btn.btn-lg Signup for Free!
       section.headline-page-h1
         .container
           .d-flex.align-items-center.sol-landing
@@ -34,10 +39,9 @@ block footer
                   | RiraPay for Business
               .header-sub-text
                 p(style='color: white; font-size: 25px; text-align: center; margin-top: 20px;')
-                  | RiraPay is building a payment infrastructure to help you receive payment from your buyers and also as a sign of trust.
-                  | We will also be paternering with top logistics to help you ship your orders faster.
+                  | Selling Physical products with landing pages and receiving orders with a form builder? There is a better way! With RiraPay, you can receive payment, ship, and manage all your orders and customers all in one powerful platform.                
                 .text-center
-                  a#headline-buttonn1.btn.btn-lg(href='/signup') Get Started
+                  a#headline-buttonn1.btn.btn-lg(href='/signup') Signup for Free!
                   a#headline-buttonn.btn.btn-lg(href='##what-rira-bus') Learn More
       section#what-rira-bus
         .container(style='background-color: white;')
@@ -47,44 +51,63 @@ block footer
                 h1
                   | What is RiraPay for Business?
               .header-text-what-is-sub-text
-                p
-                  | RiraPay for Business is an escrow payment infrastructure that serves as an intermidiary between your
-                  | business and your customers. Rirapay makes sure your products is delivered timely with zero percent cancelation rate
-                  | at the same time make sure your customers are satisfied.
+                p RiraPay for business is an escrow payment infrastructure that serves as an intermediary between your business and your customers. Rirapay makes sure your products are delivered timely with zero percent cancelation rate at the same time to make sure your customers are satisfied. RiraPay also sends SMS and Email Notification to your buyers for every order placed for Free!
       section#why-rira-bus(style='background-color: #f7fcfe; padding-bottom: 50px;')
         .header-text-why
           h1
             | Why RiraPay for Business?
         .container
-          .row.text-center
+          .row.justify-content-left
             .col-lg-4.my-3
-              .card.border-3.shadow-lg
+              .card.h-100.border-3.shadow-lg
                 .card-body.py-5.px-4
-                  img.svg-icon(src='/img/homepage/fast_shipping.svg', alt='')
-                  h3.card-title Fast Delivery and Easy Tracking
+                  img.svg-icon(src='/img/homepage/undraw_push_notifications_im0o.png', alt='')
+                  h3.card-title Free SMS and Email Notification
                   p#why-text
-                    | When you recieve payment through Rirapay, you&apos;re expected to ship the product within 48 hours after the
-                    | order has been confirmed this means orders will be delivered faster. We will be collaborating with top logistics firm to make
-                    | this process faster and smoother. Also, you will be able to track all shipment live and receive lifetime updates.
+                    | We send SMS and email notifications to your buyers once they have been created for Free! Also, you receive an email alert 
+                    | for every order!
             .col-lg-4.my-3
-              .card.border-3.shadow-lg
+              .card.h-100.border-3.shadow-lg
                 .card-body.py-5.px-4
-                  img.svg-icon(src='/img/homepage/stock management.svg', alt='')
-                  h3.card-title Inventory Management
+                  img.svg-icon(src='/img/homepage/undraw_Credit_card_re_blml.png', alt='')
+                  h3.card-title Accept payment
                   p#why-text
-                    | Not sure when your stock is going to finish or when you should stock up? With our inventory management,
-                    | you can manage all your inventories and also add an alert when your stock is going low according to your settings.
+                    |  We offer your buyers the option to pay through our platform in order to reduce the rate of pay on delivery.
+
             .col-lg-4.my-3
-              .card.border-3.shadow-lg
+              .card.h-100.border-3.shadow-lg
+                .card-body.py-5.px-4
+                  img.svg-icon(src='/img/homepage/undraw_mobile_ux_o0e1.png', alt='')
+                  h3.card-title Better User Experience
+                  p#why-text
+                    | We are a ux-centric platform. You can call customers, update orders, and add tags all in one page and with one click of a button
+          .row.justify-content-left
+            .col-lg-4.my-3
+              .card.h-100.border-3.shadow-lg
+                .card-body.py-5.px-4
+                  img.svg-icon(src='/img/homepage/undraw_community_8nwl.png', alt='')
+                  h3.card-title  Unlimited Multi-Users 
+                  p#why-text
+                    | You can add unlimited number of people to manage your orders with different privileges and limitation 
+
+            .col-lg-4.my-3
+              .card.h-100.border-3.shadow-lg
                 .card-body.py-5.px-4
                   img.svg-icon(src='/img/homepage/low failed delivery.svg', alt='')
                   h3.card-title Low Failed Delivery Rate
                   p#why-text
                     | Since buyers are paying ahead through our escrow infrastructure,you&apos;re assured all orders will be delivered.
-        .container
-          .row.text-center
             .col-lg-4.my-3
-              .card.border-3.shadow-lg
+              .card.h-100.border-3.shadow-lg
+                .card-body.py-5.px-4
+                  img.svg-icon(src='/img/homepage/stock management.svg', alt='')
+                  h3.card-title Inventory Management
+                  p#why-text
+                    | Not sure when your stock is going to finish or when you should stock up? With our inventory management, 
+                    | you can manage all your inventories and also add an alert when your stock is going low according to your settings.
+          .row.justify-content-left
+            .col-lg-4.my-3
+              .card.h-100.border-3.shadow-lg
                 .card-body.py-5.px-4
                   img.svg-icon(src='/img/homepage/undraw_online_payments_luau (1).svg', alt='')
                   h3.card-title Fast Remittance
@@ -92,15 +115,16 @@ block footer
                     | Waitimg forever for your logistics company to remit your money to you?
                     | With rirapay, your money is sent to your RiraPay wallet imediately the escrow days are over
             .col-lg-4.my-3
-              .card.border-3.shadow-lg
+              .card.h-100.border-3.shadow-lg
                 .card-body.py-5.px-4
-                  img.svg-icon(src='/img/homepage/CRM.svg', alt='')
-                  h3.card-title  Customer Relationship Management 
+                  img.svg-icon(src='/img/homepage/fast_shipping.svg', alt='')
+                  h3.card-title Fast Delivery and Easy Tracking
                   p#why-text
-                    | You don&apos;t need to download or subscribe to any CRM software; with Rirapay, you can manage your customers right from the app.
-                    | You can have access to details of each trasaction and customer. Launching a new product? you can easily contact your last customers right from your RiraPay app
+                    | When you receive payment through RiraPay, you're expected to ship the product within 48 hours after the order has been 
+                    | confirmed this means orders will be delivered faster. We will be collaborating with top logistics firms to make this process
+                    | faster and smoother. Also, you will be able to track all shipment live and receive lifetime updates.          
             .col-lg-4.my-3
-              .card.border-3.shadow-lg
+              .card.h-100.border-3.shadow-lg
                 .card-body.py-5.px-4
                   img.svg-icon(src='/img/homepage/undraw_setup_analytics_8qkl.svg', alt='')
                   h3.card-title  Analytics 
@@ -108,6 +132,23 @@ block footer
                     | With RiraPay, you can keep track on your sales, compare sales
                     | to previous sales and also keep track of your goals. We are also
                     | building an alogirthm that help you chek an estimmated net sales and revenue.
+          .row.justify-content-left
+            .col-lg-4.my-3
+              .card.h-100.border-3.shadow-lg
+                .card-body.py-5.px-4
+                  img.svg-icon(src='/img/homepage/CRM.svg', alt='')
+                  h3.card-title  Customer Relationship Management(Coming Soon)
+                  p#why-text
+                    | You don&apos;t need to download or subscribe to any CRM software or email marketing platforms; with Rirapay, you can manage your customers right from the app.
+                    | You can have access to details of each trasaction and customer. Launching a new product? you can easily send your customers messages right from your RiraPay app
+
+      section(style='background-color: darkslategrey;')
+        .container(style='padding-top: 70px; padding-bottom: 70px;')
+          .form-row.text-center
+            .col-lg-12
+              h1.font-weight-bold(style='color: white;') What are you waiting for?
+              a.btn.btn-primary.btn-lg(href='./../busSignup', id='#navbar-button-Get-Started') Join the early bird testers
+
       section#how-works(style='background-color: whitesmoke;')
         .container
           .row

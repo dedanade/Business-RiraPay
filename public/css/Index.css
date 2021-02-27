@@ -81,13 +81,11 @@ body {
   background-color: ghostwhite;
   margin-top: none;
   text-decoration-color: white;
-  height: fit-content;
 }
 
 .svg-icon {
-  height: 150px;
-  width: 150px;
-  text-align: center;
+  height: 10rem;
+  width: 15rem;
 }
 h1#why-rira-heading {
   font-size: 30px;
@@ -107,7 +105,7 @@ h5#why-rira-heading {
 }
 p#why-text {
   color: #003152;
-  font-size: 20px;
+  font-size: 1.1rem;
   letter-spacing: 0.5;
   margin-bottom: 50px;
 }
