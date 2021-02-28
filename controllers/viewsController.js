@@ -281,6 +281,16 @@ exports.purchasePixel = catchAsync(async (req, res, next) => {
     businessAccount,
   });
 });
+exports.productPixel = catchAsync(async (req, res, next) => {
+  const product = await Product.findById({
+    _id: req.params.productId,
+  });
+
+  res.status(200).render('productPixel', {
+    title: 'Check purchase Pixel',
+    product,
+  });
+});
 
 exports.mobileOrdersPage = catchAsync(async (req, res, next) => {
   const businessUser = await BusinessUser.findById({

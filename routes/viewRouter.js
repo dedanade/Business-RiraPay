@@ -72,6 +72,7 @@ router.get(
 );
 
 router.get('/purchasepixel/:businessAccountId', viewController.purchasePixel);
+router.get('/productpixel/:productId', viewController.productPixel);
 
 router.get('/verify-email/:emailtoken', authBusinessController.verifyEmail);
 
