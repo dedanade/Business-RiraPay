@@ -50,22 +50,22 @@ block content
                                                     tr.table-row(style= 'height: 65px')
                                                     
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=ordersDate
+                                                            a.py-3(href=`/myorder/${product._id}/${order._id}`)=ordersDate
                                                                                                 
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)= shtProductName
+                                                            a.py-3(href=`/myorder/${product._id}/${order._id}`)= shtProductName
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)= order.status
+                                                            a.py-3(href=`/myorder/${product._id}/${order._id}`)= order.status
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)= order.orderNum
+                                                            a.py-3(href=`/myorder/${product._id}/${order._id}`)= order.orderNum
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=shtOrderName
+                                                            a.py-3(href=`/myorder/${product._id}/${order._id}`)=shtOrderName
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=shtOrderState
+                                                            a.py-3(href=`/myorder/${product._id}/${order._id}`)=shtOrderState
                                                         td
                                                             a.py-3(style='color: #007bff;' onmouseover="mouseover()" onmouseout="mouseout()" name='orderPhonea' href=`tel:${order.phone}`)= order.phone
                                                         td
-                                                            a.py-3(href=`/myorder/${product.id}/${order._id}`)=`₦${orderTotal}`
+                                                            a.py-3(href=`/myorder/${product._id}/${order._id}`)=`₦${orderTotal}`
                                                         td
                                                             .tag-edit-btn(style='position: relative;')
                                                                 button( id = `${order._id}` class='create-tags-pencil' style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
@@ -80,7 +80,7 @@ block content
 
                                                         td
                                                             .d-flex
-                                                                button(style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                                                button(style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}` target="_blank" rel="noopener noreferrer")
                                                                     i.far.fa-share-square
                                                                 button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
                                                                     i.far.fa-copy
