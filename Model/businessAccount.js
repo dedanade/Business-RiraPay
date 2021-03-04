@@ -99,15 +99,6 @@ businessAccountSchema.virtual('product', {
 //   next();
 // });
 
-// businessAccountSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'products',
-//     select: '',
-//   });
-
-//   next();
-// });
-
 businessAccountSchema.pre(/^find/, function (next) {
   this.populate('businessUsers');
   this.populate('products');
