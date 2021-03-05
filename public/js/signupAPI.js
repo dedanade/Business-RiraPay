@@ -33,45 +33,8 @@ export const busSignup = async (
       }, 1500);
     }
   } catch (err) {
-    if (err.response.data.error._message) {
-      if (
-        err.response.data.error._message ===
-          'BusinessAccount validation failed' ||
-        'BusinessUser validation failed'
-      ) {
-        const dataErrors = err.response.data.error.errors;
-        const rawErrorMsg = {};
-        const keys = Object.keys(dataErrors);
-
-        keys.forEach((key) => {
-          let message = dataErrors[key].message;
-
-          if (
-            dataErrors[key].properties &&
-            dataErrors[key].properties.message
-          ) {
-            message = dataErrors[key].properties.message.replace(
-              '`{PATH}`',
-              key
-            );
-          }
-
-          message = message.replace('Path ', '').replace(key, '').trim();
-          rawErrorMsg[key] = message;
-        });
-
-        var validationErrorMessage = [];
-
-        for (const [key, value] of Object.entries(rawErrorMsg)) {
-          validationErrorMessage.push(value);
-        }
-        showAlert('error', validationErrorMessage);
-        stopLoadingBtnSpinner(submitButton);
-      }
-    } else {
-      showAlert('error', err.response.data.message);
-      stopLoadingBtnSpinner(submitButton);
-    }
+    showAlert('error', err.response.data.message);
+    stopLoadingBtnSpinner(submitButton);
   }
 };
 
