@@ -80,9 +80,9 @@ block content
 
                                                         td
                                                             .d-flex
-                                                                button(style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}` target="_blank" rel="noopener noreferrer")
+                                                                button(style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Share on whatsapp" target="_blank" rel="noopener noreferrer" )
                                                                     i.far.fa-share-square
-                                                                button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
+                                                                button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
                                                                     i.far.fa-copy
                                                                 .btn-group.dropleft
                                                                     button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')

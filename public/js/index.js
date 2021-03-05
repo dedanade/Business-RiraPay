@@ -436,6 +436,10 @@ $('td > a').on('click', function (e) {
   e.stopPropagation();
 });
 
+// Popper tooltip
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
 //COpy Tooltip Notification
 
 $('.clipboard-btn').tooltip({
