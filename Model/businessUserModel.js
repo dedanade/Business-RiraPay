@@ -69,8 +69,6 @@ businessUserSchema.set('toJSON', { virtuals: true });
 //     'Error, {PATH} must be unique. Try another or Login if you have an account '
 // });
 
-businessUserSchema.index({ businessEmail: 1 }, { unique: true });
-
 businessUserSchema.path('businessEmail').validate(async (businessEmail) => {
   const emailCount = await mongoose.models.BusinessUser.countDocuments({
     businessEmail,

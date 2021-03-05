@@ -40,11 +40,6 @@ const businessAccountSchema = new mongoose.Schema({
 businessAccountSchema.set('toObject', { virtuals: true });
 businessAccountSchema.set('toJSON', { virtuals: true });
 
-businessAccountSchema.index(
-  { businessAccountEmail: 1, businessPhoneNumber: 1 },
-  { unique: true }
-);
-
 businessAccountSchema
   .path('businessAccountEmail')
   .validate(async (businessAccountEmail) => {
