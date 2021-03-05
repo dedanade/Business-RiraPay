@@ -9367,16 +9367,17 @@ var busSignup = /*#__PURE__*/function () {
               }, 1500);
             }
 
-            _context.next = 11;
+            _context.next = 12;
             break;
 
           case 7:
             _context.prev = 7;
             _context.t0 = _context["catch"](0);
+            console.log(_context.t0);
             (0, _alert.showAlert)('error', _context.t0.response.data.message);
             (0, _index.stopLoadingBtnSpinner)(submitButton);
 
-          case 11:
+          case 12:
           case "end":
             return _context.stop();
         }

@@ -33,6 +33,7 @@ export const busSignup = async (
       }, 1500);
     }
   } catch (err) {
+    console.log(err);
     showAlert('error', err.response.data.message);
     stopLoadingBtnSpinner(submitButton);
   }
