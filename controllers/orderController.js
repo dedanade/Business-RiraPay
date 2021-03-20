@@ -116,6 +116,29 @@ exports.updateCancel = catchAsync(async (req, res, next) => {
     },
   });
 });
+exports.updateSchedule = catchAsync(async (req, res, next) => {
+  const filteredBody = filterObj(req.body, 'scheduledAt');
+
+  // 3) Update user document
+  // Validator not working!!!
+  const UpdatedSchorder = await Order.findByIdAndUpdate(
+    req.params.orderId,
+    filteredBody,
+    {
+      new: true,
+      upsert: true,
+    }
+  );
+  UpdatedSchorder.status = 'Scheduled';
+  await UpdatedSchorder.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      UpdatedSchorder,
+    },
+  });
+});
 
 exports.getAllOrders = factory.getAll(Order);
 

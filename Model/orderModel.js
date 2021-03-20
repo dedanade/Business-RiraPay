@@ -55,6 +55,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: [
         'Incomplete',
+        'Scheduled',
         'Paid',
         'Shipped',
         'Delivered',
@@ -82,6 +83,7 @@ const orderSchema = new mongoose.Schema(
     paidAt: { type: Date, default: 0 },
     shippedAt: { type: Date, default: 0 },
     deliveredAt: { type: Date, default: 0 },
+    scheduledAt: { type: Date, default: 0 },
 
     businessAccount: [
       {

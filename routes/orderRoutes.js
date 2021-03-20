@@ -13,6 +13,12 @@ router
 router.route('/ship').patch(orderController.updateShiping);
 
 router.route('/:OrderId').patch(orderController.updateOrder);
+router
+  .route('/schedule/:orderId')
+  .patch(
+    authBusinessController.protectBusiness,
+    orderController.updateSchedule
+  );
 
 // // FETCH Weekly, LIFETIME AND MONTHLY SALES
 

@@ -14,6 +14,10 @@ const AppError = require('../utils/appError');
 const Cart = require('../Model/cart');
 const Order = require('../Model/orderModel');
 
+//Today
+var startToday = moment().startOf('day').toDate(); // set to 12:00 am today
+var endToday = moment().endOf('day').toDate(); // set to 23:59 pm today
+
 exports.getBusDashboard = catchAsync(async (req, res, next) => {
   const businessUser = await BusinessUser.findById({
     _id: req.businessUser.id,
@@ -35,8 +39,6 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
   // Date Calculation
 
   //Today
-  const startToday = moment().startOf('day').toDate(); // set to 12:00 am today
-  const endToday = moment().endOf('day').toDate(); // set to 23:59 pm today
 
   // Sales Today Calculation
   const salesorders = await Order.find({
@@ -78,6 +80,14 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     0
   ).toLocaleString();
 
+  const scheduledOrderToday = await Order.find({
+    _id: businessAccount.orders,
+    scheduledAt: {
+      $gte: startToday,
+      $lte: endToday,
+    },
+  });
+
   res.status(200).render('busDashBoard', {
     title: 'Business DashBoard',
     product,
@@ -86,6 +96,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     busAccountOrders,
     businessUser,
     businessAccount,
+    schdToday: scheduledOrderToday,
     salesToday: sumOfCartSalesToday,
     transToday: sumOfcartTranToday,
   });
@@ -157,28 +168,53 @@ exports.allBusOrders = catchAsync(async (req, res, next) => {
     _id: businessUser.businessAccount,
   }).populate('orders');
 
-  const results = await Order.find({ _id: businessAccount.orders })
-    .limit(req.query.limit)
-    .sort({ _id: -1 })
-    .skip(req.skip)
-    .lean()
-    .exec();
-  const itemCount = await Order.countDocuments({ _id: businessAccount.orders });
-
+  if (req.query.search) {
+    var querySearch = req.query.search;
+    var busOrders = await Order.find({
+      _id: businessAccount.orders,
+      $text: { $search: `\"${req.query.search}\"` },
+    })
+      .sort({ _id: -1 })
+      .skip(req.skip)
+      .lean()
+      .exec();
+    var busOrdersCount = await Order.countDocuments({
+      _id: busOrders,
+    });
+  } else {
+    var busOrders = await Order.find({
+      _id: businessAccount.orders,
+    })
+      .limit(req.query.limit)
+      .sort({ _id: -1 })
+      .skip(req.skip)
+      .lean()
+      .exec();
+    var busOrdersCount = await Order.countDocuments({
+      _id: businessAccount.orders,
+    });
+  }
   const { paginate } = res.locals;
-  const pageCount = Math.ceil(itemCount / req.query.limit);
-
+  const pageCount = Math.ceil(busOrdersCount / req.query.limit);
   const currentPage = req.query.page;
   const pages = paginate.getArrayPages(10, pageCount, req.query.page);
-
-  res.status(200).render('allbusorders', {
+  const scheduledOrderToday = await Order.find({
+    _id: businessAccount.orders,
+    scheduledAt: {
+      $gte: startToday,
+      $lte: endToday,
+    },
+  });
+  res.status(200).render('allBusOrders', {
     title: 'All Orders',
     businessAccount,
-    orders: results,
+    orders: busOrders,
+    schdToday: scheduledOrderToday,
     pageCount,
-    itemCount,
+    itemCount: busOrdersCount,
     currentPage,
     pages,
+    querySearch,
   });
 });
 
@@ -327,6 +363,14 @@ exports.mobileOrdersPage = catchAsync(async (req, res, next) => {
       _id: mobileOrdersBusinessAccount.orders,
     });
   }
+  const scheduledOrderToday = await Order.find({
+    _id: mobileOrdersBusinessAccount.orders,
+    scheduledAt: {
+      $gte: startToday,
+      $lte: endToday,
+    },
+  });
+
   const { paginate } = res.locals;
   const pageCount = Math.ceil(mobileOrdersCount / req.query.limit);
 
@@ -335,6 +379,7 @@ exports.mobileOrdersPage = catchAsync(async (req, res, next) => {
   res.status(200).render('mobileOrders', {
     title: 'All Orders',
     orders: mobileOrdersResult,
+    schdToday: scheduledOrderToday,
     pageCount,
     mobileOrdersCount,
     currentPage,

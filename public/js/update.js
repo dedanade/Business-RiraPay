@@ -218,3 +218,27 @@ export const updateDelivery = async (DelOrderId) => {
     console.log(`🔥🔥🔥 ${err.response.data.message}`);
   }
 };
+export const updateSchedule = async (schOrderId, scheduledAt) => {
+  try {
+    const res = await axios({
+      method: 'PATCH',
+      url: `/api/v1/orders/schedule/${schOrderId}`,
+      data: {
+        scheduledAt,
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Order has been Scheduled');
+      window.setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert(
+      'error',
+      'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
+    );
+    console.log(`🔥🔥🔥 ${err.response.data.message}`);
+  }
+};

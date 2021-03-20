@@ -6,14 +6,89 @@ block script
     .small-container-mobile-orders(style="margin-top: 150px;")
         ul.list-group.my-4
             li.d-flex.justify-content-between
-                h4.d-flex.justify-content-between Your Orders:
+                h4.d-flex.justify-content-between Your Orders
                 h6
                     a.rira-color-btn.btn(href='/allorders') Desktop Mode
         form.form-inline.justify-content-center(action=`` method="GET")
             label.sr-only(for='inlineFormInputName2') Name
             input#inlineFormInputName2.form-control.mb-2.mr-sm-2(type='text', name='search' placeholder='Search Orders' required='')
             button.btn.rira-color-btn.mb-2(type='submit') Search
+        if (schdToday.length  && currentPage === 1)
+            h5.mt-3 Schedule today:
+            each order in schdToday
+                each product in order.product
+                    -const orderTotal = order.total.toLocaleString()
+                    -const mobiledate = moment(order.createdAt).format('MMM DD');
+                    -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
+                    -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
+                    -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
+                    -const orderTags = order.tags
+                    -const tags = order.tags.join(",");
+
+                    if (order.altPhone)
+                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}`;
+                    else
+                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}`;
+
+
+                    .mini-table(data-href=`/myorder/${product._id}/${order._id}`)
+                        .row.clickable-row.no-gutter.mx-1.py-2.px-2
+                            .col-8
+                                p.m-0 
+                                    a(target='_blank' href=`/myorder/${product._id}/${order._id}`)
+                                        b= `₦${orderTotal}`
+                                p.m-0 
+                                    a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= shtOrderName
+                                
+                                p.m-0 
+                                    a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= shtProductName
+                            .col-4
+                                p.m-0 
+                                    a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= order.status
+                                    
+                                p.m-0 
+                                    a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= mobiledate
+                                p.m-0 
+                                    a(target='_blank' href=`/myorder/${product._id}/${order._id}`)= shtOrderState
+                    
+                            div(id =`p-order-tags-${order._id}` class='row no-gutters dflex mx-2' style='font-size: 1rem;')
+                                if (orderTags.length)                             
+                                    b.m-0 Tags:
+                                    p.m-0.ml-1=order.tags
+
+                    .row.text-center(style='font-weight: 500;')
+                        .col-3
+                            .ml-3
+                                a.call-order-number(style='color: black;' href=`tel:${order.phone}` tabindex="0")
+                                    i.lni.lni-phone
+                        .col-3
+                            .ml-3
+                                button.btn-focus-rira( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                    i.far.fa-share-square
+                        .col-3
+                            .ml-3
+                                button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
+                                    i.far.fa-copy
+                        .col-3
+                            .ml-3
+                                .btn-group.dropleft
+                                    button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                        i.lni.lni-menu
+                                    .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                        a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
+                                        a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
+                                        a.dropdown-item( type='button' data-orderid=`${order._id}` onClick="openTagsForm()") Add Tag
+                    .row.border-bottom
+                        .col-10.mx-auto
+                            form(id=`order-form-tags-${order._id}` class='mobileOrders-tags-form' data-orderid=`${order._id}` style='font-size: 1rem; display: none;')
+                                input.form-control( id=`input-order-tags-${order._id}` type='text', value=tags data-role='tagsinput' placeholder='Type your tags here')
+                                .text-center                                        
+                                    button.btn.btn-secondary.my-2.mr-2(data-orderid=`${order._id}` type='button' onclick="closeTagsForm()") cancel
+        
+                                    button.btn.rira-color-btn.my-2(type='submit') save
+            
         if (orders.length)
+            h5.ml-1.my-3 Latest Orders:
             each order in orders
                 each product in order.product
                     -const orderTotal = order.total.toLocaleString()
@@ -74,6 +149,7 @@ block script
                                     button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                                         i.lni.lni-menu
                                     .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                        a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
                                         a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
                                         a.dropdown-item( type='button' data-orderid=`${order._id}` onClick="openTagsForm()") Add Tag
                     .row.border-bottom
@@ -83,23 +159,38 @@ block script
                                 .text-center                                        
                                     button.btn.btn-secondary.my-2.mr-2(data-orderid=`${order._id}` type='button' onclick="closeTagsForm()") cancel
                                     button.btn.rira-color-btn.my-2(type='submit') save
-        
-            if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
-                nav.my-3
-                    ul.pagination.pagination-sm.justify-content-center
-                            if pages
-                                //- a.page-link.active() 11
-                                each page in pages
-                                    li.page-item
-                                        a.page-link(href=page.url)= page.number
-        if (!orders.length && querySearch)
-            .text-center
-                p.mt-2(style='font-size: 1.2rem;')= `Unable to get result for ${querySearch}. Kindly check and try again`
-        if (!orders.length && !querySearch)
-            .text-center
-                p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customer to pay through RiraPay
-            .text-center
-                a.rira-color-btn.btn(href='/createproduct') Create your first Product
+    
+        if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+            nav.my-3
+                ul.pagination.pagination-sm.justify-content-center
+                        if pages
+                            //- a.page-link.active() 11
+                            each page in pages
+                                li.page-item
+                                    a.page-link(href=page.url)= page.number
+        div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
+            .modal-dialog.modal-dialog-centered(role='document')
+                .modal-content
+                    .modal-header
+                        h5#exampleModalLongTitle.modal-title Schedule Order
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    .modal-body
+                        form.schedule-order-form
+                            input(type="hidden" id="schedule-orderId" value="")
+                            label.form-label(for='schedule-date-input') Pick a date                                                
+                            input#schedule-date-input.form-control(type='date', value='')
+                            .modal-footer
+                                button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                                button.btn.rira-color-btn(type='submit') Save changes
+    if (!orders.length && querySearch)
+        .text-center
+            p.mt-2(style='font-size: 1.2rem;')= `Unable to get result for ${querySearch}. Kindly check and try again`
+    if (!orders.length && !querySearch)
+        .text-center
+            p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customer to pay through RiraPay
+        .text-center
+            a.rira-color-btn.btn(href='/createproduct') Create your first Product
 
     script.
         currentPages= #{currentPage};
@@ -123,5 +214,9 @@ block script
             const tagP = document.getElementById(`p-order-tags-${orderId}`)
             tagForm.style.display = 'none';
             tagP.style.display = 'block';
-            
             }
+        $('.schedule-modal-button').on("click", function () {
+                var orderId = $(this).data('orderid');
+                $(".modal-body #schedule-orderId").val( orderId );
+            });
+        document.getElementById('schedule-date-input').valueAsDate = new Date();

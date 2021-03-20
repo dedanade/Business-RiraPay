@@ -15,6 +15,7 @@ import {
   updateOrderEmails,
   updateShippingOrder,
   updateDelivery,
+  updateSchedule,
   updateCancelOrder,
 } from './update';
 import { showAlert } from './alert';
@@ -30,6 +31,7 @@ import {
   transThisMonth,
   transLifeTime,
 } from './salesTransAPI';
+import { ISO_8601 } from 'moment';
 
 export const sumOfSalesResult = document.getElementById('sumOfSalesResult');
 
@@ -58,6 +60,7 @@ const resetBusPassForm = document.querySelector('.reset-bus-pass-form');
 
 const createProductForm = document.querySelector('.create-product-form');
 const editProductForm = document.querySelector('.edit-product-form');
+const updateScheduleForm = document.querySelector('.schedule-order-form');
 
 const business_pixel_Form = document.getElementById('business-pixel-form');
 const tagsForm = document.getElementById('tagsform');
@@ -362,6 +365,15 @@ if (updateDeliveryForm)
     const delOrderId = document.getElementById('orderid').value;
     updateDelivery(delOrderId);
   });
+if (updateScheduleForm)
+  updateScheduleForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const schOrderId = document.getElementById('schedule-orderId').value;
+    const schDate = document.getElementById('schedule-date-input').value;
+    const scheduleDate = `${schDate}T00:00:00.000+00:00`;
+    updateSchedule(schOrderId, scheduleDate);
+  });
+
 if (selectPriceOptions) {
   const selectPromoPrice = document.getElementById('selectPromoPrice');
   const promoQtyPriceValue = document.getElementById('inputPromoQtyPrice')
