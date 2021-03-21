@@ -22,11 +22,11 @@ block footer
                     | Home 
                     span.sr-only (current)
                 li.nav-item.active
-                  a.nav-link(href='#why-rira-bus') Why Rirapay
+                  a.nav-link(href='#why-rira-bus') why RiraPay
                 li.nav-item.active
-                  a.nav-link(href='#how-works') How It Works
+                  a.nav-link(href='#how-works') how it works
                 li.nav-item.active
-                  a.nav-link(href='/') Personal
+                  a.nav-link(href='/') personal
               ul.navbar-nav
                 a(href='/Login' type='button')#navbar-button-login.btn.btn-lg Login
                 a(href='/signup' type='button')#navbar-button-Get-Started.btn.btn-lg Signup for Free!
@@ -53,7 +53,7 @@ block footer
               .header-text-what-is-sub-text
                 p RiraPay for business is an escrow payment infrastructure that serves as an intermediary between your business and your customers. Rirapay makes sure your products are delivered timely with zero percent cancelation rate at the same time to make sure your customers are satisfied. RiraPay also sends SMS and Email Notification to your buyers for every order placed for Free!
           .text-center
-            iframe(width='100%', height='500', src='https://www.youtube.com/embed/AvkvFHiAowg', frameborder='0', allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture', allowfullscreen='allowfullscreen', style='border-radius: 20px;')
+            iframe(width='100%', height='500', src='https://www.youtube.com/embed/fsaV2ardckc', frameborder='0', allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture', allowfullscreen='allowfullscreen', style='border-radius: 20px;')
 
       section#why-rira-bus(style='background-color: #f7fcfe; padding-bottom: 50px;')
         .header-text-why
@@ -161,41 +161,23 @@ block footer
               ul.listed-how
                 li.li-listed-how
                   h3 Sign up on Rirapay
-                p.li-listed-how Click on the Get Started Button and register with your real bsuiness details
+                p.li-listed-how Click on the Get Started Button and register with your real business details
                 br
                 li.li-listed-how
                   h3 Create a payment link
                 p.li-listed-how
-                  | Insert the payment link to your ecommerce store or if you&apos;re a social commerce merchant, reconmend RiraPay to your customers and
-                  | send the payment link to make payment.
+                  | Create a product and insert the product link or embed code to your landing page
                 br
                 li.li-listed-how
-                  h3 Recieve Payment
+                  h3 Order placed by customer
                 p.li-listed-how
-                  | Payment is made through our secured and certified payment proccesor. Once payment has been made,
-                  | you will receive a notification on your mail and you can confirm the payment on your transaction page on RiraPay web app.
+                  | Once order has been placed, customer has two options, to pay via rirapay or pay on delivery. 
+                  | if Payment is made via rirapay, you can go ahead to ship the order and update it on your rirapay dashboard
                 br
                 li.li-listed-how
-                  h3 Ship Product
+                  h3 Payment received 
                 p.li-listed-how
-                  | After payment has been confirmed, you have 48 hours to ship the product or order might be canceled by the buyer. If you&apos;re not able
-                  | to ship product within the 48 hours timefraame, send a message through the instant messaging and plead for delivery time extension. when shipped,
-                  | mark the order as shipped and include the logistics firm and tracking number
-                br
-                li.li-listed-how
-                  h3 Product Delivered
-                p.li-listed-how
-                  | When your product is delivered, update your order as delivered.
-                  | The buyer has 24 hours to confirm receiving the order or it will be automatically be marked as &quot;delivered&quot;. After that, you will have
-                  | to wait for 7 days before the amount is sent to your RiraPay wallet which you can withdraw to your bank account immediately
-                br
-                li.li-listed-how
-                  h3 Refund Process
-                p.li-listed-how(style='margin-bottom: 120px;')
-                  | When a buyer is disatisfied with a product due to a difference in description or quality, they have 7 days after the order has been marked &quot;delivered&quot;.
-                  | Buyer has to prove their assertion with an evidence; you have 24 hours after the request has been made to counter their request. If you feel the buyer is right, you can accept the request or renegotiate a new price.
-                  | If you reject the request, you can escalate the issue to our dedicated resolution team who will go
-                  | through both conversation and make a verdict within 24 hours of making request.
+                  | Payment is sent to your bank account 24 hours after the payment has been confirmed
             .col-mid-2
       section(style='background-color: darkslategrey;')
         .container(style='padding-top: 70px; padding-bottom: 70px;')
@@ -221,7 +203,7 @@ block footer
                 #rirapay-footer.col-6.col-sm-4.col-md-3.col-lg-3
                   h4#hd Customers
                     h5
-                      a(href='#')  Pricing
+                      a( type='button', data-toggle='modal', data-target='#exampleModalCenter')  Pricing
                     h5
                       a(href='#')   Testimonials 
                     h5
@@ -247,3 +229,24 @@ block footer
                   a.ml-2.fa.fa-linkedin(href='#')
         .text-center(style = 'border-top: 1px solid whitesmoke;')
           p.my-4(style = 'font-size: .8rem;') &copy; 2020 RiraPay. All Rights Reserved.
+
+      #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              h5#exampleModalLongTitle.modal-title RiraPay Fair Pricing
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') &times;
+            .modal-body
+              p.my-3 Rirapay only makes money when you make money through us!
+              br
+              h3 2.0% + NGN 100 per transaction
+              br
+              br
+              ul
+                li ₦100 fee waived for transactions under ₦2500
+                li Transactions fees are capped at ₦5000, that means that highest fee you'll ever pay is 5000 naira regardless of the transaction amount
+
+
+            .modal-footer
+              button.btn.btn-secondary(type='button', data-dismiss='modal') Close
