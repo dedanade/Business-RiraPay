@@ -205,7 +205,7 @@ exports.allBusOrders = catchAsync(async (req, res, next) => {
       $lte: endToday,
     },
   });
-  res.status(200).render('allBusOrders', {
+  res.status(200).render('allbusorders', {
     title: 'All Orders',
     businessAccount,
     orders: busOrders,
