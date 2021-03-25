@@ -34,7 +34,7 @@ export const busSignup = async (
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
-    stopLoadingBtnSpinner(submitButton);
+    // //stopLoadingBtnSpinner(submitButton);
   }
 };
 
@@ -125,7 +125,7 @@ export const addNewBus = async (
       }, 1500);
     }
   } catch (err) {
-    stopLoadingBtnSpinner(submitButton);
+    //stopLoadingBtnSpinner(submitButton);
     showAlert('error', err.response.data.message);
   }
 };

@@ -43,23 +43,23 @@ export const createProductInput = (e) => {
   } else if (price === 0 && promoPriceQty.split(',')[0] === '0 = 0 Naira') {
     alert(`Kindly use one of the pricing type. The two options can't be empty`);
     return false;
-  } else loadingBtnSpinner(submitButton);
-
-  createProduct(
-    productName,
-    price,
-    stock,
-    additionalInfo,
-    discount,
-    codOption,
-    colours,
-    sizes,
-    promoPriceQty,
-    facebookPixelId,
-    facebookCurrency,
-    facebookValue,
-    submitButton
-  );
+  } //loadingBtnSpinner(submitButton);
+  else
+    createProduct(
+      productName,
+      price,
+      stock,
+      additionalInfo,
+      discount,
+      codOption,
+      colours,
+      sizes,
+      promoPriceQty,
+      facebookPixelId,
+      facebookCurrency,
+      facebookValue,
+      submitButton
+    );
 };
 
 export const editProductInput = (e) => {
@@ -110,23 +110,23 @@ export const editProductInput = (e) => {
   } else if (editprice === 0 && promoPriceQty.split(',')[0] === '0 = 0 Naira') {
     alert(`Kindly use one of the pricing type. The two options can't be empty`);
     return false;
-  } else loadingBtnSpinner(submitButton);
-
-  updateProduct(
-    productName,
-    editprice,
-    stock,
-    additionalInfo,
-    discount,
-    editCodOption,
-    colours,
-    sizes,
-    promoPriceQty,
-    promoPriceQty,
-    facebookPixelId,
-    facebookCurrency,
-    facebookValue,
-    productId,
-    submitButton
-  );
+  } //loadingBtnSpinner(submitButton);
+  else
+    updateProduct(
+      productName,
+      editprice,
+      stock,
+      additionalInfo,
+      discount,
+      editCodOption,
+      colours,
+      sizes,
+      promoPriceQty,
+      promoPriceQty,
+      facebookPixelId,
+      facebookCurrency,
+      facebookValue,
+      productId,
+      submitButton
+    );
 };

@@ -31,7 +31,6 @@ import {
   transThisMonth,
   transLifeTime,
 } from './salesTransAPI';
-import { ISO_8601 } from 'moment';
 
 export const sumOfSalesResult = document.getElementById('sumOfSalesResult');
 
@@ -106,7 +105,6 @@ export const hideLoadingAnimation = function hideLoading() {
 export function loadingBtnSpinner(submitButton) {
   submitButton.classList.add('btnLoadingSpiner');
   submitButton.disabled = true;
-
   setTimeout(() => {
     submitButton.classList.remove('btnLoadingSpiner');
   }, 20000);
@@ -231,7 +229,7 @@ if (business_pixel_Form)
   business_pixel_Form.addEventListener('submit', (e) => {
     e.preventDefault();
     const submitButton = e.submitter;
-    loadingBtnSpinner(submitButton);
+    //loadingBtnSpinner(submitButton);
     const facebookPixelId = document.getElementById('business-pixelId').value;
     const facebookPixelCurrency = document.getElementById(
       'business-pixel-currency'
@@ -291,7 +289,7 @@ if (tagsForm)
     const tags = document.getElementById('order-tags').value;
     const orderId = document.getElementById('orderid').value;
     const submitButton = e.submitter;
-    loadingBtnSpinner(submitButton);
+    //loadingBtnSpinner(submitButton);
     updateTags(tags, orderId, submitButton);
   });
 
@@ -305,7 +303,7 @@ $('.create-tags-pencil').on('click', function (e) {
     e.preventDefault();
     const tags = document.getElementById(`input-order-tags-${orderId}`).value;
     const submitButton = e.submitter;
-    loadingBtnSpinner(submitButton);
+    //loadingBtnSpinner(submitButton);
     updateTags(tags, orderId, submitButton);
   });
 });
@@ -315,7 +313,7 @@ $('.mobileOrders-tags-form').on('submit', (e) => {
   const orderId = e.target.dataset.orderid;
   const tags = document.getElementById(`input-order-tags-${orderId}`).value;
   const submitButton = e.originalEvent.submitter;
-  loadingBtnSpinner(submitButton);
+  //loadingBtnSpinner(submitButton);
   updateTags(tags, orderId, submitButton);
 });
 

@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { showAlert } from './alert';
-import { stopLoadingBtnSpinner } from './index';
+// import { //stopLoadingBtnSpinner } from './index';
 
 export const busLogin = async (
   businessEmail,
@@ -26,7 +26,7 @@ export const busLogin = async (
       }, 1500);
     }
   } catch (err) {
-    stopLoadingBtnSpinner(submitButton);
+    //stopLoadingBtnSpinner(submitButton);
     showAlert('error', err.response.data.message);
   }
 };

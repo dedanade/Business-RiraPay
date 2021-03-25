@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { busSignup, addNewBus } from './signupAPI';
 import { busLogin } from './loginAPI';
-import { loadingBtnSpinner } from './index';
+// import { loadingBtnSpinner } from './index';
 
 export const busSignupInput = (e) => {
   e.preventDefault();
@@ -11,7 +11,7 @@ export const busSignupInput = (e) => {
   const businessPhoneNumber = document.getElementById('input-bus-phone').value;
   const businessPassword = document.getElementById('input-bus-password').value;
   const submitButton = e.submitter;
-  loadingBtnSpinner(submitButton);
+  // //loadingBtnSpinner(submitButton);
   busSignup(
     businessName,
     fullName,
@@ -31,7 +31,7 @@ export const addNewbusInput = (e) => {
   const businessPassword = document.getElementById('input-new-staff-password')
     .value;
   const role = document.getElementById('input-new-staff-role').value;
-  loadingBtnSpinner(submitButton);
+  //loadingBtnSpinner(submitButton);
   addNewBus(fullName, businessEmail, businessPassword, role, submitButton);
 };
 
@@ -40,6 +40,6 @@ export const busLoginInput = (e) => {
   const businsessEmail = document.getElementById('email-bus-login').value;
   const busisnessPassword = document.getElementById('pass-bus-login').value;
   const submitButton = e.submitter;
-  loadingBtnSpinner(submitButton);
+  //loadingBtnSpinner(submitButton);
   busLogin(businsessEmail, busisnessPassword, submitButton);
 };
