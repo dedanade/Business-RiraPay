@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Product = require('../Model/productModel');
 const BusinessUser = require('../Model/businessUserModel');
 const catchAsync = require('../utils/catchAsync');
@@ -16,6 +17,18 @@ exports.createNewProduct = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     data: { newProduct },
+  });
+});
+
+exports.cloneNewProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+  product._id = mongoose.Types.ObjectId();
+  product.productName = `${product.productName}-copy`;
+  product.isNew = true;
+  product.save();
+  res.status(201).json({
+    status: 'success',
+    data: { product },
   });
 });
 

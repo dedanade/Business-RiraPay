@@ -1,551 +1,333 @@
 extends base
+
+mixin largeOrderTable(ordersArray)
+    table.table.table-condensed.table-hover                       
+        thead
+            tr
+                th Date
+                th Product Name
+                th Status
+                th Order No
+                th Customer
+                th State
+                th Phone
+                th Amount
+                th Tags
+                th Action
+
+        tbody
+            each order in ordersArray 
+                each product in order.product
+                    //- -console.log(order.product);
+
+                    -const ordersDate = moment(order.createdAt).format('dddd, DD/MMM/YY, h:mma');
+                    -const orderTotal = order.total.toLocaleString()
+                    -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
+                    -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
+                    -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
+                    -const tags = order.tags.join(",");
+                    -var OrderId = order._id;
+
+                    if (order.altPhone)
+                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}\n\n${product.delInfo}`;
+                    else
+                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\n${product.delInfo}`;
+
+
+                    section
+                        tr.table-row.order-table-row(style= 'height: 65px')
+                        
+                            td
+                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=ordersDate
+                                                                    
+                            td
+                                a.py-2(href=`/myorder/${product._id}/${order._id}`)= shtProductName
+                            td
+                                a.py-2(href=`/myorder/${product._id}/${order._id}`)= order.status
+                            td
+                                a.py-2(href=`/myorder/${product._id}/${order._id}`)= order.orderNum
+                            td
+                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=shtOrderName
+                            td
+                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=shtOrderState
+                            td
+                                a.py-2.lg-table-phoneNum(style='color: #007bff;' name='orderPhonea' href=`tel:${order.phone}`)= order.phone
+                            td
+                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=`₦${orderTotal}`
+                            td
+                                .d-flex
+                                    a.p-order-tags.mr-4(style='font-size: 1rem;')=order.tags
+                                    .tag-edit-btn(style='position: relative;')
+                                        button.create-tags-pencil(style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;')
+                                            i.lni.lni-pencil
+                                form.allorders-tags-form(data-orderid= order._id style='font-size: 1rem; display: none;')
+                                    input.form-control.input-order-tags( type='text', value=tags data-role='tagsinput')
+                                    button.btn.rira-color-btn.my-2.mr-2(type='submit') save
+                                    button.btn.btn-secondary.my-2.cancel-tags-form(type='button') cancel
+                            td
+                                .d-flex.py-1
+                                    button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
+                                        i.far.fa-copy
+                                    .btn-group.dropleft
+                                        button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                            i.lni.lni-menu
+                                        .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                            a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
+                                            a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled 
+mixin miniOrderTable(textheader, orderArray)
+    ul.list-group.my-2
+        li.d-flex.justify-content-between
+        h4.d-flex.justify-content-between #{textheader}:
+
+    each order in orderArray
+        each product in order.product
+            -const orderTotal = order.total.toLocaleString()
+            -const mobiledate = moment(order.createdAt).format('MMM DD');
+            -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
+            -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
+            -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
+            -const orderTags = order.tags
+            -const tags = order.tags.join(",");
+
+            if (order.altPhone)
+                -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}\n\n${product.delInfo}`;
+            else
+                -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\n${product.delInfo}`;
+
+            section
+                .mini-table(data-href=`/myorder/${product.id}/${order._id}`)
+                    .row.clickable-row.no-gutters.mx-3.py-2.px-2
+                        .col-8
+                            p.m-0 
+                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)
+                                    b= `₦${orderTotal}`
+                            p.m-0 
+                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtOrderName
+                            
+                            p.m-0 
+                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtProductName
+                        .col-4
+                            p.m-0 
+                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= order.status
+                                
+                            p.m-0 
+                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= mobiledate
+                            p.m-0 
+                            a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtOrderState
+                        div.p-order-tags.row.no-gutters.dflex.mx-2(style='font-size: 1rem;')
+                            if (orderTags.length)                             
+                                b.m-0 Tags:
+                                p.m-0.ml-1=order.tags
+
+                .row.text-center(style='font-weight: 500;')
+                    .col-3
+                        .ml-3
+                            a.call-order-number(style='color: black;' href=`tel:${order.phone}` tabindex="0")
+                                i.lni.lni-phone
+                    .col-3
+                        .ml-3
+                            button.btn-focus-rira( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
+                                i.far.fa-share-square
+                    .col-3
+                        .ml-3
+                            button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
+                                i.far.fa-copy
+                    .col-3
+                        .ml-3
+                            .btn-group.dropleft
+                                button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                    i.lni.lni-menu
+                                .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                    a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
+                                    a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
+                                    a.add-tag-mobile-button.dropdown-item( type='button') Add Tag
+                .row.border-bottom
+                    .col-10.mx-auto
+                        form.allorders-tags-form(data-orderid= order._id style='font-size: 1rem; display: none;')
+                            input.form-control.input-order-tags( type='text', value=tags data-role='tagsinput')
+                            .text-center                                        
+                                button.btn.btn-secondary.my-2.mr-2.cancel-tags-form( type='button') cancel
+                                button.btn.rira-color-btn.my-2(type='submit') save
 block Indexcss
 block content
-block script                  
-        section(style='margin-top: 50px;')
-            .container.my-5
-                if (businessUser.isEmailVerified === false)
-                    .card.py-2.px-3(style = "background-color: red; color: white; margin-top: 50px;")
-                        p Kindly Check your Email and click on the link provided to verify your email. If you didn't received the email 
-                            a#request-verify-email_btn(href="#") Request a New one
-            .container
-                .row
-                    .col-6
-                        h4= `Hello, ${businessAccount.businessName}`
-                        a.mx-1(href='#') View and Edit Profile
-                .col-6
+block script
+    section(style='margin-top: 50px;')
+        .container.my-5
+            if (businessUser.isEmailVerified === false)
+                .card.py-2.px-3(style = "background-color: red; color: white; margin-top: 50px;")
+                    p Kindly Check your Email and click on the link provided to verify your email. If you didn't received the email 
+                        a#request-verify-email_btn(href="#") Request a New one
         .container
-            .row.my-5
-                #card2.col-12.col-md-6.col-xl-4
-                    .card.border-1.shadow-sm
-                        .card-body.py-5
-                            h6 RiraPay Wallet Balance
-                            h3  &#x20A6;0.00
-                #card2.col-12.col-md-6.col-xl-4
-                    .card.border-1.shadow-sm
-                        .card-body.py-5
-                            h6 Sales
-                            .btn-group
-                            a.btn#button-sales.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                | Today
-                            #dropdownbtn.dropdown-menu.sales-today
-                                a#salesToday_btn(href='#sumOfSalesToday') Today
-                                a#salesWeekly_btn(href='#sumOfSalesWeek') This Week
-                                a#salesMonthly_btn(href='') This Month
-                                a#salesLifeTime_btn(href='#sumOfSalesLifetime') Lifetime                      
-                            .sumOfSalesResult(style='display: flex;')
-                                h3#sumOfSalesResult.sales-toggle=`₦ ${salesToday}`
-                                #loading-Sales-Result
-                            
-                                                
-                                        
-                #card2.col-12.col-md-6.col-xl-4
-                    .card.border-1.shadow-sm
-                        .card-body.py-5
-                            h6 Transactions
-                            .btn-group
-                            a.btn#button-trans.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                | Today
-                            #dropdownbtn.dropdown-menu.trans-today
-                                a#transToday_btn(href='#sumOfTransToday') Today
-                                a#transWeekly_btn(href='#sumOfTransWeek') This Week
-                                a#transMonthly_btn(href='#sumOfTransMonth') This Month
-                                a#transLifeTime_btn(href='#sumOfTransLifetime') Lifetime
-                            .sumOfTransResult(style='display: flex;')
-                                h3#sumOfTransResult.trans-toggle=`₦ ${transToday}`
-                                #loading-Trans-Result
+            .row
+                .col-6
+                    h4= `Hello, ${businessAccount.businessName}`
+                    a.mx-1(href='#') View and Edit Profile
+            .col-6
+    .container
+        .row.my-5
+            #card2.col-12.col-md-6.col-xl-4
+                .card.border-1.shadow-sm
+                    .card-body.py-5
+                        h6 RiraPay Wallet Balance
+                        h3  &#x20A6;0.00
+            #card2.col-12.col-md-6.col-xl-4
+                .card.border-1.shadow-sm
+                    .card-body.py-5
+                        h6 Sales
+                        .btn-group
+                        a.btn#button-sales.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                            | Today
+                        #dropdownbtn.dropdown-menu.sales-today
+                            a#salesToday_btn(href='#sumOfSalesToday') Today
+                            a#salesWeekly_btn(href='#sumOfSalesWeek') This Week
+                            a#salesMonthly_btn(href='') This Month
+                            a#salesLifeTime_btn(href='#sumOfSalesLifetime') Lifetime                      
+                        .sumOfSalesResult(style='display: flex;')
+                            h3#sumOfSalesResult.sales-toggle=`₦ ${salesToday}`
+                            #loading-Sales-Result
+                        
+                                            
+                                    
+            #card2.col-12.col-md-6.col-xl-4
+                .card.border-1.shadow-sm
+                    .card-body.py-5
+                        h6 Transactions
+                        .btn-group
+                        a.btn#button-trans.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                            | Today
+                        #dropdownbtn.dropdown-menu.trans-today
+                            a#transToday_btn(href='#sumOfTransToday') Today
+                            a#transWeekly_btn(href='#sumOfTransWeek') This Week
+                            a#transMonthly_btn(href='#sumOfTransMonth') This Month
+                            a#transLifeTime_btn(href='#sumOfTransLifetime') Lifetime
+                        .sumOfTransResult(style='display: flex;')
+                            h3#sumOfTransResult.trans-toggle=`₦ ${transToday}`
+                            #loading-Trans-Result
 
-        section.large-view-table
-            .large-container.mb-5
-                .row
-                    .col-12
-                            .card-body.py-5.mx-2
-                                if (schdToday.length)
-                                    ul.list-group
-                                            li.d-flex.justify-content-between
-                                                h4.d-flex.justify-content-between Scheduled Today:
-                                    table.table.table-condensed.table-hover                       
-                                        thead
-                                            tr
-                                                th Date
-                                                th Product Name
-                                                th Status
-                                                th Order No
-                                                th Customer
-                                                th State
-                                                th Phone
-                                                th Amount
-                                                th Tags
-                                                th Action
-
-                                        tbody
-                                            each order in schdToday
-                                                each product in order.product
-                                                    //- -console.log(order.product);
-
-                                                    -const ordersDate = moment(order.createdAt).format('dddd, DD/MMM/YY, h:mma');
-                                                    -const orderTotal = order.total.toLocaleString()
-                                                    -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
-                                                    -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
-                                                    -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
-                                                    -const tags = order.tags.join(",");
-                                                    -var OrderId = order._id;
-
-                                                    if (order.altPhone)
-                                                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}`;
-                                                    else
-                                                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}`;
-
-
-
-                                                        tr.table-row(style= 'height: 65px')
-                                                        
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=ordersDate
-                                                                                                    
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)= shtProductName
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)= order.status
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)= order.orderNum
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=shtOrderName
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=shtOrderState
-                                                            td
-                                                                a.py-3(style='color: #007bff;' onmouseover="mouseover()" onmouseout="mouseout()" name='orderPhonea' href=`tel:${order.phone}`)= order.phone
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=`₦${orderTotal}`
-                                                            td
-                                                                .tag-edit-btn(style='position: relative;')
-                                                                    button( id = `${order._id}` class='create-tags-pencil' style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
-                                                                        i.lni.lni-pencil(id = `${order._id}`)
-                                                                a(id=`p-order-tags-${order._id}` style='font-size: 1rem;')=order.tags
-
-                                                                form(id=`order-form-tags-${order._id}` class='allorders-tags-form' style='font-size: 1rem; display: none;')
-                                                                    input.form-control( id=`input-order-tags-${order._id}` type='text', value=tags data-role='tagsinput')
-                                                            
-                                                                    button.btn.rira-color-btn.my-2.mr-2(type='submit') save
-                                                                    button.btn.btn-secondary.my-2(id=`tags-${order._id}` type='button' onclick="removetaginput()") cancel
-
-                                                            td
-                                                                .d-flex
-                                                                    button(style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Share on whatsapp" target="_blank" rel="noopener noreferrer" )
-                                                                        i.far.fa-share-square
-                                                                    button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
-                                                                        i.far.fa-copy
-                                                                    .btn-group.dropleft
-                                                                        button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                                                            i.lni.lni-menu
-                                                                        .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                                                            a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
-                                                                            a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled                
-                                if (busAccountOrders.length)
-                                    ul.list-group
-                                            li.d-flex.justify-content-between
-                                                h4.d-flex.justify-content-between Latest Orders:
-                                    table.table.table-condensed.table-hover                       
-                                        thead
-                                            tr
-                                                th Date
-                                                th Product Name
-                                                th Status
-                                                th Order No
-                                                th Customer
-                                                th State
-                                                th Phone
-                                                th Amount
-                                                th Tags
-                                                th Action
-
-                                        tbody
-                                            each order in busAccountOrders
-                                                each product in order.product
-                                                    //- -console.log(order.product);
-
-                                                    -const ordersDate = moment(order.createdAt).format('dddd, DD/MMM/YY, h:mma');
-                                                    -const orderTotal = order.total.toLocaleString()
-                                                    -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
-                                                    -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
-                                                    -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
-                                                    -const tags = order.tags.join(",");
-                                                    -var OrderId = order._id;
-
-                                                    if (order.altPhone)
-                                                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}`;
-                                                    else
-                                                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}`;
-
-
-
-                                                        tr.table-row(style= 'height: 65px')
-                                                        
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=ordersDate
-                                                                                                    
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)= shtProductName
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)= order.status
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)= order.orderNum
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=shtOrderName
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=shtOrderState
-                                                            td
-                                                                a.py-3(style='color: #007bff;' onmouseover="mouseover()" onmouseout="mouseout()" name='orderPhonea' href=`tel:${order.phone}`)= order.phone
-                                                            td
-                                                                a.py-3(href=`/myorder/${product._id}/${order._id}`)=`₦${orderTotal}`
-                                                            td
-                                                                .tag-edit-btn(style='position: relative;')
-                                                                    button( id = `${order._id}` class='create-tags-pencil' style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;' onclick="showtaginput()")
-                                                                        i.lni.lni-pencil(id = `${order._id}`)
-                                                                a(id=`p-order-tags-${order._id}` style='font-size: 1rem;')=order.tags
-
-                                                                form(id=`order-form-tags-${order._id}` class='allorders-tags-form' style='font-size: 1rem; display: none;')
-                                                                    input.form-control( id=`input-order-tags-${order._id}` type='text', value=tags data-role='tagsinput')
-                                                            
-                                                                    button.btn.rira-color-btn.my-2.mr-2(type='submit') save
-                                                                    button.btn.btn-secondary.my-2(id=`tags-${order._id}` type='button' onclick="removetaginput()") cancel
-
-                                                            td
-                                                                .d-flex
-                                                                    button(style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Share on whatsapp" target="_blank" rel="noopener noreferrer" )
-                                                                        i.far.fa-share-square
-                                                                    button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
-                                                                        i.far.fa-copy
-                                                                    .btn-group.dropleft
-                                                                        button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                                                            i.lni.lni-menu
-                                                                        .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                                                            a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
-                                                                            a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled                
-
-                                                
-                                    .text-center.mb-3
-                                        h6
-                                            a(href='/allorders') View All orders
-                                div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
-                                    .modal-dialog.modal-dialog-centered(role='document')
-                                        .modal-content
-                                            .modal-header
-                                                h5#exampleModalLongTitle.modal-title Schedule Order
-                                                button.close(type='button', data-dismiss='modal', aria-label='Close')
-                                                span(aria-hidden='true') &times;
-                                            .modal-body
-                                                form.schedule-order-form
-                                                    input(type="hidden" id="schedule-orderId" value="")
-                                                    label.form-label(for='schedule-date-input') Pick a date                                                
-                                                    input#schedule-date-input.form-control(type='date', value='')
-                                                    .modal-footer
-                                                        button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-                                                        button.btn.rira-color-btn(type='submit') Save changes
-                                if (!busAccountOrders.length)
-                                    .text-center
-                                        p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
-                                    .text-center
-                                        a(style='font-size: 1.2rem;' href='/createproduct') Create New Product                             
-        section.large-view-table
-            .large-container
-                .row
-                    .col-12                        
+    section.large-view-table
+        .large-container.mb-5
+            .row
+                .col-12
                         .card-body.py-5.mx-2
+                            if (schdToday.length)
                                 ul.list-group
-                                    li.d-flex.justify-content-between
-                                        h4.d-flex.justify-content-between Latest Products:  
-                                        h6
-                                            a(href='/createproduct') Create New Product
-                            
-                                table.table.table-condensed.table-hover                       
-                                    thead
-                                        tr
-                                            th Date
-                                            th Product Name
-                                            th Stock
-                                            th Amount
+                                        li.d-flex.justify-content-between
+                                            h4.d-flex.justify-content-between Scheduled Today:
+                                +largeOrderTable(schdToday)
+                            if (busAccountOrders.length)
+                                ul.list-group
+                                        li.d-flex.justify-content-between
+                                            h4.d-flex.justify-content-between Latest Orders:
+                                +largeOrderTable(busAccountOrders)             
 
-                                    tbody
-                                        each product in businessAccount.products.reverse().slice(0, 10)
-                                            - const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
-                                            -const productprice = product.price.toLocaleString()
-
-                                            tr.table-row(data-href=`/myproduct/${product.slug}/${product._id}`)
-                                        
-                                                td
-                                                    a(href=`/myproduct/${product.slug}/${product._id}`)=Date
-                                                td
-                                                    a(href=`/myproduct/${product.slug}/${product._id}`)=product.productName
-                                                td
-                                                    a(href=`/myproduct/${product.slug}/${product._id}`)=product.stock                                
-                                                td
-                                                    a(href=`/myproduct/${product.slug}/${product._id}`)= `₦${productprice}`
-                                        
+                                            
                                 .text-center.mb-3
                                     h6
-                                        a(href='/allproducts') View All Products
+                                        a(href='/allorders') View All orders
+                            div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
+                                .modal-dialog.modal-dialog-centered(role='document')
+                                    .modal-content
+                                        .modal-header
+                                            h5#exampleModalLongTitle.modal-title Schedule Order
+                                            button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                            span(aria-hidden='true') &times;
+                                        .modal-body
+                                            form.schedule-order-form
+                                                input(type="hidden" id="schedule-orderId" value="")
+                                                label.form-label(for='schedule-date-input') Pick a date                                                
+                                                input#schedule-date-input.form-control(type='date', value='')
+                                                .modal-footer
+                                                    button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                                                    button.btn.rira-color-btn(type='submit') Save changes
+                            if (!busAccountOrders.length)
+                                .text-center
+                                    p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
+                                .text-center
+                                    a(style='font-size: 1.2rem;' href='/createproduct') Create New Product   
 
-        section
-            .small-container
-                if(schdToday.length)
-                    ul.list-group.my-4
-                        li.d-flex.justify-content-between
-                        h4.d-flex.justify-content-between Scheduled Today:
-                    
-                        each order in schdToday
-                            each product in order.product
-                                -const orderTotal = order.total.toLocaleString()
-                                -const mobiledate = moment(order.createdAt).format('MMM DD');
-                                -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
-                                -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
-                                -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
-                                -const orderTags = order.tags
-                                -const tags = order.tags.join(",");
+    section
+        .small-container.pt-4
+            if(schdToday.length)
+                +miniOrderTable('Scheduled Today', schdToday)
 
-                                if (order.altPhone)
-                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}`;
-                                else
-                                    -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}`;
+                
+            if (busAccountOrders.length)
+                +miniOrderTable('Latest Order', busAccountOrders)
+                .text-center.my-3
+                    h6
+                        a.btn.btn-lg.rira-color-btn(href='/mobileorders') View all orders
 
+            if (!busAccountOrders.length)
+                .text-center
+                    p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
+                .text-center
+                    a.rira-color-btn.btn(href='/createproduct') Create your first Product
 
-                                .mini-table(data-href=`/myorder/${product.id}/${order._id}`)
-                                    .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top
-                                        .col-8
-                                            p.m-0 
-                                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)
-                                                    b= `₦${orderTotal}`
-                                            p.m-0 
-                                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtOrderName
-                                            
-                                            p.m-0 
-                                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtProductName
-                                        .col-4
-                                            p.m-0 
-                                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= order.status
-                                                
-                                            p.m-0 
-                                                a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= mobiledate
-                                            p.m-0 
-                                            a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtOrderState
-                                        div(id =`p-order-tags-${order._id}` class='row no-gutters dflex mx-2' style='font-size: 1rem;')
-                                            if (orderTags.length)                             
-                                                b.m-0 Tags:
-                                                p.m-0.ml-1=order.tags
+            div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
+                .modal-dialog.modal-dialog-centered(role='document')
+                    .modal-content
+                        .modal-header
+                            h5#exampleModalLongTitle.modal-title Schedule Order
+                            button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') &times;
+                        .modal-body
+                            form.schedule-order-form
+                                input(type="hidden" id="schedule-orderId" value="")
+                                label.form-label(for='schedule-date-input') Pick a date                                                
+                                input#schedule-date-input.form-control(type='date', value='')
+                                .modal-footer
+                                    button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                                    button.btn.rira-color-btn(type='submit') Save changes
 
-                                .row.text-center(style='font-weight: 500;')
-                                    .col-3
-                                        .ml-3
-                                            a.call-order-number(style='color: black;' href=`tel:${order.phone}` tabindex="0")
-                                                i.lni.lni-phone
-                                    .col-3
-                                        .ml-3
-                                            button.btn-focus-rira( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
-                                                i.far.fa-share-square
-                                    .col-3
-                                        .ml-3
-                                            button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
-                                                i.far.fa-copy
-                                    .col-3
-                                        .ml-3
-                                            .btn-group.dropleft
-                                                button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                                    i.lni.lni-menu
-                                                .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                                    a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
-                                                    a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
-                                                    a.dropdown-item( type='button' data-orderid=`${order._id}` onClick="openTagsForm()") Add Tag
-                                .row.border-bottom
-                                    .col-10.mx-auto
-                                        form(id=`order-form-tags-${order._id}` class='mobileOrders-tags-form' data-orderid=`${order._id}` style='font-size: 1rem; display: none;')
-                                            input.form-control( id=`input-order-tags-${order._id}` type='text', value=tags data-role='tagsinput' placeholder='Type your tags here')
-                                            .text-center                                        
-                                                button.btn.btn-secondary.my-2.mr-2(data-orderid=`${order._id}` type='button' onclick="closeTagsForm()") cancel
-                                                button.btn.rira-color-btn.my-2(type='submit') save
-                if (busAccountOrders.length)
-                    ul.list-group.my-4
-                        li.d-flex.justify-content-between
-                        h4.d-flex.justify-content-between Latest Orders:
-                    each order in busAccountOrders
-                        each product in order.product
-                            -const orderTotal = order.total.toLocaleString()
-                            -const mobiledate = moment(order.createdAt).format('MMM DD');
-                            -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
-                            -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
-                            -const shtProductName = product.productName.split(" ").splice(0,2).join(" ")
-                            -const orderTags = order.tags
-                            -const tags = order.tags.join(",");
+    section.large-view-table
+        .large-container
+            .row
+                .col-12                        
+                    .card-body.py-5.mx-2
+                            ul.list-group
+                                li.d-flex.justify-content-between
+                                    h4.d-flex.justify-content-between Latest Products:  
+                                    h6
+                                        a(href='/createproduct') Create New Product
+                        
+                            table.table.table-condensed.table-hover                       
+                                thead
+                                    tr
+                                        th Date
+                                        th Product Name
+                                        th Stock
+                                        th Amount
+                                        th Action
 
-                            if (order.altPhone)
-                                -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}`;
-                            else
-                                -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}`;
+                                tbody
+                                    each product in businessAccount.products.reverse().slice(0, 10)
+                                        - const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
+                                        -const productprice = product.price.toLocaleString()
 
+                                        tr.table-row(data-href=`/myproduct/${product.slug}/${product._id}`)
+                                    
+                                            td
+                                                a(href=`/myproduct/${product.slug}/${product._id}`)=Date
+                                            td
+                                                a(href=`/myproduct/${product.slug}/${product._id}`)=product.productName
+                                            td
+                                                a(href=`/myproduct/${product.slug}/${product._id}`)=product.stock                                
+                                            td
+                                                a(href=`/myproduct/${product.slug}/${product._id}`)= `₦${productprice}`
+                                            td 
+                                                a.cloneProduct(href="#" data-productid= product._id style='font-size: 1rem;' onmouseover="mouseover()" onmouseout="mouseout()") Duplicate 
 
-                            .mini-table(data-href=`/myorder/${product.id}/${order._id}`)
-                                .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top
-                                    .col-8
-                                        p.m-0 
-                                            a(target='_blank' href=`/myorder/${product.id}/${order._id}`)
-                                                b= `₦${orderTotal}`
-                                        p.m-0 
-                                            a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtOrderName
-                                        
-                                        p.m-0 
-                                            a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtProductName
-                                    .col-4
-                                        p.m-0 
-                                            a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= order.status
-                                            
-                                        p.m-0 
-                                            a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= mobiledate
-                                        p.m-0 
-                                        a(target='_blank' href=`/myorder/${product.id}/${order._id}`)= shtOrderState
-                                    div(id =`p-order-tags-${order._id}` class='row no-gutters dflex mx-2' style='font-size: 1rem;')
-                                        if (orderTags.length)                             
-                                            b.m-0 Tags:
-                                            p.m-0.ml-1=order.tags
+                                    
+                            .text-center.mb-3
+                                h6
+                                    a(href='/allproducts') View All Products
+        
+        input#salesTransBusinessAccountID(type="text", hidden="", value=`${businessAccount.id}`)
+        
 
-                            .row.text-center(style='font-weight: 500;')
-                                .col-3
-                                    .ml-3
-                                        a.call-order-number(style='color: black;' href=`tel:${order.phone}` tabindex="0")
-                                            i.lni.lni-phone
-                                .col-3
-                                    .ml-3
-                                        button.btn-focus-rira( style='border: 0;border-color: transparent; background-color: transparent;' data-sharer='whatsapp', data-title="" data-url=`${copiedInfo}`)
-                                            i.far.fa-share-square
-                                .col-3
-                                    .ml-3
-                                        button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}`)
-                                            i.far.fa-copy
-                                .col-3
-                                    .ml-3
-                                        .btn-group.dropleft
-                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                                i.lni.lni-menu
-                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                                a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled
-                                                a.dropdown-item( type='button' data-orderid=`${order._id}` onClick="openTagsForm()") Add Tag
-                            .row.border-bottom
-                                .col-10.mx-auto
-                                    form(id=`order-form-tags-${order._id}` class='mobileOrders-tags-form' data-orderid=`${order._id}` style='font-size: 1rem; display: none;')
-                                        input.form-control( id=`input-order-tags-${order._id}` type='text', value=tags data-role='tagsinput' placeholder='Type your tags here')
-                                        .text-center                                        
-                                            button.btn.btn-secondary.my-2.mr-2(data-orderid=`${order._id}` type='button' onclick="closeTagsForm()") cancel
-                                            button.btn.rira-color-btn.my-2(type='submit') save
-                    .text-center.my-3
-                        h6
-                            a.btn.btn-lg.rira-color-btn(href='/mobileorders') View all orders
-
-                if (!busAccountOrders.length)
-                    .text-center
-                        p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
-                    .text-center
-                        a.rira-color-btn.btn(href='/createproduct') Create your first Product
-
-                div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
-                    .modal-dialog.modal-dialog-centered(role='document')
-                        .modal-content
-                            .modal-header
-                                h5#exampleModalLongTitle.modal-title Schedule Order
-                                button.close(type='button', data-dismiss='modal', aria-label='Close')
-                                span(aria-hidden='true') &times;
-                            .modal-body
-                                form.schedule-order-form
-                                    input(type="hidden" id="schedule-orderId" value="")
-                                    label.form-label(for='schedule-date-input') Pick a date                                                
-                                    input#schedule-date-input.form-control(type='date', value='')
-                                    .modal-footer
-                                        button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-                                        button.btn.rira-color-btn(type='submit') Save changes
-
-        section(style = 'margin-top: 150px;')
-            .small-container
-                - const busproducts = businessAccount.products;
-                if (busproducts.length)
-                    ul.list-group.my-4
-                        li.d-flex.justify-content-between
-                            h4.d-flex.justify-content-between Latest Product:
-                            a.rira-color-btn.btn(href='/createproduct') Create New Product
-                    each product in businessAccount.products.slice(0, 10)
-                        -const productprice = product.price.toLocaleString()
-                        - const mobiledate = moment(product.date).format('DD/MMM/YY');
-
-                        .mini-table(data-href=`/myproduct/${product.slug}/${product._id}`)
-                            .row.clickable-row.no-gutters.mx-3.py-2.px-2.border-top.border-bottom
-                                .col-9
-                                    p.m-0 
-                                        a(target='_blank' href=`/myproduct/${product.slug}/${product._id}`)
-                                            b= `${product.productName}`
-                                    p.m-0 
-                                        a(target='_blank' href=`/myproduct/${product.slug}/${product._id}`)= `Stock: ${product.stock}`
-                                    p.m-0 
-                                        a(target='_blank' href=`/myproduct/${product.slug}/${product._id}`)= `Price: ₦${productprice}`
-                                .col-3
-                                    p.mt-3
-                                    a(target='_blank' href=`/myproduct/${product.slug}/${product._id}`)= mobiledate
-                    .text-center.my-3
-                        h6
-                            a.rira-color-btn.btn(href='/allproducts') View All Products
-                if (!busproducts.length)
-                    .text-center
-                        p.mt-2(style='font-size: 1.2rem;') Create your first product and share to your social media buyers
-                    .text-center
-                        a.rira-color-btn.btn(href='/createproduct') Create your first Product
-            
-            input#salesTransBusinessAccountID(type="text", hidden="", value=`${businessAccount.id}`)
-            
-
-        script.
-            function mouseover(e){
-                if (!e) var e = window.event;
-                var target = e.target || e.srcElement;
-                target.style.textDecoration= 'underline';
-            //-  document.getElementsByName('orderPhonea').style.color = 'red'
-             }
-            function mouseout (){
-            if (!e) var e = window.event;
-                var target = e.target || e.srcElement;
-                target.style.textDecoration= 'none';
-            }
-            function showtaginput (){
-            if (!e) var e = window.event;
-            var target = e.target || e.srcElement;
-             const tagInput = document.getElementById(`order-form-tags-${target.id}`)
-             const tagP = document.getElementById(`p-order-tags-${target.id}`)
-                tagP.style.display = 'none';
-              tagInput.style.display = 'block';
-            }
-            function removetaginput (){
-            if (!e) var e = window.event;
-            var target = e.target || e.srcElement;
-             const tagInput = document.getElementById(`order-form-${target.id}`)
-             const tagP = document.getElementById(`p-order-${target.id}`)
-                tagP.style.display = 'block';
-              tagInput.style.display = 'none';
-            }
-            function openTagsForm (){
-            if (!e) var e = window.event;
-            var target = e.target || e.srcElement;
-            const orderId = target.dataset.orderid
-            const tagForm = document.getElementById(`order-form-tags-${orderId}`)
-            const tagP = document.getElementById(`p-order-tags-${orderId}`)
-            tagP.style.display = 'none';
-            tagForm.style.display = 'block';
-            }
-            function closeTagsForm (){
-                if (!e) var e = window.event;
-                var target = e.target || e.srcElement;
-                const orderId = target.dataset.orderid
-                const tagForm = document.getElementById(`order-form-tags-${orderId}`)
-                const tagP = document.getElementById(`p-order-tags-${orderId}`)
-                tagForm.style.display = 'none';
-                tagP.style.display = 'block';
-                }
-
-            $('.schedule-modal-button').on("click", function () {
-                var orderId = $(this).data('orderid');
-                $(".modal-body #schedule-orderId").val( orderId );
-            });
-            document.getElementById('schedule-date-input').valueAsDate = new Date();
+    script.
+        $('.schedule-modal-button').on("click", function () {
+            var orderId = $(this).data('orderid');
+            $(".modal-body #schedule-orderId").val( orderId );
+        });
+        document.getElementById('schedule-date-input').valueAsDate = new Date();

@@ -26,5 +26,10 @@ router
     productController.deleteProduct,
     authBusinessController.protectBusiness
   );
-
+router
+  .route('/clone/:id')
+  .get(
+    authBusinessController.protectBusiness,
+    productController.cloneNewProduct
+  );
 module.exports = router;

@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { showAlert } from './alert';
-// import { //stopLoadingBtnSpinner } from './index';
+import { stopLoadingBtnSpinner } from './index';
 
 export const updatePixel = async (
   facebookPixelId,
@@ -21,7 +21,7 @@ export const updatePixel = async (
       },
     });
     if (res.data.status === 'success') {
-      //stopLoadingBtnSpinner(submitButton);
+      stopLoadingBtnSpinner(submitButton);
       showAlert(
         'success',
         'Your Pixel has been Updated. Refresh this page and check your facebook pixel Helper Extention'
@@ -31,7 +31,7 @@ export const updatePixel = async (
       }, 1500);
     }
   } catch (err) {
-    //stopLoadingBtnSpinner(submitButton);
+    stopLoadingBtnSpinner(submitButton);
     showAlert('success', 'Something is wrong somewhere. Try again later');
     console.log(err.response.data.message);
   }
@@ -48,7 +48,7 @@ export const updateTags = async (tags, orderId, submitButton) => {
     });
 
     if (res.data.status === 'success') {
-      //stopLoadingBtnSpinner(submitButton);
+      stopLoadingBtnSpinner(submitButton);
       showAlert('success', 'Tags Created');
       window.setTimeout(() => {
         location.reload();
@@ -140,20 +140,42 @@ export const updateCancelOrder = async (OrderId) => {
   }
 };
 
+export const cloneProductApi = async (productId) => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `/api/v1/products/clone/${productId}`,
+    });
+    if (res.data.status === 'success') {
+      showAlert('success', 'Product Duplicated!');
+      location.reload();
+    }
+  } catch (err) {
+    showAlert(
+      'error',
+      'Opps! Unable to Duplicate product. Try again later. If the error persist, kindly contact us ASAP'
+    );
+    console.log(err);
+  }
+};
+
 export const updateProduct = async (
   productName,
   price,
   stock,
   additionalInfo,
+  delInfo,
   discount,
-  codOption,
   colours,
   sizes,
   promoQtyPrice,
-  promoPriceQty,
-  facebookPixelId,
-  facebookCurrency,
-  facebookValue,
+  FbId,
+  currency,
+  value,
+  conversionEvent,
+  submitBtnText,
+  submitBtnBGColor,
+  submitBtnColor,
   productId,
   submitButton
 ) => {
@@ -166,33 +188,40 @@ export const updateProduct = async (
         price,
         stock,
         additionalInfo,
+        delInfo,
         discount,
-        codOption,
         colours,
         sizes,
         promoQtyPrice,
-        promoPriceQty,
-        facebookPixelId,
-        facebookCurrency,
-        facebookValue,
+        facebookPixel: {
+          FbId,
+          currency,
+          value,
+          conversionEvent,
+        },
+        formStyle: {
+          submitBtnText,
+          submitBtnBGColor,
+          submitBtnColor,
+        },
       },
     });
     const productSlug = res.data.data.data.slug;
     const updateproductid = res.data.data.data._id;
     if (res.data.status === 'success') {
       showAlert('success', 'Product Updated!');
-      //stopLoadingBtnSpinner(submitButton);
+      stopLoadingBtnSpinner(submitButton);
       window.setTimeout(() => {
         location.assign(`/myproduct/${productSlug}/${updateproductid}`);
       }, 1500);
     }
   } catch (err) {
-    //stopLoadingBtnSpinner(submitButton);
+    stopLoadingBtnSpinner(submitButton);
     showAlert(
       'error',
       'Opps! Unable to update product. Try again later. If the error persist, kindly contact us ASAP'
     );
-    console.log(`🔥🔥🔥 ${err.response.data.message}`);
+    console.log(err);
   }
 };
 
@@ -204,7 +233,7 @@ export const updateDelivery = async (DelOrderId) => {
     });
 
     if (res.data.status === 'success') {
-      // //stopLoadingBtnSpinner(submitButton);
+      stopLoadingBtnSpinner(submitButton);
       showAlert('success', 'Order has been marked as Delivered');
       window.setTimeout(() => {
         location.reload();

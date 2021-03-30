@@ -27,7 +27,7 @@ const orderSchema = new mongoose.Schema(
 
     area: {
       type: String,
-      required: [true, 'Your Area is required'],
+      default: ' ',
     },
     phone: {
       type: String,

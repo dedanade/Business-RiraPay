@@ -18,63 +18,51 @@ block script
                 .row.mx-2.py-3
                     .col
                         textarea#additionalInfo.form-control(name='editordata',placeholder='Submit button Info' )
-                p.mx-3.mt-4 
-                    b Pricing:
-                p.mx-4.mt-3.mb-2
-                    b Type:
-                .row.mx-2.py-3
-                    .col-8
-                        select#productPriceType.form-control
-                            option#oneProductPrice(selected='', value='onePriceForm') One Price
-                            option#varientProductPrice( value='promoPriceForm') Varient Prices
-                #onePriceForm
-                    .row.mx-2.py-3
-                        .col-8
-                            .input-group
-                                .input-group-prepend
-                                    .input-group-text ₦
-                                input#productPrice.form-control(type='number', placeholder='Price')
-                #promoPriceForm(style= 'display: none;')
-                    .row.mx-2.py-3
-                        .col-7
-                            input#promoQty.form-control(type='text', placeholder='Quantity 1')
-                        .col-5
-                            .input-group
-                                .input-group-prepend
-                                    .input-group-text ₦
-                                input#promoPrice.form-control(type='number', placeholder='Price 1' )
-                    .row.mx-2.py-3
-                        .col-7
-                            input#promoQty2.form-control(type='text', placeholder='Quanity 2' )
-                        .col-5
-                            .input-group
-                                .input-group-prepend
-                                    .input-group-text ₦
-                                input#promoPrice2.form-control(type='number', placeholder='Price 2')
-                    .row.mx-2.py-3
-                        .col-7
-                            input#promoQty3.form-control(type='text', placeholder='Quanity 3')
-                        .col-5
-                            .input-group
-                                .input-group-prepend
-                                    .input-group-text ₦
-                                input#promoPrice3.form-control(type='number', placeholder='Price 3')
-                    .row.mx-2.py-3
-                        .col-7
-                            input#promoQty4.form-control(type='text', placeholder='Quanity 4')
-                        .col-5
-                            .input-group
-                                .input-group-prepend
-                                    .input-group-text ₦
-                                input#promoPrice4.form-control(type='number', placeholder='Price 4')
-                .row.mx-3.py-3
-                    .col
-                        | Discount for RiraPay orders
-                        .input-group.w-50
-                            input#inputDiscount.form-control(type='number', placeholder='eg: 20')
-                            .input-group-append
-                                .input-group-text %
-                        small.form-text We reconmend giving out more than 10% discount for order placed with RiraPay.
+                .panel.panel-info.mx-2.my-3
+                    .panel-heading.collapsed(data-toggle='collapse', data-target='#pricing-panel' style = "background-color: lightgrey;" )
+                        .ml-2.py-2
+                            i.fa.fa-fw.fa-chevron-down
+                            i.fa.fa-fw.fa-chevron-right
+                            | Pricing:
+                    .panel-body
+                        #pricing-panel.collapse
+                            p.mx-4.mt-3.mb-2
+                                b Type:
+                            .row.mx-2.py-3
+                                .col-8
+                                    select#productPriceType.form-control
+                                        option#varientProductPrice(selected='' value='promoPriceForm') Varient Prices
+                                        option#oneProductPrice( value='onePriceForm') One Price
+                                        
+                            #onePriceForm(style= 'display: none;')
+                                .row.mx-2.py-3
+                                    .col-8
+                                        .input-group
+                                            .input-group-prepend
+                                                .input-group-text ₦
+                                            input#productPrice.form-control(type='number', placeholder='Price')
+                            #promoPriceForm
+                                .QPInputcl
+                                    .row.mx-2.py-3
+                                        .col-7
+                                            input#promoQty.form-control(type='text', placeholder='Quantity 1')
+                                        .col-5
+                                            .input-group
+                                                .input-group-prepend
+                                                    .input-group-text ₦
+                                                input#promoPrice.form-control(type='number', placeholder='Price 1' )
+                                                i.deleteQPInput.my-auto.ml-1.far.fa-trash-alt(style='font-size: 0.9rem' onclick="deleteQPInput()")                                    
+               
+                                a#cloneQPBtn.ml-3.my-0(type='button' style='font-size: 1rem; color: blue;') Create more options 
+                            .row.mx-3.py-3.my-4
+                                .col
+                                    label Discount
+                                        i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='top', title='This is the discount you want to give customers if they pay before delivery. eg: Product price is 10,000 but if you pay now through rirapay, you get 10% discount' style='-webkit-appearance: none;')
+                                    .input-group.w-100
+                                        input#inputDiscount.form-control(type='number', placeholder='eg: 20')
+                                        .input-group-append
+                                            .input-group-text %
+                                    small.form-text We reconmend giving out more than 10% discount for order placed with RiraPay.
                 .panel.panel-info.mx-2.my-3
                     .panel-heading.collapsed(data-toggle='collapse', data-target='#createproduct-color-size' style = "background-color: lightgrey;" )
                         .ml-2.py-2
@@ -82,7 +70,6 @@ block script
                             i.fa.fa-fw.fa-chevron-right
                             | Color/Size(Optional)
                     .panel-body
-                        // The inside div eliminates the 'jumping' animation.
                         #createproduct-color-size.collapse
                             .row.mx-3.my-2
                                 .col
@@ -95,14 +82,39 @@ block script
                                     input#size-tags.form-control( type='text', value='' data-role='tagsinput',)
                                     small.form-text Seperate each size with comma. eg large, medium, extra large. Click 'x' to remove colour 
 
-                .panel.panel-info.mx-2.my-2
+                .panel.panel-info.mx-2.my-3
+                    .panel-heading.collapsed(data-toggle='collapse', data-target='#styling-product-panel' style = "background-color: lightgrey;" )
+                        .ml-2.py-2
+                            i.fa.fa-fw.fa-chevron-down
+                            i.fa.fa-fw.fa-chevron-right
+                            | Form Styling(Optional)
+                    .panel-body
+                        #styling-product-panel.collapse
+                            .row.mx-3.mb-3.mt-4
+                                .col
+                                    label Button text
+                                    input#submitbBtnTextInput.form-control( type='text', value='Submit Order',)
+                            .row.mx-3.mt-3.mb-5
+                                .col-6
+                                    label Background Color
+                                    input#submitBtnBGColor.form-control( type='color', value='#01afee',)
+                                .col-6
+                                    label Text Color
+                                    input#submitBtnTextColor.form-control( type='color', value='#ffffff',)
+                            .text-center.mb-3
+                                input#submitBtnSample.rira-color-btn.btn.btn-lg.my-1.mx-auto.d-block(type='button' value='Submit Order')
+
+
+
+
+                                
+                .panel.panel-info.mx-2.my-3
                     .panel-heading.collapsed(data-toggle='collapse', data-target='#createproduct-fbpixelaccord' style = "background-color: lightgrey;" )
                         .ml-2.py-2
                             i.fa.fa-fw.fa-chevron-down
                             i.fa.fa-fw.fa-chevron-right
                             | Facebook Pixel(Optional)
-                    .panel-body
-                        // The inside div eliminates the 'jumping' animation.
+                    .panel-body.my-4
                         #createproduct-fbpixelaccord.collapse
                             .row.mx-3.my-2
                                 .col
@@ -116,18 +128,44 @@ block script
                                         option( value='EUR') EUR
                             .row.mx-3.my-2
                                 .col
+                                    select#product-pixel-conversion.form-control
+                                        option(selected='', value='Purchase	') Purchase	
+                                        option( value='CompleteRegistration') Complete registration
+                                        option( value='Lead') Lead
+                                        option( value='SubmitApplication') Submit application	
+                                        option( value='InitiateCheckout') Initiate checkout	
+                                        option( value='AddToCart') Add to cart		
+                                        option( value='AddPaymentInfo') Add payment info		
+                            .row.mx-3.my-2
+                                .col
                                     input#product-pixel-value.form-control( type='Number', value=businessAccount.facebookValue, placeholder='Value')                 
-                .row.mx-3.mb-5.mt-4
-                    .col.ml-3(style = 'font-size: 1rem')
-                        input#cod_Check_Option.form-check-input(type='checkbox')
-                        | I don't want COD option
 
-                .text-center
+                .panel.panel-info.mx-2.my-3
+                    .panel-heading.collapsed(data-toggle='collapse', data-target='#others-product-panel' style = "background-color: lightgrey;" )
+                        .ml-2.py-2
+                            i.fa.fa-fw.fa-chevron-down
+                            i.fa.fa-fw.fa-chevron-right
+                            | Others(Optional)
+                    .panel-body
+                        #others-product-panel.collapse
+                            .row.mx-3.my-2
+                                .col
+                                    label Other Info
+                                        i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='top', title='Any another warning or information you want attached to this product when you send order infomation. Like your account details, etc' style='-webkit-appearance: none;')
+
+                                    textarea#product-del-Info.form-control(placeholder='Type any other information you want added to your order information when sharing with an agent' )
+                .text-center.my-5
                     button.rira-color-btn.btn.btn-lg.my-1.mx-auto.d-block(type='submit') Create Product
                 
 
-            //- script.
-            //-     $(document).ready(function() {
-            //-         $('#additionalInfo').summernote();
-            //-         });
+            script.
+                //- $(document).ready(function() {
+                //-     $('#additionalInfo').summernote();
+                //-     });
+                function deleteQPInput (){
+                    if (!e) var e = window.event;
+                    var target = e.target || e.srcElement;
+                    target.closest('.QPInputcl').remove();
+                }
+                
                 

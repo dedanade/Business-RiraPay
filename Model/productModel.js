@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema(
     slug: String,
     stock: Number,
     additionalInfo: String,
+    delInfo: String,
     price: {
       type: Number,
       default: 0,
@@ -27,14 +28,37 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    facebookPixelId: {
-      type: String,
+    facebookPixel: {
+      FbId: {
+        type: String,
+        default: '0000',
+      },
+      currency: {
+        type: String,
+        default: 'USD',
+      },
+      value: {
+        type: String,
+        default: '00',
+      },
+      conversionEvent: {
+        type: String,
+        default: 'Purchase',
+      },
     },
-    facebookCurrency: {
-      type: String,
-    },
-    facebookValue: {
-      type: String,
+    formStyle: {
+      submitBtnText: {
+        type: String,
+        default: 'Submit Order',
+      },
+      submitBtnBGColor: {
+        type: String,
+        default: '#01afee',
+      },
+      submitBtnColor: {
+        type: String,
+        default: '#ffffff',
+      },
     },
 
     createdAt: {

@@ -17,6 +17,7 @@ import {
   updateDelivery,
   updateSchedule,
   updateCancelOrder,
+  cloneProductApi,
 } from './update';
 import { showAlert } from './alert';
 import { busLoginInput, busSignupInput, addNewbusInput } from './signup_login';
@@ -206,13 +207,25 @@ function removeMemberFuction(id) {
 }
 window.removeMemberFuction = removeMemberFuction;
 
-if (busloginForm) busloginForm.addEventListener('submit', busLoginInput);
+if (busloginForm)
+  busloginForm.addEventListener('submit', (e) => {
+    var submitButton = busloginForm.querySelector('[type="submit"]');
+    busLoginInput(e, submitButton);
+  });
 
 if (logoutBus) logoutBus.addEventListener('click', busLogout);
 
-if (busSignupForm) busSignupForm.addEventListener('submit', busSignupInput);
+if (busSignupForm)
+  busSignupForm.addEventListener('submit', (e) => {
+    var submitButton = busSignupForm.querySelector('[type="submit"]');
+    busSignupInput(e, submitButton);
+  });
 
-if (addNewBusForm) addNewBusForm.addEventListener('submit', addNewbusInput);
+if (addNewBusForm)
+  addNewBusForm.addEventListener('submit', (e) => {
+    var submitButton = addNewBusForm.querySelector('[type="submit"]');
+    addNewbusInput(e, submitButton);
+  });
 
 if (busForgotForm) busForgotForm.addEventListener('submit', busForgotPassInput);
 
@@ -220,16 +233,24 @@ if (resetBusPassForm)
   resetBusPassForm.addEventListener('submit', busResetPassInput);
 
 if (createProductForm)
-  createProductForm.addEventListener('submit', createProductInput);
+  createProductForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    var submitButton = createProductForm.querySelector('[type="submit"]');
+    createProductInput(e, submitButton);
+  });
 
 if (editProductForm)
-  editProductForm.addEventListener('submit', editProductInput);
+  editProductForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    var submitButton = editProductForm.querySelector('[type="submit"]');
+    editProductInput(e, submitButton);
+  });
 
 if (business_pixel_Form)
   business_pixel_Form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const submitButton = e.submitter;
-    //loadingBtnSpinner(submitButton);
+    var submitButton = business_pixel_Form.querySelector('[type="submit"]');
+    loadingBtnSpinner(submitButton);
     const facebookPixelId = document.getElementById('business-pixelId').value;
     const facebookPixelCurrency = document.getElementById(
       'business-pixel-currency'
@@ -288,32 +309,45 @@ if (tagsForm)
     e.preventDefault();
     const tags = document.getElementById('order-tags').value;
     const orderId = document.getElementById('orderid').value;
-    const submitButton = e.submitter;
-    //loadingBtnSpinner(submitButton);
+    const submitButton = tagsForm.querySelector('[type="submit"]');
+    loadingBtnSpinner(submitButton);
     updateTags(tags, orderId, submitButton);
   });
 
 $('.create-tags-pencil').on('click', function (e) {
   const target = e.target || e.srcElement;
-  const orderId = target.id;
-  const allOrdersTagsForm = document.getElementById(
-    `order-form-tags-${orderId}`
-  );
-  allOrdersTagsForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const tags = document.getElementById(`input-order-tags-${orderId}`).value;
-    const submitButton = e.submitter;
-    //loadingBtnSpinner(submitButton);
-    updateTags(tags, orderId, submitButton);
-  });
+  const pencilIcon = target
+    .closest('section')
+    .querySelector('.allorders-tags-form');
+  const pOrderTags = target.closest('section').querySelector('.p-order-tags');
+  pOrderTags.style.display = 'none';
+  pencilIcon.style.display = 'block';
+});
+$('.cancel-tags-form').on('click', function (e) {
+  const target = e.target || e.srcElement;
+  const cancelBtn = target.closest('form');
+  const pOrdertags = target.closest('section').querySelector('.p-order-tags');
+  pOrdertags.style.display = 'block';
+  cancelBtn.style.display = 'none';
+});
+$('.allorders-tags-form').on('submit', (e) => {
+  e.preventDefault();
+  const target = e.target || e.srcElement;
+  const orderId = target.dataset.orderid;
+  const tags = target.parentNode.querySelector(`.input-order-tags`).value;
+  const submitButton = target.querySelector('[type="submit"]');
+  loadingBtnSpinner(submitButton);
+  updateTags(tags, orderId, submitButton);
 });
 
 $('.mobileOrders-tags-form').on('submit', (e) => {
   e.preventDefault();
   const orderId = e.target.dataset.orderid;
   const tags = document.getElementById(`input-order-tags-${orderId}`).value;
-  const submitButton = e.originalEvent.submitter;
-  //loadingBtnSpinner(submitButton);
+  // console.log($(this));
+  // var submitButton = $('.mobileOrders-tags-form').querySelector(
+  //   '[type="submit"]'
+  // );
   updateTags(tags, orderId, submitButton);
 });
 
@@ -332,6 +366,16 @@ $('.cancel-mobile-order').on('click', function (e) {
   } else {
     return false;
   }
+});
+$('.add-tag-mobile-button').on('click', function (e) {
+  e.preventDefault();
+  const target = e.target || e.srcElement;
+  const orderFormMobile = target
+    .closest('section')
+    .querySelector('.allorders-tags-form');
+  const pMobileTags = target.closest('section').querySelector('.p-order-tags');
+  pMobileTags.style.display = 'none';
+  orderFormMobile.style.display = 'block';
 });
 
 if (updateForm)
@@ -379,7 +423,7 @@ if (selectPriceOptions) {
 
   // console.log(promoQtyPriceValue);
   const PromoQtyArray = promoQtyPriceValue.split(',');
-  const newPromoQtyArray = PromoQtyArray.filter((e) => e !== ' 0 = 0 Naira');
+  const newPromoQtyArray = PromoQtyArray.filter((e) => e !== ' = ₦');
   // console.log(PromoQtyArray);
 
   for (var i = 0; i < newPromoQtyArray.length; i++) {
@@ -418,7 +462,6 @@ if (selectSizeOptions) {
 }
 
 $('#productPriceType').on('change', function () {
-  console.log('chnagee');
   if (this.value === 'onePriceForm') {
     $('#onePriceForm').show();
     $('#promoPriceForm').hide();
@@ -512,3 +555,85 @@ $('.toggle-password').click(function () {
     input.attr('type', 'password');
   }
 });
+
+const cloneQPbtn = document.getElementById('cloneQPBtn');
+
+if (cloneQPbtn)
+  cloneQPbtn.addEventListener('click', (e) => {
+    const allPromoInput = document.querySelectorAll('.QPInputcl');
+    var i = allPromoInput.length;
+    var original = allPromoInput[allPromoInput.length - 1];
+    var clone = original.cloneNode(true, true);
+    const newNumber = ++i;
+    const qtyInput = clone.querySelector('input[type="text"]');
+    const priceInput = clone.querySelector('input[type="number"]');
+    qtyInput.setAttribute('placeholder', `Quantity ${newNumber}`);
+    priceInput.setAttribute('placeholder', `Price ${newNumber}`);
+    original.parentNode.insertBefore(clone, cloneQPbtn);
+  });
+
+const submittextInputSample = document.getElementById('submitbBtnTextInput');
+if (submittextInputSample) {
+  submittextInputSample.addEventListener('input', (e) => {
+    changeSubmitBtnText(e);
+  });
+  submittextInputSample.addEventListener('change', (e) => {
+    changeSubmitBtnText(e);
+  });
+}
+
+function changeSubmitBtnText(e) {
+  const submitBtn = document.getElementById('submitBtnSample');
+  var target = e.target || e.srcElement;
+  submitBtn.value = target.value;
+}
+
+const submitBGColorSample = document.getElementById('submitBtnBGColor');
+
+if (submitBGColorSample) {
+  submitBGColorSample.addEventListener('input', (e) => {
+    changeSubmitBGColor(e);
+  });
+  submitBGColorSample.addEventListener('change', (e) => {
+    changeSubmitBGColor(e);
+  });
+}
+function changeSubmitBGColor(e) {
+  const submitBtn = document.getElementById('submitBtnSample');
+  var target = e.target || e.srcElement;
+  submitBtn.style.backgroundColor = target.value;
+}
+
+const submitBtnTextColor = document.getElementById('submitBtnTextColor');
+
+if (submitBtnTextColor) {
+  submitBtnTextColor.addEventListener('input', (e) => {
+    changeSubmitTextColor(e);
+  });
+  submitBtnTextColor.addEventListener('change', (e) => {
+    changeSubmitTextColor(e);
+  });
+}
+function changeSubmitTextColor(e) {
+  const submitBtn = document.getElementById('submitBtnSample');
+  var target = e.target || e.srcElement;
+  submitBtn.style.color = target.value;
+}
+
+$('.cloneProduct').on('click', (e) => {
+  e.preventDefault();
+  var target = e.target || e.srcElement;
+  const productId = target.dataset.productid;
+  cloneProductApi(productId);
+});
+
+// $('.table-row').on('mouseover', function (e) {
+//   console.log(e.target);
+//   // const pencilIcon = e.target.querySelector('.tag-edit-btn');
+//   // console.log(pencilIcon);
+//   // pencilIcon.style.display = 'block';
+// });
+// .on('mouseout', function (e) {
+//   const pencilIcon = e.target.querySelector('.tag-edit-btn');
+//   pencilIcon.style.display = 'none';
+// });

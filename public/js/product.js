@@ -3,130 +3,133 @@ import { createProduct } from './create';
 import { updateProduct } from './update';
 import { loadingBtnSpinner } from './index';
 
-export const createProductInput = (e) => {
+export const createProductInput = (e, submitButton) => {
   e.preventDefault();
-
-  const submitButton = e.submitter;
   const productName = document.getElementById('productName').value;
   const price = document.getElementById('productPrice').value || 0;
   const stock = document.getElementById('productStock').value;
   const additionalInfo = document.getElementById('additionalInfo').value;
+  const delInfo = document.getElementById('product-del-Info').value;
   const discount = document.getElementById('inputDiscount').value;
   const colours = document.getElementById('color-tags').value;
   const sizes = document.getElementById('size-tags').value;
-
-  const promoQty = document.getElementById('promoQty').value || 0;
-  const promoPrice = document.getElementById('promoPrice').value || 0;
-
-  const promoQty2 = document.getElementById('promoQty2').value || 0;
-  const promoPrice2 = document.getElementById('promoPrice2').value || 0;
-
-  const promoQty3 = document.getElementById('promoQty3').value || 0;
-  const promoPrice3 = document.getElementById('promoPrice3').value || 0;
-
-  const promoQty4 = document.getElementById('promoQty4').value || 0;
-  const promoPrice4 = document.getElementById('promoPrice4').value || 0;
+  const submitBtnTextColor = document.getElementById('submitBtnTextColor')
+    .value;
+  const submitBtnBGColor = document.getElementById('submitBtnBGColor').value;
+  const submitBtnTextInput = document.getElementById('submitbBtnTextInput')
+    .value;
+  const promoPriceForm = document
+    .getElementById('promoPriceForm')
+    .querySelectorAll('.QPInputcl');
+  var newarray = [];
+  promoPriceForm.forEach((e) => {
+    const inputtext = e.querySelector('input[type="text"]').value;
+    const inputnumber = e.querySelector('input[type="number"]').value;
+    const array = `${inputtext} = ₦${inputnumber}`;
+    newarray.push(array);
+  });
+  const promoPriceQty = newarray.toString();
 
   const facebookPixelId = document.getElementById('product-pixel-id').value;
+  const facebookPixelEvent = document.getElementById('product-pixel-conversion')
+    .value;
   const facebookCurrency = document.getElementById('product-pixel-currency')
     .value;
   const facebookValue = document.getElementById('product-pixel-value').value;
 
-  const promoPriceQty = `${promoQty} = ${promoPrice} Naira, ${promoQty2} = ${promoPrice2} Naira, ${promoQty3} = ${promoPrice3} Naira, ${promoQty4} = ${promoPrice4} Naira`;
-  const codOptionCheckbox = document.getElementById('cod_Check_Option');
-  if (codOptionCheckbox.checked) {
-    var codOption = false;
-  }
-  if (price > 0 && promoPriceQty.split(',')[0] != '0 = 0 Naira') {
+  if (price > 0 && promoPriceQty.split(',')[0] != ' = ₦') {
     alert(`You can't use one Price and Varient at the same time`);
     return false;
-  } else if (price === 0 && promoPriceQty.split(',')[0] === '0 = 0 Naira') {
+  } else if (price === 0 && promoPriceQty.split(',')[0] === ' = ₦') {
     alert(`Kindly use one of the pricing type. The two options can't be empty`);
     return false;
-  } //loadingBtnSpinner(submitButton);
-  else
-    createProduct(
-      productName,
-      price,
-      stock,
-      additionalInfo,
-      discount,
-      codOption,
-      colours,
-      sizes,
-      promoPriceQty,
-      facebookPixelId,
-      facebookCurrency,
-      facebookValue,
-      submitButton
-    );
+  } else loadingBtnSpinner(submitButton);
+  createProduct(
+    productName,
+    price,
+    stock,
+    additionalInfo,
+    delInfo,
+    discount,
+    colours,
+    sizes,
+    promoPriceQty,
+    facebookPixelId,
+    facebookCurrency,
+    facebookValue,
+    facebookPixelEvent,
+    submitBtnTextInput,
+    submitBtnBGColor,
+    submitBtnTextColor,
+    submitButton
+  );
 };
 
-export const editProductInput = (e) => {
+export const editProductInput = (e, submitButton) => {
   e.preventDefault();
-  const submitButton = e.submitter;
   const productName = document.getElementById('editproductName').value;
-  const editprice = document.getElementById('editproductPrice').value || 0;
+  const editprice = document.getElementById('editProductPrice').value || 0;
   const stock = document.getElementById('editproductStock').value;
   const additionalInfo = document.getElementById('editadditionalInfo').value;
-  const discount = document.getElementById('editinputDiscount').value;
+  const delInfo = document.getElementById('edit-product-del-Info').value;
+  const discount = document.getElementById('editInputDiscount').value;
   const colours = document.getElementById('edit-color-tags').value;
   const sizes = document.getElementById('edit-size-tags').value;
-  const productId = document.getElementById('productId').value;
+  const productId = document.getElementById('editProductId').value;
 
-  const promoQty = document.getElementById('editPromoQty').value || 0;
-  const promoPrice = document.getElementById('editPromoPrice').value || 0;
-
-  const promoQty2 = document.getElementById('editPromoQty2').value || 0;
-  const promoPrice2 = document.getElementById('editPromoPrice2').value || 0;
-
-  const promoQty3 = document.getElementById('editPromoQty3').value || 0;
-  const promoPrice3 = document.getElementById('editPromoPrice3').value || 0;
-
-  const promoQty4 = document.getElementById('editPromoQty4').value || 0;
-  const promoPrice4 = document.getElementById('editPromoPrice4').value || 0;
-
-  const promoPriceQty = `${promoQty} = ${promoPrice} Naira, ${promoQty2} = ${promoPrice2} Naira, ${promoQty3} = ${promoPrice3} Naira, ${promoQty4} = ${promoPrice4} Naira`;
+  const submitBtnTextColor = document.getElementById('submitBtnTextColor')
+    .value;
+  const submitBtnBGColor = document.getElementById('submitBtnBGColor').value;
+  const submitBtnTextInput = document.getElementById('submitbBtnTextInput')
+    .value;
+  const promoPriceForm = document
+    .getElementById('promoPriceForm')
+    .querySelectorAll('.QPInputcl');
+  var newarray = [];
+  promoPriceForm.forEach((e) => {
+    const inputtext = e.querySelector('input[type="text"]').value;
+    const inputnumber = e.querySelector('input[type="number"]').value;
+    const array = `${inputtext} = ₦${inputnumber}`;
+    newarray.push(array);
+  });
+  const promoPriceQty = newarray.toString();
 
   const facebookPixelId = document.getElementById('edit-product-pixel-id')
     .value;
+  const facebookPixelEvent = document.getElementById(
+    'edit-product-pixel-conversion'
+  ).value;
+
   const facebookCurrency = document.getElementById(
     'edit-product-pixel-currency'
   ).value;
   const facebookValue = document.getElementById('edit-product-pixel-value')
     .value;
-
-  const editCodOptionCheckbox = document.getElementById(
-    'edit_cod_Check_Option'
-  );
-  if (editCodOptionCheckbox.checked) {
-    var editCodOption = false;
-  } else {
-    var editCodOption = true;
-  }
-  if (editprice > 0 && promoPriceQty.split(',')[0] != '0 = 0 Naira') {
+  if (editprice > 0 && promoPriceQty.split(',')[0] != ' = ₦') {
     alert(`You can't use one Price and Varient at the same time`);
     return false;
-  } else if (editprice === 0 && promoPriceQty.split(',')[0] === '0 = 0 Naira') {
+  } else if (editprice === 0 && promoPriceQty.split(',')[0] === ' = ₦') {
     alert(`Kindly use one of the pricing type. The two options can't be empty`);
     return false;
-  } //loadingBtnSpinner(submitButton);
-  else
-    updateProduct(
-      productName,
-      editprice,
-      stock,
-      additionalInfo,
-      discount,
-      editCodOption,
-      colours,
-      sizes,
-      promoPriceQty,
-      promoPriceQty,
-      facebookPixelId,
-      facebookCurrency,
-      facebookValue,
-      productId,
-      submitButton
-    );
+  } else loadingBtnSpinner(submitButton);
+  updateProduct(
+    productName,
+    editprice,
+    stock,
+    additionalInfo,
+    delInfo,
+    discount,
+    colours,
+    sizes,
+    promoPriceQty,
+    facebookPixelId,
+    facebookCurrency,
+    facebookValue,
+    facebookPixelEvent,
+    submitBtnTextInput,
+    submitBtnBGColor,
+    submitBtnTextColor,
+    productId,
+    submitButton
+  );
 };

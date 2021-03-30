@@ -123,6 +123,13 @@ td a:hover {
   text-decoration: none;
 }
 
+tr.order-table-row .create-tags-pencil {
+  display: none;
+}
+tr.order-table-row:hover .create-tags-pencil {
+  display: block;
+}
+
 #card-border {
   width: 30em;
 }
@@ -430,6 +437,7 @@ table {
   width: 100%;
   max-width: 100%;
   margin-bottom: 20px;
+  word-wrap: break-word;
   white-space: pre-line;
 }
 
@@ -447,6 +455,11 @@ table {
   font-size: 1rem;
 }
 
+.lg-table-phoneNum:hover {
+  letter-spacing: 0.2rem;
+  font-size: 1.1rem;
+  text-decoration: underline;
+}
 /* Order-Page */
 
 #card-order {

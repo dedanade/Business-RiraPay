@@ -1,21 +1,25 @@
 /* eslint-disable */
 import axios from 'axios';
 import { showAlert } from './alert';
-// import { //stopLoadingBtnSpinner } from './index';
+import { stopLoadingBtnSpinner } from './index';
 
 export const createProduct = async (
   productName,
   price,
   stock,
   additionalInfo,
+  delInfo,
   discount,
-  codOption,
   colours,
   sizes,
   promoQtyPrice,
-  facebookPixelId,
-  facebookCurrency,
-  facebookValue,
+  FbId,
+  currency,
+  value,
+  conversionEvent,
+  submitBtnText,
+  submitBtnBGColor,
+  submitBtnColor,
   submitButton
 ) => {
   try {
@@ -27,14 +31,22 @@ export const createProduct = async (
         price,
         stock,
         additionalInfo,
+        delInfo,
         discount,
-        codOption,
         colours,
         sizes,
         promoQtyPrice,
-        facebookPixelId,
-        facebookCurrency,
-        facebookValue,
+        facebookPixel: {
+          FbId,
+          currency,
+          value,
+          conversionEvent,
+        },
+        formStyle: {
+          submitBtnText,
+          submitBtnBGColor,
+          submitBtnColor,
+        },
       },
     });
 
@@ -42,13 +54,12 @@ export const createProduct = async (
     const productId = res.data.data.newProduct._id;
     if (res.data.status === 'success') {
       showAlert('success', 'Product created Successfully!');
-      //stopLoadingBtnSpinner(submitButton);
       window.setTimeout(() => {
         location.assign(`/myproduct/${productSlug}/${productId}`);
       }, 1500);
     }
   } catch (err) {
-    //stopLoadingBtnSpinner(submitButton);
+    stopLoadingBtnSpinner(submitButton);
     showAlert('error', err.response.data.message);
   }
 };

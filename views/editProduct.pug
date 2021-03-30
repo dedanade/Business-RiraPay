@@ -6,6 +6,7 @@ block content
         section
             .form-container(style= 'margin-top: 150px;')
                 form.edit-product-form
+                    input#editProductId(type='hidden', value= product._id)
                     .text-center.py-4
                         h3.pt-3= `Edit ${product.productName}`
                     .row.mx-2.py-3
@@ -18,115 +19,52 @@ block content
                             input#editproductStock.form-control(type='number', required='' value= product.stock)
                     .row.mx-2.py-3
                         .col
-                            | Submit button info
-                            
-                            //- input#editProductDescription(type='hidden', name='businessUser', value= product.additionalInfo)
+                            label Submit button info
                             textarea#editadditionalInfo.form-control(name='editordata') !{product.additionalInfo}
-                    p.mx-3.mt-4
-                        b  Pricing:
-                    p.mx-4.mt-3.mb-2 
-                        b Type:
-                    .row.mx-2.py-3
-                        .col-8
-                            select#productPriceType.form-control
-                                if (product.price > 0)
-                                    option#oneProductPrice(selected='', value='onePriceForm') One Price
-                                    option#varientProductPrice( value='promoPriceForm') Varient Prices
-                                else
-                                    option#oneProductPrice( value='onePriceForm') One Price
-                                    option#varientProductPrice( selected='', value='promoPriceForm') Varient Prices
-                    
-                    #onePriceForm
-                        .row.mx-2.py-3
-                            .col-8
-                                .input-group
-                                    .input-group-prepend
-                                        .input-group-text ₦
-                                    input#editproductPrice.form-control(type='number', placeholder='Price' value=product.price)
-                    -const promoPriceArray = product.promoQtyPrice.join(',').replace(/Naira/g, '').replace(/\s/g, "").split(',');
-                    -const newPromoPriceArray = promoPriceArray.filter(e => e !== '0=0');
-                    -const promoPricesQty = newPromoPriceArray.join(',').replace(/=/g, ",").split(',')
-                    #promoPriceForm
-                        .row.mx-2.py-3
-                            if (promoPricesQty[0])
-                                .col-7
-                                    input#editPromoQty.form-control(type='text', placeholder='Quantity 1' value= promoPricesQty[0])
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice.form-control(type='number', placeholder='Price 1' value= promoPricesQty[1])
-                            else
-                                .col-7
-                                    input#editPromoQty.form-control(type='text', placeholder='Quantity 1')
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice.form-control(type='number', placeholder='Price 1')
-                        .row.mx-2.py-3
-                            if (promoPricesQty[2])
-                                .col-7
-                                    input#editPromoQty2.form-control(type='text', placeholder='Quantity 2' value=promoPricesQty[2])
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice2.form-control(type='number', placeholder='Price 2' value=promoPricesQty[3])
-                            else
-                                .col-7
-                                    input#editPromoQty2.form-control(type='text', placeholder='Quantity 2' )
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice2.form-control(type='number', placeholder='Price 2')
-                        .row.mx-2.py-3
-                            if (promoPricesQty[4])
-                                .col-7
-                                    input#editPromoQty3.form-control(type='text', placeholder='Quantity 3' value=promoPricesQty[4])
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice3.form-control(type='number', placeholder='Price 3' value=promoPricesQty[5])
-                            else
-                                .col-7
-                                    input#editPromoQty3.form-control(type='text', placeholder='Quantity 3')
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice3.form-control(type='number', placeholder='Price 3')
-                        .row.mx-2.py-3
-                            if (promoPricesQty[6])
-                                .col-7
-                                    input#editPromoQty4.form-control(type='text', placeholder='Quantity 4' value=promoPricesQty[6])
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice4.form-control(type='number', placeholder='Price 4' value=promoPricesQty[7])
-                            else
-                                .col-7
-                                    input#editPromoQty4.form-control(type='text', placeholder='Quantity 4')
-                                .col-5
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text ₦
-                                        input#editPromoPrice4.form-control(type='number', placeholder='Price 4')
-                        //- .row.mx-2.py-3
-                        //-     .col
-                        //-         label(for='editproductPrice') Price (required)
-                        //-         input#editproductPrice.form-control(type='number', required='' value= product.price)
-                    .row.mx-2.py-3
-                        .col
-                            label(for='#editinputDiscount') Discount for RiraPay orders
-                            .input-group.w-50
-                                input#editinputDiscount.form-control(type='number', value= product.discount)
-                                .input-group-append
-                                .input-group-text %
-
+                    .panel.panel-info.mx-2.my-3
+                        .panel-heading.collapsed(data-toggle='collapse', data-target='#pricing-panel' style = "background-color: lightgrey;" )
+                            .ml-2.py-2
+                                i.fa.fa-fw.fa-chevron-down
+                                i.fa.fa-fw.fa-chevron-right
+                                | Pricing:
+                        .panel-body
+                            #pricing-panel.collapse
+                                p.mx-4.mt-3.mb-2
+                                    b Type:
+                                .row.mx-2.py-3
+                                    .col-8
+                                        select#productPriceType.form-control
+                                            option#varientProductPrice(selected='' value='promoPriceForm') Varient Prices
+                                            option#oneProductPrice( value='onePriceForm') One Price
+                                            
+                                #onePriceForm(style= 'display: none;')
+                                    .row.mx-2.py-3
+                                        .col-8
+                                            .input-group
+                                                .input-group-prepend
+                                                    .input-group-text ₦
+                                                input#editProductPrice.form-control(type='number', placeholder='Price')
+                                #promoPriceForm
+                                    .QPInputcl
+                                        .row.mx-2.py-3
+                                            .col-7
+                                                input.form-control(type='text', placeholder='Quantity 1')
+                                            .col-5
+                                                .input-group
+                                                    .input-group-prepend
+                                                        .input-group-text ₦
+                                                    input#promoPrice.form-control(type='number', placeholder='Price 1' )
+                                                    i.deleteQPInput.my-auto.ml-1.far.fa-trash-alt(style='font-size: 0.9rem' onclick="deleteQPInput()")                                    
+                                    a#cloneQPBtn.ml-3.my-0(type='button' style='font-size: 1rem; color: blue;') Create more options 
+                                .row.mx-3.py-3.my-4
+                                    .col
+                                        label Discount
+                                            i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='top', title='This is the discount you want to give customers if they pay before delivery. eg: Product price is 10,000 but if you pay now through rirapay, you get 10% discount' style='-webkit-appearance: none;')
+                                        .input-group.w-100
+                                            input#editInputDiscount.form-control(type='number', placeholder='eg: 20' value=product.discount)
+                                            .input-group-append
+                                                .input-group-text %
+                                        small.form-text We reconmend giving out more than 10% discount for order placed with RiraPay.
                     .panel.panel-info.mx-2.my-3
                         .panel-heading.collapsed(data-toggle='collapse', data-target='#editproduct-color-size' style = "background-color: lightgrey;" )
                             .ml-2.py-2
@@ -148,46 +86,117 @@ block content
                                         label(for='edit-size-tags').my-2 Size
                                         input#edit-size-tags.form-control( type='text', value=newProductSizes data-role='tagsinput',)
                                         small.form-text Seperate each size with comma.
-                    
-                    .panel.panel-info.mx-2.my-2
-                        .panel-heading.collapsed(data-toggle='collapse', data-target='#editproduct-fbpixelaccord' style = "background-color: lightgrey;" )
+
+                    .panel.panel-info.mx-2.my-3
+                        .panel-heading.collapsed(data-toggle='collapse', data-target='#styling-product-panel' style = "background-color: lightgrey;" )
+                            .ml-2.py-2
+                                i.fa.fa-fw.fa-chevron-down
+                                i.fa.fa-fw.fa-chevron-right
+                                | Form Styling(Optional)
+                        .panel-body
+                            #styling-product-panel.collapse
+                                .row.mx-3.mb-3.mt-4
+                                    .col
+                                        label Button text
+                                        input#submitbBtnTextInput.form-control( type='text', value=product.formStyle.submitBtnText,)
+                                .row.mx-3.mt-3.mb-5
+                                    .col-6
+                                        label Background Color
+                                        input#submitBtnBGColor.form-control( type='color', value=product.formStyle.submitBtnBGColor)
+                                    .col-6
+                                        label Text Color
+                                        input#submitBtnTextColor.form-control( type='color', value=product.formStyle.submitBtnColor)
+                                .text-center.mb-3
+                                    input#submitBtnSample.rira-color-btn.btn.btn-lg.my-1.mx-auto.d-block(type='button' value= product.formStyle.submitBtnText style=`background-color: ${product.formStyle.submitBtnBGColor}; color: ${product.formStyle.submitBtnColor} `)
+                                    
+                    .panel.panel-info.mx-2.my-3
+                        .panel-heading.collapsed(data-toggle='collapse', data-target='#createproduct-fbpixelaccord' style = "background-color: lightgrey;" )
                             .ml-2.py-2
                                 i.fa.fa-fw.fa-chevron-down
                                 i.fa.fa-fw.fa-chevron-right
                                 | Facebook Pixel(Optional)
-                        .panel-body
-                            // The inside div eliminates the 'jumping' animation.
-                            #editproduct-fbpixelaccord.collapse
+                        .panel-body.my-4
+                            #createproduct-fbpixelaccord.collapse
                                 .row.mx-3.my-2
                                     .col
-                                        input#edit-product-pixel-id.form-control( type='Number', value=product.facebookPixelId, placeholder='Pixel ID' )
+                                        input#edit-product-pixel-id.form-control( type='Number', value=product.facebookPixel.FbId, placeholder='Pixel ID' )
                                 .row.mx-3.my-2
                                     .col
                                         select#edit-product-pixel-currency.form-control
-                                            option(selected='') USD
+                                            option(selected='', value='USD') USD
                                             option( value='NGN') NGN
                                             option( value='GBP') GBP
                                             option( value='EUR') EUR
                                 .row.mx-3.my-2
                                     .col
-                                        input#edit-product-pixel-value.form-control( type='Number', value=product.facebookValue, placeholder='Value')
-                    
-                    if (product.codOption === true)
-                        .row.mx-3.mb-5.mt-3
-                            .col.ml-3(style = 'font-size: 1rem')
-                                input#edit_cod_Check_Option.form-check-input(type='checkbox')
-                                | I don't want COD option
-                                input#productId(type='hidden', value= product._id)
-                    else
-                        .row.mx-3.mb-5.mt-3
-                            .col.ml-3(style = 'font-size: 1rem')
-                                input#edit_cod_Check_Option.form-check-input(type='checkbox' checked='')
-                                | I don't want COD option
-                                input#productId(type='hidden', value= product._id)
-                    .text-center
-                        button.rira-color-btn.btn.btn-lg.my-1.mx-auto.d-block(type='submit') update
+                                        select#edit-product-pixel-conversion.form-control
+                                            option(selected='', value='Purchase	') Purchase	
+                                            option( value='CompleteRegistration') Complete registration
+                                            option( value='Lead') Lead
+                                            option( value='SubmitApplication') Submit application	
+                                            option( value='InitiateCheckout') Initiate checkout	
+                                            option( value='AddToCart') Add to cart		
+                                            option( value='AddPaymentInfo') Add payment info		
+                                .row.mx-3.my-2
+                                    .col
+                                        input#edit-product-pixel-value.form-control( type='Number', value=product.facebookPixel.value, placeholder='Value')                 
+
+                    .panel.panel-info.mx-2.my-0
+                        .panel-heading.collapsed(data-toggle='collapse', data-target='#others-product-panel' style = "background-color: lightgrey;" )
+                            .ml-2.py-2
+                                i.fa.fa-fw.fa-chevron-down
+                                i.fa.fa-fw.fa-chevron-right
+                                | Others(Optional)
+                        .panel-body
+                            #others-product-panel.collapse
+                                .row.mx-3.my-2
+                                    .col
+                                        label Other Info
+                                            i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='top', title='Any another warning or information you want attached to this product when you send order infomation. Like your account details, etc' style='-webkit-appearance: none;')
+
+                                        textarea#edit-product-del-Info.form-control(placeholder='Type any other information you want added to your order information when sharing with an agent' )=product.delInfo
+                    .text-center.my-4
+                            button.rira-color-btn.btn.btn-lg.my-1.mx-auto.d-block(type='submit') Update Product
                         
                 script.
+                    price = #{product.price} 
+                    promoPrice = !{JSON.stringify(product.promoQtyPrice)}
+
+                    function deleteQPInput (){
+                        if (!e) var e = window.event;
+                        var target = e.target || e.srcElement;
+                        target.closest('.QPInputcl').remove();
+                    }
+
+                    if (price <= 0){
+                        const promoPricelength = promoPrice.join(',').split(',').length
+                        const promoForm = document.querySelectorAll('.QPInputcl')
+                        const promoFormLenght = document.querySelectorAll('.QPInputcl').length
+                        const cloneQPbtn = document.getElementById('cloneQPBtn');
+
+                        if (promoPricelength > promoFormLenght){
+                            const lastPromoForm = promoForm[promoForm.length - 1]
+                            for (var i = promoFormLenght; i < promoPricelength; ++i){
+                            var clone = lastPromoForm.cloneNode(true);
+                            lastPromoForm.parentNode.insertBefore(clone, cloneQPbtn);
+                            }
+                        }
+                        const newPromoInputs = document.querySelectorAll('.QPInputcl');
+                        const promoPriceSplit = promoPrice.join(',').replace(/₦/g, '').replace(/\s/g, "").replace(/=/g, ",").split(',')
+                        //- console.log(promoPriceSplit)
+                       var allTextNumber =[]
+                        newPromoInputs.forEach(inputs => {
+                            let eachTextinput = inputs.querySelector('input[type="text"]')
+                            let eachNumberinput = inputs.querySelector('input[type="number"]')
+                            allTextNumber.push(eachTextinput, eachNumberinput)
+                            })
+
+                            for (let i = 0; i < allTextNumber.length; i++) {
+                                var eachTextNumberInput = allTextNumber[i];
+                                var eachPriceList = promoPriceSplit[i];
+                                eachTextNumberInput.value = eachPriceList
+                                }
+                    }
                     $(document).ready( function() {
                         var priceTypeVal = $('#productPriceType').val();
                         if (priceTypeVal === 'onePriceForm') {
@@ -200,5 +209,7 @@ block content
                         }
                     });
 
-                    let fbcurrency =!{JSON.stringify(product.facebookCurrency)}                          
+                    let fbcurrency =!{JSON.stringify(product.facebookPixel.currency)}                          
                         $('#edit-product-pixel-currency').val(fbcurrency)
+                    let fbEvent =!{JSON.stringify(product.facebookPixel.conversionEvent)}                          
+                        $('#edit-product-pixel-conversion').val(fbEvent)
