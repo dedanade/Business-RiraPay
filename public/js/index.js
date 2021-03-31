@@ -316,10 +316,8 @@ if (tagsForm)
 
 $('.create-tags-pencil').on('click', function (e) {
   const target = e.target || e.srcElement;
-  const pencilIcon = target
-    .closest('section')
-    .querySelector('.allorders-tags-form');
-  const pOrderTags = target.closest('section').querySelector('.p-order-tags');
+  const pencilIcon = target.closest('td').querySelector('.allorders-tags-form');
+  const pOrderTags = target.closest('td').querySelector('.p-order-tags');
   pOrderTags.style.display = 'none';
   pencilIcon.style.display = 'block';
 });
@@ -349,6 +347,14 @@ $('.mobileOrders-tags-form').on('submit', (e) => {
   //   '[type="submit"]'
   // );
   updateTags(tags, orderId, submitButton);
+});
+
+$('.suggested-tag-input').on('click', (e) => {
+  const suggestedText = e.target.innerText;
+  const inputOrderTags = e.target
+    .closest('form')
+    .querySelector('.input-order-tags');
+  inputOrderTags.value = suggestedText;
 });
 
 $('.cancel-mobile-order').on('click', function (e) {

@@ -49,10 +49,14 @@ export const updateTags = async (tags, orderId, submitButton) => {
 
     if (res.data.status === 'success') {
       stopLoadingBtnSpinner(submitButton);
-      showAlert('success', 'Tags Created');
-      window.setTimeout(() => {
-        location.reload();
-      }, 100);
+      const tags = res.data.data.Updatedorder.tags;
+      const pOrdertags = submitButton
+        .closest('td')
+        .querySelector('.p-order-tags');
+      const tagsForm = submitButton.closest('form');
+      pOrdertags.style.display = 'block';
+      tagsForm.style.display = 'none';
+      pOrdertags.innerText = tags;
     }
   } catch (err) {
     showAlert('error', 'Unable to update tags. Try again');

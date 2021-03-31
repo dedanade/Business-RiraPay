@@ -61,9 +61,13 @@ mixin largeOrderTable(ordersArray)
                                         button.create-tags-pencil(style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;')
                                             i.lni.lni-pencil
                                 form.allorders-tags-form(data-orderid= order._id style='font-size: 1rem; display: none;')
-                                    input.form-control.input-order-tags( type='text', value=tags data-role='tagsinput')
-                                    button.btn.rira-color-btn.my-2.mr-2(type='submit') save
-                                    button.btn.btn-secondary.my-2.cancel-tags-form(type='button') cancel
+                                    input.form-control.input-order-tags( type='text', value=tags)
+                                    .d-flex
+                                        p.ml-1.my-1.p-0.suggested-tag-input( style='font-size: 0.8rem; background-color: black; color: white') Not Picking
+                                        p.ml-1.my-1.p-0.suggested-tag-input( style='font-size: 0.8rem; background-color: black; color: white') Not Reachable
+                                    .text-center
+                                        button.btn.rira-color-btn.my-2.mr-2(type='submit') save
+                                        button.btn.btn-secondary.my-2.cancel-tags-form(type='button') cancel
                             td
                                 .d-flex.py-1
                                     button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
