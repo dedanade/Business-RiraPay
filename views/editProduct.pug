@@ -43,7 +43,7 @@ block content
                                             .input-group
                                                 .input-group-prepend
                                                     .input-group-text ₦
-                                                input#editProductPrice.form-control(type='number', placeholder='Price')
+                                                input#editProductPrice.form-control(type='number', placeholder='Price' value=product.price)
                                 #promoPriceForm
                                     .QPInputcl
                                         .row.mx-2.py-3
@@ -114,9 +114,12 @@ block content
                             .ml-2.py-2
                                 i.fa.fa-fw.fa-chevron-down
                                 i.fa.fa-fw.fa-chevron-right
-                                | Facebook Pixel(Optional)
+                                | Pixel Tracking(Optional)
                         .panel-body.my-4
                             #createproduct-fbpixelaccord.collapse
+                                p Direct Tracking:
+                                    i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='right', title='If you want RiraPay to automatically track your pixel, input your pixel ID, value, event and currency below or use the second option' style='-webkit-appearance: none;')
+
                                 .row.mx-3.my-2
                                     .col
                                         input#edit-product-pixel-id.form-control( type='Number', value=product.facebookPixel.FbId, placeholder='Pixel ID' )
@@ -139,8 +142,13 @@ block content
                                             option( value='AddPaymentInfo') Add payment info		
                                 .row.mx-3.my-2
                                     .col
-                                        input#edit-product-pixel-value.form-control( type='Number', value=product.facebookPixel.value, placeholder='Value')                 
+                                        input#edit-product-pixel-value.form-control( type='Number', placeholder='Value', value=product.facebookPixel.value)                 
 
+                                p Thank you Page:
+                                    i.ml-1.fas.fa-info-circle.my-auto(type='button', data-toggle='tooltip', data-placement='right', title='If you prefer using your custom thank you page, input it below with full domain description eg: https://yourstore.com/thank-you' style='-webkit-appearance: none;')
+                                .row.mx-3.my-2
+                                    .col
+                                        input#edit-product-thank-you-page.form-control( type='Text', value=product.facebookPixel.thankYouPage, placeholder='https://yourstore.com/thank-you' onfocusout="showUrlError()")                 
                     .panel.panel-info.mx-2.my-0
                         .panel-heading.collapsed(data-toggle='collapse', data-target='#others-product-panel' style = "background-color: lightgrey;" )
                             .ml-2.py-2
@@ -213,3 +221,12 @@ block content
                         $('#edit-product-pixel-currency').val(fbcurrency)
                     let fbEvent =!{JSON.stringify(product.facebookPixel.conversionEvent)}                          
                         $('#edit-product-pixel-conversion').val(fbEvent)
+
+                    function showUrlError (){
+                    if (!e) var e = window.event;
+                    var target = e.target || e.srcElement;
+                    if (target.value.indexOf("http") === -1) {
+                    alert('Please make sure you use the full url description eg: https://yourstore.com/thank-you')
+                    return false;
+                    } return false
+                    }   

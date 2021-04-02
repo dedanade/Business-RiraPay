@@ -37,6 +37,8 @@ export const createProductInput = (e, submitButton) => {
     .value;
   const facebookValue = document.getElementById('product-pixel-value').value;
 
+  const thankYouPage = document.getElementById('product-thank-you-page').value;
+
   if (price > 0 && promoPriceQty.split(',')[0] != ' = ₦') {
     alert(`You can't use one Price and Varient at the same time`);
     return false;
@@ -58,6 +60,7 @@ export const createProductInput = (e, submitButton) => {
     facebookCurrency,
     facebookValue,
     facebookPixelEvent,
+    thankYouPage,
     submitBtnTextInput,
     submitBtnBGColor,
     submitBtnTextColor,
@@ -105,6 +108,9 @@ export const editProductInput = (e, submitButton) => {
   ).value;
   const facebookValue = document.getElementById('edit-product-pixel-value')
     .value;
+  console.log(facebookValue);
+  const thankYouPage = document.getElementById('edit-product-thank-you-page')
+    .value;
   if (editprice > 0 && promoPriceQty.split(',')[0] != ' = ₦') {
     alert(`You can't use one Price and Varient at the same time`);
     return false;
@@ -126,6 +132,7 @@ export const editProductInput = (e, submitButton) => {
     facebookCurrency,
     facebookValue,
     facebookPixelEvent,
+    thankYouPage,
     submitBtnTextInput,
     submitBtnBGColor,
     submitBtnTextColor,

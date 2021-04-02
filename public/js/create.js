@@ -17,6 +17,7 @@ export const createProduct = async (
   currency,
   value,
   conversionEvent,
+  thankYouPage,
   submitBtnText,
   submitBtnBGColor,
   submitBtnColor,
@@ -41,6 +42,7 @@ export const createProduct = async (
           currency,
           value,
           conversionEvent,
+          thankYouPage,
         },
         formStyle: {
           submitBtnText,

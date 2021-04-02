@@ -45,6 +45,7 @@ const productSchema = new mongoose.Schema(
         type: String,
         default: 'Purchase',
       },
+      thankYouPage: String,
     },
     formStyle: {
       submitBtnText: {

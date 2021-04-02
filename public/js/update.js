@@ -177,6 +177,7 @@ export const updateProduct = async (
   currency,
   value,
   conversionEvent,
+  thankYouPage,
   submitBtnText,
   submitBtnBGColor,
   submitBtnColor,
@@ -202,6 +203,7 @@ export const updateProduct = async (
           currency,
           value,
           conversionEvent,
+          thankYouPage,
         },
         formStyle: {
           submitBtnText,
