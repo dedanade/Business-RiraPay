@@ -25,17 +25,11 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
 
   const businessAccount = await BusinessAccount.findOne(
     businessUser.businessAccount
-  ).populate('orders');
+  );
 
   const busAccountOrders = await Order.find({ _id: businessAccount.orders })
     .sort({ _id: -1 })
     .limit(10);
-
-  const product = await Product.find();
-
-  const orders = await Order.find();
-
-  const cart = await Cart.find();
   // Date Calculation
 
   //Today
@@ -90,9 +84,6 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
 
   res.status(200).render('busDashBoard', {
     title: 'Business DashBoard',
-    product,
-    orders,
-    cart,
     busAccountOrders,
     businessUser,
     businessAccount,
