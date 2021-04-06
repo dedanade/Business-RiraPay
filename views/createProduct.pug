@@ -17,13 +17,13 @@ block script
                         input#productStock.form-control(type='number', placeholder='Quantity Available' required='')
                 .row.mx-2.py-3
                     .col
-                        textarea#additionalInfo.form-control(name='editordata',placeholder='Submit button Info' )
+                        textarea#additionalInfo.form-control(name='editordata',placeholder='Type any Info you want your customers to see before clicking submit button' )
                 .panel.panel-info.mx-2.my-3
                     .panel-heading.collapsed(data-toggle='collapse', data-target='#pricing-panel' style = "background-color: lightgrey;" )
                         .ml-2.py-2
                             i.fa.fa-fw.fa-chevron-down
                             i.fa.fa-fw.fa-chevron-right
-                            | Pricing:
+                            | Pricing
                     .panel-body
                         #pricing-panel.collapse
                             p.mx-4.mt-3.mb-2
@@ -90,15 +90,15 @@ block script
                             | Form Styling(Optional)
                     .panel-body
                         #styling-product-panel.collapse
-                            .row.mx-3.mb-3.mt-4
+                            .row.mx-2.mb-3.mt-4
                                 .col
                                     label Button text
                                     input#submitbBtnTextInput.form-control( type='text', value='Submit Order',)
-                            .row.mx-3.mt-3.mb-5
-                                .col-6
+                            .row.mx-2.mt-3.mb-5
+                                .col-7
                                     label Background Color
                                     input#submitBtnBGColor.form-control( type='color', value='#01afee',)
-                                .col-6
+                                .col-5
                                     label Text Color
                                     input#submitBtnTextColor.form-control( type='color', value='#ffffff',)
                             .text-center.mb-3
@@ -117,7 +117,7 @@ block script
                     .panel-body.my-4
                         #createproduct-fbpixelaccord.collapse
                             p Direct Tracking:
-                                i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='right', title='If you want RiraPay to automatically track your pixel, input your pixel ID, value, event and currency below or use the second option' style='-webkit-appearance: none;')
+                                i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='top', title='If you want RiraPay to automatically track your pixel, input your pixel ID, value, event and currency below or use the second option' style='-webkit-appearance: none;')
 
                             .row.mx-3.my-2
                                 .col
@@ -143,7 +143,7 @@ block script
                                 .col
                                     input#product-pixel-value.form-control( type='Number', value="", placeholder='Value')                 
                             p Thank you Page:
-                                i.ml-1.fas.fa-info-circle.my-auto(type='button', data-toggle='tooltip', data-placement='right', title='If you prefer using your custom thank you page, input it below with full domain description eg: https://yourstore.com/thank-you' style='-webkit-appearance: none;')
+                                i.ml-1.fas.fa-info-circle.my-auto(type='button', data-toggle='tooltip', data-placement='top', title='If you prefer using your custom thank you page, input it below with full domain description eg: https://yourstore.com/thank-you' style='-webkit-appearance: none;')
                             .row.mx-3.my-2
                                 .col
                                     input#product-thank-you-page.form-control( type='Text', value="", placeholder='https://yourstore.com/thank-you' onfocusout="showUrlError()")                 

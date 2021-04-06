@@ -1,6 +1,7 @@
 extends base
 
-mixin largeOrderTable(ordersArray)
+mixin largeOrderTable(textHeader, ordersArray)                
+    h4= `${textHeader}:`
     table.table.table-condensed.table-hover                       
         thead
             tr
@@ -211,43 +212,21 @@ block script
     section.large-view-table
         .large-container.mb-5
             .row
-                .col-12
-                        .card-body.py-5.mx-2
-                            if (schdToday.length)
-                                ul.list-group
-                                        li.d-flex.justify-content-between
-                                            h4.d-flex.justify-content-between Scheduled Today:
-                                +largeOrderTable(schdToday)
-                            if (busAccountOrders.length)
-                                ul.list-group
-                                        li.d-flex.justify-content-between
-                                            h4.d-flex.justify-content-between Latest Orders:
-                                +largeOrderTable(busAccountOrders)             
-
-                                            
-                                .text-center.mb-3
-                                    h6
-                                        a(href='/allorders') View All orders
-                            div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
-                                .modal-dialog.modal-dialog-centered(role='document')
-                                    .modal-content
-                                        .modal-header
-                                            h5#exampleModalLongTitle.modal-title Schedule Order
-                                            button.close(type='button', data-dismiss='modal', aria-label='Close')
-                                            span(aria-hidden='true') &times;
-                                        .modal-body
-                                            form.schedule-order-form
-                                                input(type="hidden" id="schedule-orderId" value="")
-                                                label.form-label(for='schedule-date-input') Pick a date                                                
-                                                input#schedule-date-input.form-control(type='date', value='')
-                                                .modal-footer
-                                                    button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-                                                    button.btn.rira-color-btn(type='submit') Save changes
-                            if (!busAccountOrders.length)
-                                .text-center
-                                    p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
-                                .text-center
-                                    a(style='font-size: 1.2rem;' href='/createproduct') Create New Product   
+                .card-body.py-5.mx-2
+           
+                    if (schdToday.length)
+                        +largeOrderTable('Scheduled Today', schdToday)
+                    if (busAccountOrders.length)
+                        +largeOrderTable('Latest Orders', busAccountOrders)             
+                                    
+                        .text-center.mb-3
+                            h6
+                                a(href='/allorders') View All orders
+                    if (!busAccountOrders.length)
+                        .text-center
+                            p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay
+                        .text-center
+                                            a(style='font-size: 1.2rem;' href='/createproduct') Create New Product   
 
     section
         .small-container.pt-4
@@ -256,7 +235,7 @@ block script
 
                 
             if (busAccountOrders.length)
-                +miniOrderTable('Latest Order', busAccountOrders)
+                +miniOrderTable('Latest Orders', busAccountOrders)
                 .text-center.my-3
                     h6
                         a.btn.btn-lg.rira-color-btn(href='/mobileorders') View all orders
@@ -267,7 +246,7 @@ block script
                 .text-center
                     a.rira-color-btn.btn(href='/createproduct') Create your first Product
 
-            div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
+    div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
                 .modal-dialog.modal-dialog-centered(role='document')
                     .modal-content
                         .modal-header

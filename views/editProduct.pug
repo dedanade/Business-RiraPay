@@ -118,7 +118,7 @@ block content
                         .panel-body.my-4
                             #createproduct-fbpixelaccord.collapse
                                 p Direct Tracking:
-                                    i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='right', title='If you want RiraPay to automatically track your pixel, input your pixel ID, value, event and currency below or use the second option' style='-webkit-appearance: none;')
+                                    i.ml-1.fas.fa-info-circle(type='button', data-toggle='tooltip', data-placement='top', title='If you want RiraPay to automatically track your pixel, input your pixel ID, value, event and currency below or use the second option' style='-webkit-appearance: none;')
 
                                 .row.mx-3.my-2
                                     .col
@@ -145,7 +145,7 @@ block content
                                         input#edit-product-pixel-value.form-control( type='Number', placeholder='Value', value=product.facebookPixel.value)                 
 
                                 p Thank you Page:
-                                    i.ml-1.fas.fa-info-circle.my-auto(type='button', data-toggle='tooltip', data-placement='right', title='If you prefer using your custom thank you page, input it below with full domain description eg: https://yourstore.com/thank-you' style='-webkit-appearance: none;')
+                                    i.ml-1.fas.fa-info-circle.my-auto(type='button', data-toggle='tooltip', data-placement='top', title='If you prefer using your custom thank you page, input it below with full domain description eg: https://yourstore.com/thank-you' style='-webkit-appearance: none;')
                                 .row.mx-3.my-2
                                     .col
                                         input#edit-product-thank-you-page.form-control( type='Text', value=product.facebookPixel.thankYouPage, placeholder='https://yourstore.com/thank-you' onfocusout="showUrlError()")                 
