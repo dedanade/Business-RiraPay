@@ -22,31 +22,31 @@ block content
                             
                                 form
                                     .form-group.row
-                                        label.col-4.col-lg-4.col-form-label(for='staticEmail') Email
+                                        label.col-4.col-lg-4.col-form-label(for='settings-businessUser-staticEmail') Email
                                         .col-8.col-lg-6
-                                            input#staticEmail.form-control-plaintext(type='text', readonly='', value=`${businessUser.businessEmail}`)
+                                            input#settings-businessUser-staticEmail.form-control-plaintext(type='text', readonly='', value=`${businessUser.businessEmail}`)
                                     .form-group.row
-                                        label.col-4.col-lg-4.col-form-label(for='inputPassword') Full Name
+                                        label.col-4.col-lg-4.col-form-label(for='settings-businessUser-fullNae') Full Name
                                         .col-8.col-lg-6
-                                            input#inputPassword.form-control(type='text', value=`${businessUser.fullName}`)
+                                            input#settings-businessUser-fullNae.form-control(type='text', value=`${businessUser.fullName}`)
                                     .form-group.row
-                                        label.col-4.col-lg-4.col-form-label(for='inputPassword') Phone Number
+                                        label.col-4.col-lg-4.col-form-label(for='settings-businessUser-phone') Phone Number
                                         .col-8.col-lg-6
                                             .input-group
                                                 .input-group-prepend
                                                 .input-group-text +234
                                                 if (businessUser.phone)
-                                                    input#inputPassword.form-control(type='tel', value=`${businessUser.phone}`)
+                                                    input#settings-businessUser-phone.form-control(type='tel', value=`${businessUser.phone}`)
                                                 else
-                                                    input#inputPassword.form-control(type='tel', value=``)
+                                                    input#settings-businessUser-phone.form-control(type='tel', value=``)
                                     .form-group.row
                                         label.col-4.col-lg-4.col-form-label(for='inputPassword') Password
                                         .col-8.col-lg-6
                                             button#inputPassword.form-control(type='button', disabled='') Change password
                                     .form-group.row    
-                                        label.col-4.col-lg-4.col-form-label(for='staticEmail') Role
+                                        label.col-4.col-lg-4.col-form-label(for='settings-businessUser-role') Role
                                         .col-8.col-lg-6                                
-                                            input#staticEmail.form-control-plaintext(type='text', readonly='', value=`${businessUser.role}`)
+                                            input#settings-businessUser-role.form-control-plaintext(type='text', readonly='', value=`${businessUser.role}`)
                                     .text-right
                                         button.btn.btn-secondary.btn-lg( type='submit' disabled='') Save changes
 
