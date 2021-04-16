@@ -26,7 +26,6 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
   const businessAccount = await BusinessAccount.findById({
     _id: businessUser.businessAccount,
   });
-  console.log(businessAccount);
 
   const busAccountOrders = await Order.find({ _id: businessAccount.orders })
     .sort({ _id: -1 })
@@ -448,7 +447,6 @@ exports.mobileOrdersPage = catchAsync(async (req, res, next) => {
     var mobileOrdersCount = await Order.countDocuments({
       _id: mobileOrdersResult,
     });
-    // console.log(mobileOrdersResult);
   } else {
     var mobileOrdersResult = await Order.find({
       _id: mobileOrdersBusinessAccount.orders,
