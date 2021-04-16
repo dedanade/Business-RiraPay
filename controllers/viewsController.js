@@ -25,7 +25,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
 
   const businessAccount = await BusinessAccount.findOne(
     businessUser.businessAccount
-  );
+  ).populate('orders');
 
   const busAccountOrders = await Order.find({ _id: businessAccount.orders })
     .sort({ _id: -1 })
@@ -342,7 +342,7 @@ exports.getProductOrders = catchAsync(async (req, res, next) => {
     0
   ).toLocaleString();
 
-  res.status(200).render('ProductOrders', {
+  res.status(200).render('productOrders', {
     title: `All ${product.productName} orders`,
     product,
     productOrders,
