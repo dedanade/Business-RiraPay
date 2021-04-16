@@ -23,9 +23,10 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     _id: req.businessUser.id,
   });
 
-  const businessAccount = await BusinessAccount.findOne(
-    businessUser.businessAccount
-  ).populate('orders');
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
+  });
+  console.log(businessAccount);
 
   const busAccountOrders = await Order.find({ _id: businessAccount.orders })
     .sort({ _id: -1 })
