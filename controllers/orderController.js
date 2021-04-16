@@ -1,3 +1,7 @@
+/* eslint-disable no-redeclare */
+/* eslint-disable block-scoped-var */
+/* eslint-disable no-var */
+/* eslint-disable vars-on-top */
 const moment = require('moment');
 const Order = require('../Model/orderModel');
 const Product = require('../Model/productModel');
@@ -116,6 +120,18 @@ exports.updateCancel = catchAsync(async (req, res, next) => {
     },
   });
 });
+exports.updateProcessed = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.orderId);
+  order.status = 'Processed';
+  await order.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      order,
+    },
+  });
+});
 exports.updateSchedule = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(req.body, 'scheduledAt');
 
@@ -144,15 +160,11 @@ exports.getAllOrders = factory.getAll(Order);
 
 // FETCH DAILY, LIFETIME AND MONTHLY SALES
 
-// Sale
+// Sales
 
-exports.salesToday = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
+const salesToday = catchAsync(async (model, req, res) => {
   const salesOrdersToday = await Order.find({
-    _id: businessAccount.orders,
+    _id: model.orders,
     createdAt: {
       $gte: startToday,
       $lte: endToday,
@@ -177,14 +189,9 @@ exports.salesToday = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.salesThisWeek = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
-
+const salesThisWeek = catchAsync(async (model, req, res) => {
   const salesOrdersWeek = await Order.find({
-    _id: businessAccount.orders,
+    _id: model.orders,
     createdAt: {
       $gte: startWeek,
       $lte: endWeek,
@@ -207,14 +214,9 @@ exports.salesThisWeek = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.salesThisMonth = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
-
+const salesThisMonth = catchAsync(async (model, req, res) => {
   const salesOrdersMonth = await Order.find({
-    _id: businessAccount.orders,
+    _id: model.orders,
     createdAt: {
       $gte: startMonth,
       $lte: endMonth,
@@ -238,13 +240,9 @@ exports.salesThisMonth = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.salesLifeTime = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
+const salesLifeTime = catchAsync(async (model, req, res) => {
   const salesOrdersLifeTime = await Order.find({
-    _id: businessAccount.orders,
+    _id: model.orders,
   });
 
   const arraySalesLifeTime = [];
@@ -264,16 +262,41 @@ exports.salesLifeTime = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.modelForSearch = catchAsync(async (req, res, next) => {
+  if (req.query.productId) {
+    var model = await Product.findOne({
+      _id: req.query.productId,
+    }).populate('orders');
+  } else {
+    const businessUser = await BusinessUser.findById(req.businessUser.id);
+    var model = await BusinessAccount.findById(businessUser.businessAccount);
+  }
+  res.locals.model = model;
+  next();
+});
+
+exports.orderSalesToday = async (req, res) => {
+  const { model } = res.locals;
+  salesToday(model, req, res);
+};
+exports.orderSalesWeek = async (req, res) => {
+  const { model } = res.locals;
+  salesThisWeek(model, req, res);
+};
+exports.orderSalesMonth = async (req, res) => {
+  const { model } = res.locals;
+  salesThisMonth(model, req, res);
+};
+exports.orderSalesLifetime = async (req, res) => {
+  const { model } = res.locals;
+  salesLifeTime(model, req, res);
+};
+
 // TRANSACTION!!
 
-exports.TransToday = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
-
-  const TransOrdersToday = await Order.find({
-    _id: businessAccount.orders,
+const transToday = catchAsync(async (model, req, res) => {
+  const transOrdersToday = await Order.find({
+    _id: model.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
     paidAt: {
       $gte: startToday,
@@ -281,16 +304,15 @@ exports.TransToday = catchAsync(async (req, res, next) => {
     },
   });
 
-  const ArrayTranToday = [];
+  const arrayTranToday = [];
 
-  TransOrdersToday.forEach((e) => {
-    ArrayTranToday.push(e.total);
+  transOrdersToday.forEach((e) => {
+    arrayTranToday.push(e.total);
   });
 
-  const sumOfTransToday = ArrayTranToday.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
+  const sumOfTransToday = arrayTranToday
+    .reduce((a, b) => a + b, 0)
+    .toLocaleString();
 
   res.status(200).json({
     status: 'success',
@@ -299,14 +321,9 @@ exports.TransToday = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.TransThisWeek = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
-
-  const TransOrdersWeek = await Order.find({
-    _id: businessAccount.orders,
+const transThisWeek = catchAsync(async (model, req, res) => {
+  const transOrdersWeek = await Order.find({
+    _id: model.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
     paidAt: {
       $gte: startWeek,
@@ -314,16 +331,15 @@ exports.TransThisWeek = catchAsync(async (req, res, next) => {
     },
   });
 
-  const ArrayTranWeek = [];
+  const arrayTranWeek = [];
 
-  TransOrdersWeek.forEach((e) => {
-    ArrayTranWeek.push(e.total);
+  transOrdersWeek.forEach((e) => {
+    arrayTranWeek.push(e.total);
   });
 
-  const sumOfTransWeek = ArrayTranWeek.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
+  const sumOfTransWeek = arrayTranWeek
+    .reduce((a, b) => a + b, 0)
+    .toLocaleString();
 
   res.status(200).json({
     status: 'success',
@@ -332,14 +348,9 @@ exports.TransThisWeek = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.TransThisMonth = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
-
-  const TransOrdersMonth = await Order.find({
-    _id: businessAccount.orders,
+const transThisMonth = catchAsync(async (model, req, res) => {
+  const transOrdersMonth = await Order.find({
+    _id: model.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
     paidAt: {
       $gte: startMonth,
@@ -347,16 +358,15 @@ exports.TransThisMonth = catchAsync(async (req, res, next) => {
     },
   });
 
-  const ArrayTranMonth = [];
+  const arrayTranMonth = [];
 
-  TransOrdersMonth.forEach((e) => {
-    ArrayTranMonth.push(e.total);
+  transOrdersMonth.forEach((e) => {
+    arrayTranMonth.push(e.total);
   });
 
-  const sumOfTransMonth = ArrayTranMonth.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
+  const sumOfTransMonth = arrayTranMonth
+    .reduce((a, b) => a + b, 0)
+    .toLocaleString();
 
   res.status(200).json({
     status: 'success',
@@ -365,27 +375,21 @@ exports.TransThisMonth = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.TransLifeTime = catchAsync(async (req, res, next) => {
-  const businessUser = await BusinessUser.findById(req.businessUser.id);
-  const businessAccount = await BusinessAccount.findById(
-    businessUser.businessAccount
-  );
-
-  const TransOrdersLifeTime = await Order.find({
-    _id: businessAccount.orders,
+const transLifeTime = catchAsync(async (model, req, res) => {
+  const transOrdersLifeTime = await Order.find({
+    _id: model.orders,
     status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
   });
 
-  const ArrayTranLifeTime = [];
+  const arrayTranLifeTime = [];
 
-  TransOrdersLifeTime.forEach((e) => {
-    ArrayTranLifeTime.push(e.total);
+  transOrdersLifeTime.forEach((e) => {
+    arrayTranLifeTime.push(e.total);
   });
 
-  const sumOfTransLifeTime = ArrayTranLifeTime.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
+  const sumOfTransLifeTime = arrayTranLifeTime
+    .reduce((a, b) => a + b, 0)
+    .toLocaleString();
 
   res.status(200).json({
     status: 'success',
@@ -394,3 +398,20 @@ exports.TransLifeTime = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.orderTransToday = async (req, res) => {
+  const { model } = res.locals;
+  transToday(model, req, res);
+};
+exports.orderTransWeek = async (req, res) => {
+  const { model } = res.locals;
+  transThisWeek(model, req, res);
+};
+exports.orderTransMonth = async (req, res) => {
+  const { model } = res.locals;
+  transThisMonth(model, req, res);
+};
+exports.orderTransLifeTime = async (req, res) => {
+  const { model } = res.locals;
+  transLifeTime(model, req, res);
+};

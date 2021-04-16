@@ -250,6 +250,113 @@ exports.getMyProduct = catchAsync(async (req, res, next) => {
     protocol,
   });
 });
+exports.getProductOrders = catchAsync(async (req, res, next) => {
+  const product = await Product.findOne({
+    _id: req.params.productId,
+  }).populate('orders');
+  const businessUser = await BusinessUser.findOne({
+    _id: req.businessUser.id,
+  });
+
+  const businessAccount = await BusinessAccount.findById({
+    _id: businessUser.businessAccount,
+  });
+  if (!product) {
+    return next(
+      new AppError('There is no product with that name and ID.', 404)
+    );
+  }
+
+  if (req.query.search) {
+    var querySearch = req.query.search;
+    var productOrders = await Order.find({
+      _id: product.orders,
+      $text: { $search: `\"${req.query.search}\"` },
+    })
+      .sort({ _id: -1 })
+      .skip(req.skip)
+      .lean()
+      .exec();
+    var productOrdersCount = await Order.countDocuments({
+      _id: product.orders,
+    });
+  } else {
+    var productOrders = await Order.find({ _id: product.orders })
+      .limit(req.query.limit)
+      .sort({ _id: -1 })
+      .skip(req.skip)
+      .lean()
+      .exec();
+    var productOrdersCount = await Order.countDocuments({
+      _id: product.orders,
+    });
+  }
+  const { paginate } = res.locals;
+  const pageCount = Math.ceil(productOrdersCount / req.query.limit);
+  const currentPage = req.query.page;
+  const pages = paginate.getArrayPages(10, pageCount, req.query.page);
+  const scheduledOrderToday = await Order.find({
+    _id: product.orders,
+    scheduledAt: {
+      $gte: startToday,
+      $lte: endToday,
+    },
+  });
+  // Sales Today Calculation
+  const salesorders = await Order.find({
+    _id: product.orders,
+    createdAt: {
+      $gte: startToday,
+      $lte: endToday,
+    },
+  });
+  const arraySalesOrder = [];
+
+  salesorders.forEach((e) => {
+    arraySalesOrder.push(e.total);
+  });
+
+  const sumOfCartSalesToday = arraySalesOrder
+    .reduce((a, b) => a + b, 0)
+    .toLocaleString();
+
+  // Transactions Today
+
+  const transactionToday = await Order.find({
+    _id: product.orders,
+    status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
+    paidAt: {
+      $gte: startToday,
+      $lte: endToday,
+    },
+  });
+
+  const ArrayTranToday = [];
+
+  transactionToday.forEach((e) => {
+    ArrayTranToday.push(e.total);
+  });
+
+  const sumOfcartTranToday = ArrayTranToday.reduce(
+    (a, b) => a + b,
+    0
+  ).toLocaleString();
+
+  res.status(200).render('ProductOrders', {
+    title: `All ${product.productName} orders`,
+    product,
+    productOrders,
+    schdToday: scheduledOrderToday,
+    pageCount,
+    itemCount: productOrdersCount,
+    currentPage,
+    pages,
+    businessAccount,
+    querySearch,
+    salesToday: sumOfCartSalesToday,
+    transToday: sumOfcartTranToday,
+  });
+});
 
 exports.editProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findOne({

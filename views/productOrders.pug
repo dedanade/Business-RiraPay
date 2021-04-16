@@ -3,7 +3,7 @@ mixin largeOrderTable(ordersArray)
     table.table.table-condensed.table-hover                       
         thead
             tr
-                th
+                th 
                 th Date
                 th Product Name
                 th Status
@@ -36,7 +36,6 @@ mixin largeOrderTable(ordersArray)
 
                     section
                         tr.table-row.order-table-row(style= 'height: 65px')
-                        
                             td
                                 if (order.status === 'Incomplete')
                                     i.incomplete_order_icon.fas.fa-circle
@@ -54,6 +53,9 @@ mixin largeOrderTable(ordersArray)
                                     i.canceled_order_icon.fas.fa-circle
                                 //- else 
                                 //-     i.rira_order_icon.fas.fa-circle
+
+
+                        
                             td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)=ordersDate
                                                                     
@@ -93,12 +95,58 @@ mixin largeOrderTable(ordersArray)
                                         button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                                             i.lni.lni-menu
                                         .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                            a.processed-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Processed
+                                            a.processed-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Processed 
                                             a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
                                             a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled 
 block Indexcss
 block content
-    
+block script
+
+    .container(style= 'margin-top: 150px;')
+        .text-right             
+                select#product_link_select.form-control.ml-1.w-25(onchange="redirectSelect()")
+                    each product in businessAccount.products.reverse()
+                        option(value=`${product._id}` data-productslug=`${product.slug}` data-productid=`${product._id}` )=product.productName
+        .row.my-5.salesTransSection(data-productid=`${product._id}`)
+            #card2.col-12.col-md-6.col-xl-6
+                .card.border-1.shadow-sm
+                    .card-body.py-5
+                        .row
+                            .col-8
+                                h6= `Sales for ${product.productName}`
+                            .col-4
+                                a.btn#button-sales.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                    | Today
+                                #dropdownbtn.dropdown-menu.sales-today
+                                    a#salesToday_btn(href='#sumOfSalesToday') Today
+                                    a#salesWeekly_btn(href='#sumOfSalesWeek') This Week
+                                    a#salesMonthly_btn(href='#sumOfSalesMonth') This Month
+                                    a#salesLifeTime_btn(href='#sumOfSalesLifetime') Lifetime                      
+                        .sumOfSalesResult.mx-auto.d-flex
+                            h3#sumOfSalesResult.sales-toggle=`₦ ${salesToday}`
+                            #loading-Sales-Result
+                        
+                                            
+                                    
+            #card2.col-12.col-md-6.col-xl-6
+                .card.border-1.shadow-sm
+                    .card-body.py-5
+                        .row
+                            .col-9
+                                h6= `Transactions for ${product.productName}`
+                            .col-3
+                                .btn-group
+                                a.btn#button-trans.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                    | Today
+                                #dropdownbtn.dropdown-menu.trans-today
+                                    a#transToday_btn(href='#sumOfTransToday') Today
+                                    a#transWeekly_btn(href='#sumOfTransWeek') This Week
+                                    a#transMonthly_btn(href='#sumOfTransMonth') This Month
+                                    a#transLifeTime_btn(href='#sumOfTransLifetime') Lifetime
+                        .sumOfTransResult.mx-auto.d-flex
+                            h3#sumOfTransResult.trans-toggle=`₦ ${transToday}`
+                            #loading-Trans-Result
+
     section
         .large-container.mb-5(style= 'margin-top: 150px;')
             .row
@@ -106,24 +154,23 @@ block content
                         .card-body.py-5.mx-2
                             ul.list-group.my-3
                                         li.d-flex.justify-content-between
-                                            h4.d-flex.justify-content-between All Orders:
+                                            h4.d-flex.justify-content-between= `All Orders for ${product.productName}:`
                                             form(action=`` method="GET")
                                                 .form-row
                                                     .col-9
                                                         input#inlineFormInputName.form-control(type='text', placeholder='Search order' name ='search' required='')
                                                     .col-3
                                                         button.btn.rira-color-btn(type='submit') Search
-                                            h6
-                                                a.rira-color-btn.btn(href=`/mobileorders`) Mobile Mode
+                                            
                             if (schdToday.length && currentPage === 1 && !querySearch)
                                     ul.list-group
                                             li.d-flex.justify-content-between
                                                 h6.d-flex.justify-content-between Scheduled Today
                                     +largeOrderTable(schdToday)
-                            if (orders.length)
+                            if (productOrders.length)
                             
                                 h6.d-flex.justify-content-between Latest Orders                                                                           
-                                +largeOrderTable(orders)
+                                +largeOrderTable(productOrders)
                             
                             include _paginate
                             div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
@@ -135,16 +182,15 @@ block content
                                             span(aria-hidden='true') &times;
                                         .modal-body
                                             form.schedule-order-form
-                                                input(type="hidden" id="schedule-orderId" value="")
                                                 label.form-label(for='schedule-date-input') Pick a date                                                
                                                 input#schedule-date-input.form-control(type='date', value='')
                                                 .modal-footer
                                                     button.btn.btn-secondary(type='button', data-dismiss='modal') Close
                                                     button.btn.rira-color-btn(type='submit') Save changes
-                            if (!orders.length && querySearch)
+                            if (!productOrders.length && querySearch)
                                 .text-center
                                     p.mt-2(style='font-size: 1.2rem;')= `Unable to get result for ${querySearch}. Kindly check and try again`
-                            if (!orders.length && !querySearch)
+                            if (!productOrders.length && !querySearch)
                                 .text-center
                                     p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customer to pay through RiraPay
                                 .text-center
@@ -153,9 +199,21 @@ block content
 
         script.
             currentPages= #{currentPage};
+            currentProduct= !{JSON.stringify(product._id)};
+            $('#product_link_select').val(currentProduct)
+            //- const vaoo = document.getElementById('product_link_select');
+            //- const hhh = vaoo.querySelector(`option[value='${currentProduct}']`);
+            //- console.log(hhh);
             $('ul.pagination a').filter(function() {
                 return $(this).text() == currentPages;
             }).parent().addClass('active');
+            function redirectSelect(){
+                if (!e) var e = window.event;                
+                var target = e.target || e.srcElement;
+                const productslug = target[e.target.selectedIndex].dataset.productslug
+                const productId = target[e.target.selectedIndex].dataset.productid
+                window.location.assign(`/${productslug}/entries/${productId}`);
+            }
             document.getElementById('schedule-date-input').valueAsDate = new Date();
             
                         

@@ -5,7 +5,8 @@ const authBusinessController = require('../controllers/authBusinessController');
 const router = express.Router();
 
 router.route('/').get(orderController.getAllOrders);
-router.route('/deliver/:OrderId').get(orderController.updateDelivery);
+router.route('/deliver/:orderId').get(orderController.updateDelivery);
+router.route('/process/:orderId').get(orderController.updateProcessed);
 router
   .route('/cancel/:orderId')
   .get(authBusinessController.protectBusiness, orderController.updateCancel);
@@ -25,30 +26,61 @@ router
 //Sales!
 
 router
-  .route('/salestoday')
-  .get(authBusinessController.protectBusiness, orderController.salesToday);
+  .route('/salestoday?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderSalesToday
+  );
 router
-  .route('/salesweek')
-  .get(authBusinessController.protectBusiness, orderController.salesThisWeek);
+  .route('/salesweek?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderSalesWeek
+  );
 router
-  .route('/salesmonth')
-  .get(authBusinessController.protectBusiness, orderController.salesThisMonth);
+  .route('/salesmonth?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderSalesMonth
+  );
 router
-  .route('/saleslifetime')
-  .get(authBusinessController.protectBusiness, orderController.salesLifeTime);
+  .route('/saleslifetime?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderSalesLifetime
+  );
 
 //Transaction
 router
-  .route('/transtoday')
-  .get(authBusinessController.protectBusiness, orderController.TransToday);
+  .route('/transtoday?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderTransToday
+  );
 router
-  .route('/transweek')
-  .get(authBusinessController.protectBusiness, orderController.TransThisWeek);
+  .route('/transweek?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderTransWeek
+  );
 router
-  .route('/transmonth')
-  .get(authBusinessController.protectBusiness, orderController.TransThisMonth);
+  .route('/transmonth?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderTransMonth
+  );
 router
-  .route('/translifetime')
-  .get(authBusinessController.protectBusiness, orderController.TransLifeTime);
-
+  .route('/translifetime?:productId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.modelForSearch,
+    orderController.orderTransLifeTime
+  );
 module.exports = router;

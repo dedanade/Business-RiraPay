@@ -5,6 +5,7 @@ mixin largeOrderTable(textHeader, ordersArray)
     table.table.table-condensed.table-hover                       
         thead
             tr
+                th
                 th Date
                 th Product Name
                 th Status
@@ -39,12 +40,29 @@ mixin largeOrderTable(textHeader, ordersArray)
                         tr.table-row.order-table-row(style= 'height: 65px')
                         
                             td
+                                if (order.status === 'Incomplete')
+                                    i.incomplete_order_icon.fas.fa-circle
+                                if (order.status === 'Paid')
+                                    i.paid_order_icon.fas.fa-circle
+                                if (order.status === 'Scheduled')
+                                    i.scheduled_order_icon.fas.fa-circle
+                                if (order.status === 'Processed')
+                                    i.processed_order_icon.fas.fa-circle
+                                if (order.status === 'Shipped')
+                                    i.shipped_order_icon.fas.fa-circle
+                                if (order.status === 'Delivered')
+                                    i.delivered_order_icon.fas.fa-circle
+                                if (order.status === 'Canceled')
+                                    i.canceled_order_icon.fas.fa-circle
+                                //- else 
+                                //-     i.rira_order_icon.fas.fa-circle
+                            td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)=ordersDate
                                                                     
                             td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)= shtProductName
                             td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)= order.status
+                                a.order_status_text.py-2(href=`/myorder/${product._id}/${order._id}`)= order.status
                             td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)= order.orderNum
                             td
@@ -77,6 +95,7 @@ mixin largeOrderTable(textHeader, ordersArray)
                                         button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                                             i.lni.lni-menu
                                         .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                            a.processed-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Processed
                                             a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
                                             a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled 
 mixin miniOrderTable(textheader, orderArray)
@@ -161,7 +180,7 @@ block script
             if (businessUser.isEmailVerified === false)
                 .card.py-2.px-3(style = "background-color: red; color: white; margin-top: 50px;")
                     p Kindly Check your Email and click on the link provided to verify your email. If you didn't received the email 
-                        a#request-verify-email_btn(href="#") Request a New one
+                        a#request-verify-email_btn(href="#" data-userid= `${businessUser._id}`) Request a New one
         .container
             .row
                 .col-6
@@ -180,7 +199,7 @@ block script
                     .card-body.py-5
                         h6 Sales
                         .btn-group
-                        a.btn#button-sales.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        a.btn#button-sales.btn.btn-sm.dropdown-toggle.justify-content-end.ml-5(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                             | Today
                         #dropdownbtn.dropdown-menu.sales-today
                             a#salesToday_btn(href='#sumOfSalesToday') Today
@@ -198,7 +217,7 @@ block script
                     .card-body.py-5
                         h6 Transactions
                         .btn-group
-                        a.btn#button-trans.btn.btn-sm.dropdown-toggle.justify-content-end(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        a.btn#button-trans.btn.btn-sm.dropdown-toggle.justify-content-end.ml-5(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                             | Today
                         #dropdownbtn.dropdown-menu.trans-today
                             a#transToday_btn(href='#sumOfTransToday') Today
@@ -210,6 +229,53 @@ block script
                             #loading-Trans-Result
 
     section.large-view-table
+        .large-container
+            .row
+                .col-12                        
+                    .card-body.py-5.mx-2
+                            ul.list-group
+                                li.d-flex.justify-content-between
+                                    h4.d-flex.justify-content-between Latest Products:  
+                                    h6
+                                        a(href='/createproduct') Create New Product
+                        
+                            table.table.table-condensed.table-hover                       
+                                thead
+                                    tr
+                                        th Product Name
+                                        th Stock
+                                        th Amount
+                                        th Date
+
+                                tbody
+                                    each product in businessAccount.products.reverse().slice(0, 10)
+                                        - const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
+                                        -const productprice = product.price.toLocaleString()
+
+                                        tr.table-row.product_table_row(style='height: 3.7rem;')
+                                    
+                                            td
+                                                a(href=`/myproduct/${product.slug}/${product._id}` style='color: black;')=product.productName
+                                                .product_action_list
+                                                    .d-flex
+                                                        a(href=`/edit/${product.slug}/${product._id}` style='font-size: 0.8rem; color: blue') Edit 
+                                                        a.mx-1(href=`/${product.slug}/entries/${product._id}` style='font-size: 0.8rem; color: blue') Entries 
+                                                        a.mx-1(href=`/myproduct/${product.slug}/${product._id}` style='font-size: 0.8rem; color: blue') View 
+                                                        a.mx-1.cloneProduct(href="#" data-productid= product._id style='font-size: 0.8rem; color: blue') Duplicate 
+
+                                            td
+                                                a()=product.stock                                
+                                            td
+                                                a()= `₦${productprice}`
+                                            td
+                                                a()=Date
+                                                
+                                                    
+                                    
+                            .text-center.mb-3
+                                h6
+                                    a(href='/allproducts') View All Products
+    section.large-view-table.my-5
         .large-container.mb-5
             .row
                 .card-body.py-5.mx-2
@@ -260,57 +326,9 @@ block script
                                 input#schedule-date-input.form-control(type='date', value='')
                                 .modal-footer
                                     button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-                                    button.btn.rira-color-btn(type='submit') Save changes
-
-    section.large-view-table
-        .large-container
-            .row
-                .col-12                        
-                    .card-body.py-5.mx-2
-                            ul.list-group
-                                li.d-flex.justify-content-between
-                                    h4.d-flex.justify-content-between Latest Products:  
-                                    h6
-                                        a(href='/createproduct') Create New Product
-                        
-                            table.table.table-condensed.table-hover                       
-                                thead
-                                    tr
-                                        th Date
-                                        th Product Name
-                                        th Stock
-                                        th Amount
-                                        th Action
-
-                                tbody
-                                    each product in businessAccount.products.reverse().slice(0, 10)
-                                        - const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
-                                        -const productprice = product.price.toLocaleString()
-
-                                        tr.table-row(data-href=`/myproduct/${product.slug}/${product._id}`)
-                                    
-                                            td
-                                                a(href=`/myproduct/${product.slug}/${product._id}`)=Date
-                                            td
-                                                a(href=`/myproduct/${product.slug}/${product._id}`)=product.productName
-                                            td
-                                                a(href=`/myproduct/${product.slug}/${product._id}`)=product.stock                                
-                                            td
-                                                a(href=`/myproduct/${product.slug}/${product._id}`)= `₦${productprice}`
-                                            td 
-                                                a.cloneProduct(href="#" data-productid= product._id style='font-size: 1rem;' onmouseover="mouseover()" onmouseout="mouseout()") Duplicate 
-
-                                    
-                            .text-center.mb-3
-                                h6
-                                    a(href='/allproducts') View All Products
-        
-        input#salesTransBusinessAccountID(type="text", hidden="", value=`${businessAccount.id}`)
+                                    button.btn.rira-color-btn(type='submit') Save changes 
+    input#salesTransBusinessAccountID(type="text", hidden="", value=`${businessAccount.id}`)
         
 
     script.
-        $('.schedule-modal-button').on("click", function () {
-            var orderId = $(this).data('orderid');
-            $(".modal-body #schedule-orderId").val( orderId );
-        });
         document.getElementById('schedule-date-input').valueAsDate = new Date();

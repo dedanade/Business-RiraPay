@@ -17,6 +17,7 @@ import {
   updateDelivery,
   updateSchedule,
   updateCancelOrder,
+  updateProcessOrder,
   cloneProductApi,
 } from './update';
 import { showAlert } from './alert';
@@ -85,8 +86,9 @@ const request_Verify_Email_btn = document.getElementById(
 );
 
 if (request_Verify_Email_btn)
-  request_Verify_Email_btn.addEventListener('click', () => {
-    busSendVerifyEmail();
+  request_Verify_Email_btn.addEventListener('click', (e) => {
+    const BusinessUserId = e.target.dataset.userid;
+    busSendVerifyEmail(BusinessUserId);
   });
 
 const loading_Animation = document.getElementById('loading-animation');
@@ -142,24 +144,41 @@ export const hideSalesLoading = function hideLoading() {
 
 if (salesToday_btn)
   salesToday_btn.addEventListener('click', () => {
-    displaySalesLoading(), salesToday();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displaySalesLoading(), salesToday(productId);
   });
 if (salesWeekly_btn)
   salesWeekly_btn.addEventListener('click', () => {
-    displaySalesLoading(), salesThisWeek();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displaySalesLoading(), salesThisWeek(productId);
   });
 if (salesMonthly_btn)
   salesMonthly_btn.addEventListener('click', () => {
-    displaySalesLoading(), salesThisMonth();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displaySalesLoading(), salesThisMonth(productId);
   });
 
 if (salesLifeTime_btn)
   salesLifeTime_btn.addEventListener('click', () => {
-    displaySalesLoading(), salesLifeTime();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displaySalesLoading(), salesLifeTime(productId);
   });
 
 //Transactions
 
+const drpdown = document.getElementById('salesTransDropdown');
 const transLoader = document.getElementById('loading-Trans-Result');
 const transToday_btn = document.getElementById('transToday_btn');
 const transWeekly_btn = document.getElementById('transWeekly_btn');
@@ -180,19 +199,36 @@ export const hideTransLoading = function hideLoading() {
 
 if (transToday_btn)
   transToday_btn.addEventListener('click', () => {
-    displayTransLoading(), transToday();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displayTransLoading(), transToday(productId);
   });
+
 if (transWeekly_btn)
   transWeekly_btn.addEventListener('click', () => {
-    displayTransLoading(), transThisWeek();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displayTransLoading(), transThisWeek(productId);
   });
 if (transMonthly_btn)
   transMonthly_btn.addEventListener('click', () => {
-    displayTransLoading(), transThisMonth();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displayTransLoading(), transThisMonth(productId);
   });
 if (transLifeTime_btn)
   transLifeTime_btn.addEventListener('click', () => {
-    displayTransLoading(), transLifeTime();
+    const product = transToday_btn.closest('.salesTransSection');
+    if (product) {
+      var productId = product.dataset.productid;
+    }
+    displayTransLoading(), transLifeTime(productId);
   });
 
 if (remove_member_btn)
@@ -368,7 +404,23 @@ $('.cancel-mobile-order').on('click', function (e) {
     )
   ) {
     showAlert('success', 'Processing...');
-    updateCancelOrder(orderId);
+    updateCancelOrder(orderId, target);
+  } else {
+    return false;
+  }
+});
+$('.processed-mobile-order').on('click', function (e) {
+  e.preventDefault();
+  const target = e.target || e.srcElement;
+  const orderId = target.dataset.orderid;
+  const orderName = target.dataset.name;
+  if (
+    confirm(
+      `Are you sure you've processed ${orderName}'s order? Click Ok to confirm`
+    )
+  ) {
+    showAlert('success', 'Processing...');
+    updateProcessOrder(orderId, target);
   } else {
     return false;
   }
@@ -413,14 +465,19 @@ if (updateDeliveryForm)
     const delOrderId = document.getElementById('orderid').value;
     updateDelivery(delOrderId);
   });
-if (updateScheduleForm)
-  updateScheduleForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const schOrderId = document.getElementById('schedule-orderId').value;
-    const schDate = document.getElementById('schedule-date-input').value;
-    const scheduleDate = `${schDate}T00:00:00.000+00:00`;
-    updateSchedule(schOrderId, scheduleDate);
-  });
+$('.schedule-modal-button').on('click', function (e) {
+  const target = e.target;
+  var schOrderId = $(this).data('orderid');
+  if (updateScheduleForm)
+    updateScheduleForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const submitButton = updateScheduleForm.querySelector('[type="submit"]');
+      const schDate = document.getElementById('schedule-date-input').value;
+      const scheduleDate = `${schDate}T00:00:00.000+00:00`;
+      loadingBtnSpinner(submitButton);
+      updateSchedule(schOrderId, scheduleDate, submitButton, target);
+    });
+});
 
 if (selectPriceOptions) {
   const selectPromoPrice = document.getElementById('selectPromoPrice');

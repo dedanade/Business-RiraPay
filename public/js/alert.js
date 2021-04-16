@@ -1,5 +1,8 @@
 /* eslint-disable */
-
+export const hideAlert = () => {
+  const ViewAlert = document.getElementById(`alert-notification`);
+  ViewAlert.style.display = 'none';
+};
 export const showAlert = (type, msg) => {
   const div = document.createElement('div');
   div.id = 'hideAlertNotification';
@@ -20,11 +23,12 @@ export const showAlert = (type, msg) => {
       .querySelector('body')
       .insertAdjacentHTML('afterbegin', divMarkup.outerHTML);
   }
-  const hideAlert = document.getElementById('hideAlertNotification');
+  window.setTimeout(hideAlert, 3 * 1000);
+  const clickHideAlert = document.getElementById('hideAlertNotification');
   const ViewAlert = document.getElementById(`alert-notification`);
 
-  if (hideAlert)
-    hideAlert.addEventListener('click', () => {
+  if (clickHideAlert)
+    clickHideAlert.addEventListener('click', () => {
       ViewAlert.style.display = 'none';
     });
 };

@@ -81,17 +81,14 @@ export const busResetPassword = async (businessPassword, busToken) => {
     showAlert('error', err.response.data.message);
   }
 };
-export const busSendVerifyEmail = async () => {
+export const busSendVerifyEmail = async (businessUserId) => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/businessUsers/sendverifyemail/${salesTransBusinessUserID}`,
+      url: `/api/v1/businessUsers/sendverifyemail/${businessUserId}`,
     });
     if (res.data.status === 'success') {
       showAlert('success', `Verify Email Sent`);
-      window.setTimeout(() => {
-        location.reload();
-      }, 1500);
     }
   } catch (err) {
     showAlert('error', 'Unable to Send Email. Kindly Retry');

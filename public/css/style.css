@@ -16,12 +16,10 @@ body {
 #button-sales {
   display: inline;
   font-size: 15px;
-  margin-left: 40px;
 }
 #button-trans {
   display: inline;
   font-size: 15px;
-  margin-left: 40px;
 }
 
 .alert {
@@ -65,6 +63,38 @@ body {
   margin-top: -30px;
   position: relative;
   z-index: 2;
+}
+.incomplete_order_icon {
+  font-size: small;
+  color: gray;
+}
+.paid_order_icon {
+  font-size: small;
+  color: green;
+}
+.scheduled_order_icon {
+  font-size: small;
+  color: yellow;
+}
+.processed_order_icon {
+  font-size: small;
+  color: aqua;
+}
+.shipped_order_icon {
+  font-size: small;
+  color: darkorange;
+}
+.delivered_order_icon {
+  font-size: small;
+  color: blue;
+}
+.canceled_order_icon {
+  font-size: small;
+  color: red;
+}
+.rira_order_icon {
+  font-size: small;
+  color: #01afee;
 }
 
 h6 {
@@ -130,6 +160,15 @@ tr.order-table-row:hover .create-tags-pencil {
   display: block;
 }
 
+tr.product_table_row .product_action_list {
+  display: none;
+}
+tr.product_table_row:hover .product_action_list {
+  display: block;
+}
+.product_action_list a:hover {
+  text-decoration: underline;
+}
 #card-border {
   width: 30em;
 }

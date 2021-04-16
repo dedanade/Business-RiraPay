@@ -9,13 +9,18 @@ import {
   hideTransLoading,
 } from './index';
 
-export const salesToday = async () => {
+export const salesToday = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/salestoday?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/salestoday`;
+    }
+
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/salestoday`,
+      url,
     });
-
     if (res.data.status === 'success') {
       const todayResult = res.data.data.sumOfCartSalesToday;
       sumOfSalesResult.innerHTML = `₦ ${todayResult}`;
@@ -28,11 +33,16 @@ export const salesToday = async () => {
   }
 };
 
-export const salesThisWeek = async () => {
+export const salesThisWeek = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/salesWeek?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/salesWeek`;
+    }
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/salesWeek`,
+      url,
     });
 
     if (res.data.status === 'success') {
@@ -46,11 +56,16 @@ export const salesThisWeek = async () => {
     console.log(err);
   }
 };
-export const salesThisMonth = async () => {
+export const salesThisMonth = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/salesmonth?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/salesmonth`;
+    }
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/salesmonth`,
+      url,
     });
 
     if (res.data.status === 'success') {
@@ -65,11 +80,16 @@ export const salesThisMonth = async () => {
   }
 };
 
-export const salesLifeTime = async () => {
+export const salesLifeTime = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/saleslifetime?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/saleslifetime`;
+    }
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/saleslifetime`,
+      url,
     });
 
     if (res.data.status === 'success') {
@@ -85,11 +105,16 @@ export const salesLifeTime = async () => {
 };
 //TRANSACTIONS
 
-export const transToday = async () => {
+export const transToday = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/transtoday?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/transtoday`;
+    }
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/transtoday`,
+      url,
     });
 
     if (res.data.status === 'success') {
@@ -103,11 +128,16 @@ export const transToday = async () => {
     console.log(err);
   }
 };
-export const transThisWeek = async () => {
+export const transThisWeek = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/transweek?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/transweek`;
+    }
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/transweek`,
+      url,
     });
 
     if (res.data.status === 'success') {
@@ -121,11 +151,16 @@ export const transThisWeek = async () => {
     console.log(err);
   }
 };
-export const transThisMonth = async () => {
+export const transThisMonth = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/transmonth?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/transmonth`;
+    }
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/transmonth`,
+      url,
     });
 
     if (res.data.status === 'success') {
@@ -139,11 +174,16 @@ export const transThisMonth = async () => {
     console.log(err);
   }
 };
-export const transLifeTime = async () => {
+export const transLifeTime = async (productId) => {
   try {
+    if (productId) {
+      var url = `/api/v1/orders/translifetime?productId=${productId}`;
+    } else {
+      var url = `/api/v1/orders/translifetime`;
+    }
     const res = await axios({
       method: 'GET',
-      url: `/api/v1/orders/translifetime`,
+      url,
     });
 
     if (res.data.status === 'success') {

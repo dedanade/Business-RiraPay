@@ -119,7 +119,7 @@ export const updateShippingOrder = async (
     console.log(`🔥🔥🔥 ${err.response.data.message}`);
   }
 };
-export const updateCancelOrder = async (OrderId) => {
+export const updateCancelOrder = async (OrderId, target) => {
   try {
     const res = await axios({
       method: 'GET',
@@ -131,9 +131,10 @@ export const updateCancelOrder = async (OrderId) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'Order has been marked as Canceled');
-      window.setTimeout(() => {
-        location.reload();
-      }, 1500);
+      const tda = target.closest('tr').querySelector('a.order_status_text');
+      tda.innerText = 'Canceled';
+      const icon = target.closest('tr').querySelector('td i');
+      icon.classList.add('canceled_order_icon');
     }
   } catch (err) {
     showAlert(
@@ -141,6 +142,32 @@ export const updateCancelOrder = async (OrderId) => {
       'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
     );
     console.log(`🔥🔥🔥 ${err.response.data.message}`);
+  }
+};
+export const updateProcessOrder = async (OrderId, target) => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `/api/v1/orders/process/${OrderId}`,
+      data: {
+        OrderId,
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Order has been marked as Processed');
+      const tda = target.closest('tr').querySelector('a.order_status_text');
+      tda.innerText = 'Processed';
+      const icon = target.closest('tr').querySelector('td i');
+      icon.classList.add('processed_order_icon');
+    }
+  } catch (err) {
+    showAlert(
+      'error',
+      'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
+    );
+    if (err.response) console.log(`🔥🔥🔥 ${err.response.data.message}`);
+    else console.log(err);
   }
 };
 
@@ -253,7 +280,12 @@ export const updateDelivery = async (DelOrderId) => {
     console.log(`🔥🔥🔥 ${err.response.data.message}`);
   }
 };
-export const updateSchedule = async (schOrderId, scheduledAt) => {
+export const updateSchedule = async (
+  schOrderId,
+  scheduledAt,
+  submitButton,
+  target
+) => {
   try {
     const res = await axios({
       method: 'PATCH',
@@ -265,15 +297,20 @@ export const updateSchedule = async (schOrderId, scheduledAt) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'Order has been Scheduled');
-      window.setTimeout(() => {
-        location.reload();
-      }, 1500);
+      stopLoadingBtnSpinner(submitButton);
+      $('#schedule-modal').modal('hide');
+      const tda = target.closest('tr').querySelector('a.order_status_text');
+      tda.innerText = 'Scheduled';
+      const icon = target.closest('tr').querySelector('td i');
+      icon.classList.add('scheduled_order_icon');
     }
   } catch (err) {
+    stopLoadingBtnSpinner(submitButton);
     showAlert(
       'error',
       'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
     );
-    console.log(`🔥🔥🔥 ${err.response.data.message}`);
+    if (err.response) console.log(`🔥🔥🔥 ${err.response.data.message}`);
+    else console.log(err);
   }
 };

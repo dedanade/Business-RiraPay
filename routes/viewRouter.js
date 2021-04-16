@@ -57,6 +57,12 @@ router.get(
   authBusinessController.restrictProductView,
   viewController.getMyProduct
 );
+router.get(
+  '/:slug/entries/:productId',
+  authBusinessController.protectBusiness,
+  authBusinessController.restrictProductView,
+  viewController.getProductOrders
+);
 
 router.get(
   '/settings',

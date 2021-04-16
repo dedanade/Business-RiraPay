@@ -56,6 +56,7 @@ const orderSchema = new mongoose.Schema(
       enum: [
         'Incomplete',
         'Scheduled',
+        'Processed',
         'Paid',
         'Shipped',
         'Delivered',
