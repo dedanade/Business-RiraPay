@@ -10,17 +10,19 @@ mixin largeOrderTable(ordersArray)
                 th Order No
                 th Customer
                 th State
-                th Phone
+                th Quantity
                 th Amount
+                th Phone
                 th Tags
                 th Action
+                
 
         tbody
             each order in ordersArray 
                 each product in order.product
                     //- -console.log(order.product);
 
-                    -const ordersDate = moment(order.createdAt).format('dddd, DD/MMM/YY, h:mma');
+                    -const ordersDate = moment(order.createdAt).format('DD/MMM');
                     -const orderTotal = order.total.toLocaleString()
                     -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
                     -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
@@ -36,27 +38,17 @@ mixin largeOrderTable(ordersArray)
 
                     section
                         tr.table-row.order-table-row(style= 'height: 65px')
-                        
                             td
-                                if (order.status === 'Incomplete')
-                                    i.incomplete_order_icon.fas.fa-circle
-                                if (order.status === 'Paid')
-                                    i.paid_order_icon.fas.fa-circle
-                                if (order.status === 'Scheduled')
-                                    i.scheduled_order_icon.fas.fa-circle
-                                if (order.status === 'Processed')
-                                    i.processed_order_icon.fas.fa-circle
-                                if (order.status === 'Shipped')
-                                    i.shipped_order_icon.fas.fa-circle
-                                if (order.status === 'Delivered')
-                                    i.delivered_order_icon.fas.fa-circle
-                                if (order.status === 'Canceled')
-                                    i.canceled_order_icon.fas.fa-circle
-                                //- else 
-                                //-     i.rira_order_icon.fas.fa-circle
+                                if (order.status === "Incomplete")
+                                    i.Processed_order_icon.fas.fa-circle
+                                else 
+                                    if (order.status.split(/\W+/).length === 2)
+                                        -const st = order.status.replace(' ', '_');
+                                            i.fas.fa-circle(class=`${st}_order_icon`)
+                                    else
+                                        i.fas.fa-circle(class=`${order.status}_order_icon`)                                
                             td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=ordersDate
-                                                                    
+                                a.py-2()=ordersDate
                             td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)= shtProductName
                             td
@@ -68,12 +60,14 @@ mixin largeOrderTable(ordersArray)
                             td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)=shtOrderState
                             td
-                                a.py-2.lg-table-phoneNum(style='color: #007bff;' name='orderPhonea' href=`tel:${order.phone}`)= order.phone
+                                a.py-2()=order.qty
                             td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=`₦${orderTotal}`
+                                a.py-2()=`₦${orderTotal}`
+                            td
+                                a.py-2.lg-table-phoneNum(style='color: #0073aa; letter-spacing: 1.5px;' name='orderPhonea' href=`tel:${order.phone}`)= order.phone
                             td
                                 .d-flex
-                                    a.p-order-tags.mr-4(style='font-size: 1rem;')=order.tags
+                                    a.p-order-tags.mr-4.py-2(style='font-size: 0.9rem; font-weight: 500;')=order.tags
                                     .tag-edit-btn(style='position: relative;')
                                         button.create-tags-pencil(style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;')
                                             i.lni.lni-pencil
@@ -89,15 +83,27 @@ mixin largeOrderTable(ordersArray)
                                 .d-flex.py-1
                                     button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
                                         i.far.fa-copy
-                                    .btn-group.dropleft
-                                        button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                            i.lni.lni-menu
-                                        .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                            a.processed-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Processed
-                                            a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
-                                            a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled 
+                                    if (order.paidOnline === true)
+                                        .btn-group.dropleft
+                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                i.lni.lni-menu
+                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                                a.change-order-status.dropdown-item( type='button' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Delivered Online') Mark as Delivered Online 
+                                    else
+                                        .btn-group.dropleft
+                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                i.lni.lni-menu
+                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                                a.schedule-modal-button.dropdown-item(type='button', href='#' data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Processed' ) Mark as Processed 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Shipped' ) Mark as Shipped 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Canceled') Mark as Canceled 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Delivered') Mark as Delivered 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Remitted') Mark as Remitted block Indexcss
+block content
 block Indexcss
 block content
+block script
     
     section
         .large-container.mb-5(style= 'margin-top: 150px;')

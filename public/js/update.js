@@ -119,47 +119,30 @@ export const updateShippingOrder = async (
     console.log(`🔥🔥🔥 ${err.response.data.message}`);
   }
 };
-export const updateCancelOrder = async (OrderId, target) => {
+
+export const updateStatusOrder = async (OrderId, status, target) => {
   try {
     const res = await axios({
-      method: 'GET',
-      url: `/api/v1/orders/cancel/${OrderId}`,
+      method: 'PATCH',
+      url: `/api/v1/orders/status/${OrderId}`,
       data: {
-        OrderId,
+        status,
       },
     });
 
     if (res.data.status === 'success') {
-      showAlert('success', 'Order has been marked as Canceled');
-      const tda = target.closest('tr').querySelector('a.order_status_text');
-      tda.innerText = 'Canceled';
-      const icon = target.closest('tr').querySelector('td i');
-      icon.classList.add('canceled_order_icon');
-    }
-  } catch (err) {
-    showAlert(
-      'error',
-      'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
-    );
-    console.log(`🔥🔥🔥 ${err.response.data.message}`);
-  }
-};
-export const updateProcessOrder = async (OrderId, target) => {
-  try {
-    const res = await axios({
-      method: 'GET',
-      url: `/api/v1/orders/process/${OrderId}`,
-      data: {
-        OrderId,
-      },
-    });
+      showAlert('success', `Order has been marked as ${status}`);
 
-    if (res.data.status === 'success') {
-      showAlert('success', 'Order has been marked as Processed');
       const tda = target.closest('tr').querySelector('a.order_status_text');
-      tda.innerText = 'Processed';
+      tda.innerText = status;
       const icon = target.closest('tr').querySelector('td i');
-      icon.classList.add('processed_order_icon');
+      if (status.split(/\W+/).length === 2) {
+        const st = status.replace(' ', '_');
+        icon.classList.add(`${st}_order_icon`);
+      } else {
+        icon.classList.add(`${status}_order_icon`);
+      }
+      console.log(icon);
     }
   } catch (err) {
     showAlert(

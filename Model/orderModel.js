@@ -51,19 +51,26 @@ const orderSchema = new mongoose.Schema(
     },
     colour: String,
     size: String,
+    paidOnline: {
+      type: Boolean,
+      default: false,
+    },
     status: {
       type: String,
       enum: [
-        'Incomplete',
-        'Scheduled',
+        'New Order',
         'Processed',
-        'Paid',
         'Shipped',
-        'Delivered',
-        'Completed',
+        'Schedule',
         'Canceled',
+        'Delivered',
+        'Remitted',
+        'Paid Online',
+        'Shipped Online',
+        'Delivered Online',
+        'Canceled Online',
       ],
-      default: 'Incomplete',
+      default: 'New Order',
     },
 
     tags: [

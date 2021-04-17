@@ -5,14 +5,15 @@ const authBusinessController = require('../controllers/authBusinessController');
 const router = express.Router();
 
 router.route('/').get(orderController.getAllOrders);
-router.route('/deliver/:orderId').get(orderController.updateDelivery);
-router.route('/process/:orderId').get(orderController.updateProcessed);
+router.route('/deliver/:orderId').get(orderController.updateOnlineDelivery);
+
 router
-  .route('/cancel/:orderId')
-  .get(authBusinessController.protectBusiness, orderController.updateCancel);
-
+  .route('/status/:orderId')
+  .patch(
+    authBusinessController.protectBusiness,
+    orderController.updateOrderStatus
+  );
 router.route('/ship').patch(orderController.updateShiping);
-
 router.route('/:OrderId').patch(orderController.updateOrder);
 router
   .route('/schedule/:orderId')

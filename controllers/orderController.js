@@ -87,7 +87,7 @@ exports.updateShiping = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateDelivery = catchAsync(async (req, res, next) => {
+exports.updateOnlineDelivery = catchAsync(async (req, res, next) => {
   const order = await Order.findById(req.params.OrderId);
 
   order.status = 'Delivered';
@@ -107,28 +107,26 @@ exports.updateDelivery = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.updateCancel = catchAsync(async (req, res, next) => {
-  const order = await Order.findById(req.params.orderId);
 
-  order.status = 'Canceled';
-  await order.save();
+exports.updateOrderStatus = catchAsync(async (req, res, next) => {
+  const filteredBody = filterObj(req.body, 'status');
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      order,
-    },
-  });
-});
-exports.updateProcessed = catchAsync(async (req, res, next) => {
-  const order = await Order.findById(req.params.orderId);
-  order.status = 'Processed';
-  await order.save();
+  // 3) Update user document
+  // Validator not working!!!
+  const UpdatedSchorder = await Order.findByIdAndUpdate(
+    req.params.orderId,
+    filteredBody,
+    {
+      new: true,
+      upsert: true,
+      runValidators: true,
+    }
+  );
 
   res.status(200).json({
     status: 'success',
     data: {
-      order,
+      UpdatedSchorder,
     },
   });
 });

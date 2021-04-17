@@ -3,24 +3,26 @@ mixin largeOrderTable(ordersArray)
     table.table.table-condensed.table-hover                       
         thead
             tr
-                th 
+                th
                 th Date
                 th Product Name
                 th Status
                 th Order No
                 th Customer
                 th State
-                th Phone
+                th Quantity
                 th Amount
+                th Phone
                 th Tags
                 th Action
+                
 
         tbody
             each order in ordersArray 
                 each product in order.product
                     //- -console.log(order.product);
 
-                    -const ordersDate = moment(order.createdAt).format('dddd, DD/MMM/YY, h:mma');
+                    -const ordersDate = moment(order.createdAt).format('DD/MMM');
                     -const orderTotal = order.total.toLocaleString()
                     -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
                     -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
@@ -37,28 +39,16 @@ mixin largeOrderTable(ordersArray)
                     section
                         tr.table-row.order-table-row(style= 'height: 65px')
                             td
-                                if (order.status === 'Incomplete')
-                                    i.incomplete_order_icon.fas.fa-circle
-                                if (order.status === 'Paid')
-                                    i.paid_order_icon.fas.fa-circle
-                                if (order.status === 'Scheduled')
-                                    i.scheduled_order_icon.fas.fa-circle
-                                if (order.status === 'Processed')
-                                    i.processed_order_icon.fas.fa-circle
-                                if (order.status === 'Shipped')
-                                    i.shipped_order_icon.fas.fa-circle
-                                if (order.status === 'Delivered')
-                                    i.delivered_order_icon.fas.fa-circle
-                                if (order.status === 'Canceled')
-                                    i.canceled_order_icon.fas.fa-circle
-                                //- else 
-                                //-     i.rira_order_icon.fas.fa-circle
-
-
-                        
+                                if (order.status === "Incomplete")
+                                    i.Processed_order_icon.fas.fa-circle
+                                else 
+                                    if (order.status.split(/\W+/).length === 2)
+                                        -const st = order.status.replace(' ', '_');
+                                            i.fas.fa-circle(class=`${st}_order_icon`)
+                                    else
+                                        i.fas.fa-circle(class=`${order.status}_order_icon`)                                
                             td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=ordersDate
-                                                                    
+                                a.py-2()=ordersDate
                             td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)= shtProductName
                             td
@@ -70,12 +60,14 @@ mixin largeOrderTable(ordersArray)
                             td
                                 a.py-2(href=`/myorder/${product._id}/${order._id}`)=shtOrderState
                             td
-                                a.py-2.lg-table-phoneNum(style='color: #007bff;' name='orderPhonea' href=`tel:${order.phone}`)= order.phone
+                                a.py-2()=order.qty
                             td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=`₦${orderTotal}`
+                                a.py-2()=`₦${orderTotal}`
+                            td
+                                a.py-2.lg-table-phoneNum(style='color: #0073aa; letter-spacing: 1.5px;' name='orderPhonea' href=`tel:${order.phone}`)= order.phone
                             td
                                 .d-flex
-                                    a.p-order-tags.mr-4(style='font-size: 1rem;')=order.tags
+                                    a.p-order-tags.mr-4.py-2(style='font-size: 0.9rem; font-weight: 500;')=order.tags
                                     .tag-edit-btn(style='position: relative;')
                                         button.create-tags-pencil(style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;')
                                             i.lni.lni-pencil
@@ -91,13 +83,23 @@ mixin largeOrderTable(ordersArray)
                                 .d-flex.py-1
                                     button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
                                         i.far.fa-copy
-                                    .btn-group.dropleft
-                                        button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                            i.lni.lni-menu
-                                        .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                            a.processed-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Processed 
-                                            a.dropdown-item.schedule-modal-button(type='button', data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
-                                            a.cancel-mobile-order.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}`) Mark as Canceled 
+                                    if (order.paidOnline === true)
+                                        .btn-group.dropleft
+                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                i.lni.lni-menu
+                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                                a.change-order-status.dropdown-item( type='button' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Delivered Online') Mark as Delivered Online 
+                                    else
+                                        .btn-group.dropleft
+                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                i.lni.lni-menu
+                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
+                                                a.schedule-modal-button.dropdown-item(type='button', href='#' data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Processed' ) Mark as Processed 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Shipped' ) Mark as Shipped 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Canceled') Mark as Canceled 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Delivered') Mark as Delivered 
+                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Remitted') Mark as Remitted 
 block Indexcss
 block content
 block script
@@ -149,30 +151,63 @@ block script
 
     section
         .large-container.mb-5(style= 'margin-top: 150px;')
-            .row
-                .col-12
-                        .card-body.py-5.mx-2
-                            ul.list-group.my-3
-                                        li.d-flex.justify-content-between
-                                            h4.d-flex.justify-content-between= `All Orders for ${product.productName}:`
-                                            form(action=`` method="GET")
-                                                .form-row
-                                                    .col-9
-                                                        input#inlineFormInputName.form-control(type='text', placeholder='Search order' name ='search' required='')
-                                                    .col-3
-                                                        button.btn.rira-color-btn(type='submit') Search
-                                            
-                            if (schdToday.length && currentPage === 1 && !querySearch)
-                                    ul.list-group
-                                            li.d-flex.justify-content-between
-                                                h6.d-flex.justify-content-between Scheduled Today
-                                    +largeOrderTable(schdToday)
-                            if (productOrders.length)
-                            
-                                h6.d-flex.justify-content-between Latest Orders                                                                           
-                                +largeOrderTable(productOrders)
-                            
-                            include _paginate
+            .p-5
+                h4= `All Orders for ${product.productName}:`
+                .row.text-left
+                    #filter-panel.collapse.filter-panel
+                        .panel.panel-default
+                            .panel-body
+                                form.form-inline(role='form')
+                                    .form-group
+                                        label.mr-2( for='podStatus') POD Status:
+                                        select#podStatus.form-control
+                                            option(selected='', disabled='', value='') Select
+                                            option(value='New_Order') New Order
+                                            option(value='Processed') Processed
+                                            option(value='Shipped') Shipped
+                                            option(value='Schedule') Schedule
+                                            option(value='Canceled') Canceled
+                                            option(value='Delivered') Delivered
+                                            option(value='Remitted') Remitted
+                                    .form-group
+                                        label.ml-2( for='paidStatus') Paid Status:
+                                        select#paidStatus.form-control
+                                            option(selected='', disabled='', value='') Select
+                                            option(value='Paid_Online') Paid Online
+                                            option(value='Shipped_Online') Shipped Online
+                                            option(value='Delivered_online') Delivered Online
+                                            option(value='Canceled') Canceled Online
+                                    .form-group
+                                        label.mx-2(style='margin-right:0;', for='pref-search') Search:
+                                        input.form-control.input-sm(type='text')
+                                    button.btn.btn-default.rira-color-btn.mx-2(type='submit') Search
+                    button.btn.btn-primary(type='button', data-toggle='collapse', data-target='#filter-panel')
+                        span.fas.fa-cog Advanced Search
+                                //- form.ml-2(action=`` method="GET")
+                                //-     .form-row
+                                //-         .col-9
+                                //-             input#inlineFormInputName.form-control(type='text', placeholder='Search order' name ='search' required='')
+                                //-         .col-3
+                                //-             button.btn.rira-color-btn(type='submit') Search
+                                
+                if (schdToday.length && currentPage === 1 && !querySearch)
+                        ul.list-group
+                                li.d-flex.justify-content-between
+                                    h6.d-flex.justify-content-between Scheduled Today
+                        +largeOrderTable(schdToday)
+                if (productOrders.length)
+                
+                    h6.d-flex.justify-content-between Latest Orders                                                                           
+                    +largeOrderTable(productOrders)
+                    include _paginate
+                if (!productOrders.length && querySearch)
+                    .text-center
+                        p.mt-2(style='font-size: 1.2rem;')= `Unable to get result for ${querySearch}. Kindly check and try again`
+                if (!productOrders.length && !querySearch)
+                    .text-center
+                        p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Make sure you add your embed code so your customers can pay through RiraPay
+                    .text-center
+                        a.rira-color-btn.btn(href=`/myproduct/${product.slug}/${product._id}`) View your product
                             div(id='schedule-modal' class='modal fade' tabindex='-1', role='dialog', aria-labelledby='schedule-modalTitle', aria-hidden='true')
                                 .modal-dialog.modal-dialog-centered(role='document')
                                     .modal-content
@@ -187,14 +222,7 @@ block script
                                                 .modal-footer
                                                     button.btn.btn-secondary(type='button', data-dismiss='modal') Close
                                                     button.btn.rira-color-btn(type='submit') Save changes
-                            if (!productOrders.length && querySearch)
-                                .text-center
-                                    p.mt-2(style='font-size: 1.2rem;')= `Unable to get result for ${querySearch}. Kindly check and try again`
-                            if (!productOrders.length && !querySearch)
-                                .text-center
-                                    p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customer to pay through RiraPay
-                                .text-center
-                                    a.rira-color-btn.btn(href='/createproduct') Create your first Product
+                            
 
 
         script.

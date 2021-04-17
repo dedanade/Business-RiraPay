@@ -64,37 +64,50 @@ body {
   position: relative;
   z-index: 2;
 }
-.incomplete_order_icon {
-  font-size: small;
-  color: gray;
-}
-.paid_order_icon {
+
+.New_Order_order_icon {
   font-size: small;
   color: green;
 }
-.scheduled_order_icon {
+.Processed_order_icon {
   font-size: small;
-  color: yellow;
+  color: darkgray;
 }
-.processed_order_icon {
+.Scheduled_order_icon {
   font-size: small;
-  color: aqua;
+  color: rgb(151, 151, 9);
 }
-.shipped_order_icon {
+.Shipped_order_icon {
   font-size: small;
-  color: darkorange;
+  color: orange;
 }
-.delivered_order_icon {
+.Canceled_order_icon {
   font-size: small;
-  color: blue;
+  color: rgb(180, 23, 23);
 }
-.canceled_order_icon {
+.Delivered_order_icon {
   font-size: small;
-  color: red;
+  color: rgb(13, 139, 9);
 }
-.rira_order_icon {
+.Remitted_order_icon {
   font-size: small;
-  color: #01afee;
+  color: rgb(65, 144, 170);
+}
+.Paid_Online_order_icon {
+  font-size: small;
+  color: rgb(35, 35, 134);
+}
+.Shipped_Online_order_icon {
+  font-size: small;
+  color: rgb(114, 77, 8);
+}
+.Delivered_Online_order_icon {
+  font-size: small;
+  color: rgb(4, 58, 2);
+}
+.Canceled_Online_order_icon {
+  font-size: small;
+  color: rgb(160, 19, 19);
 }
 
 h6 {
@@ -126,13 +139,13 @@ th {
   font-size: 15px;
 }
 
-.table-row {
+/* .table-row {
   cursor: pointer;
 }
 
 *[data-href] {
   cursor: pointer;
-}
+} */
 
 td a {
   display: inline-block;
@@ -488,6 +501,11 @@ table {
   width: 100%;
   max-width: 35rem;
 }
+.dropdown-menu a:hover {
+  color: white;
+  text-decoration: none;
+  background: dodgerblue;
+}
 
 #th-1 {
   border-bottom: 1px solid black;
@@ -495,8 +513,6 @@ table {
 }
 
 .lg-table-phoneNum:hover {
-  letter-spacing: 3px;
-  font-size: 1rem;
   text-decoration: underline;
 }
 /* Order-Page */

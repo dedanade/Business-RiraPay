@@ -16,8 +16,7 @@ import {
   updateShippingOrder,
   updateDelivery,
   updateSchedule,
-  updateCancelOrder,
-  updateProcessOrder,
+  updateStatusOrder,
   cloneProductApi,
 } from './update';
 import { showAlert } from './alert';
@@ -393,38 +392,24 @@ $('.suggested-tag-input').on('click', (e) => {
   inputOrderTags.value = suggestedText;
 });
 
-$('.cancel-mobile-order').on('click', function (e) {
+$('.change-order-status').on('click', function (e) {
   e.preventDefault();
   const target = e.target || e.srcElement;
   const orderId = target.dataset.orderid;
   const orderName = target.dataset.name;
+  const status = target.dataset.status;
   if (
     confirm(
-      `Are you sure you want to cancel ${orderName}'s order? Click Ok to confirm`
+      `Are you sure you want ${orderName}'s order ${status}? Click Ok to confirm`
     )
   ) {
     showAlert('success', 'Processing...');
-    updateCancelOrder(orderId, target);
+    updateStatusOrder(orderId, status, target);
   } else {
     return false;
   }
 });
-$('.processed-mobile-order').on('click', function (e) {
-  e.preventDefault();
-  const target = e.target || e.srcElement;
-  const orderId = target.dataset.orderid;
-  const orderName = target.dataset.name;
-  if (
-    confirm(
-      `Are you sure you've processed ${orderName}'s order? Click Ok to confirm`
-    )
-  ) {
-    showAlert('success', 'Processing...');
-    updateProcessOrder(orderId, target);
-  } else {
-    return false;
-  }
-});
+
 $('.add-tag-mobile-button').on('click', function (e) {
   e.preventDefault();
   const target = e.target || e.srcElement;
