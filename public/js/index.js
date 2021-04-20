@@ -17,7 +17,10 @@ import {
   updateDelivery,
   updateSchedule,
   updateStatusOrder,
+  updateHideOrder,
+  updateRestoreOrder,
   cloneProductApi,
+  deleteProduct,
 } from './update';
 import { showAlert } from './alert';
 import { busLoginInput, busSignupInput, addNewbusInput } from './signup_login';
@@ -405,6 +408,54 @@ $('.change-order-status').on('click', function (e) {
   ) {
     showAlert('success', 'Processing...');
     updateStatusOrder(orderId, status, target);
+  } else {
+    return false;
+  }
+});
+$('.hide-order-btn').on('click', function (e) {
+  e.preventDefault();
+  const target = e.target || e.srcElement;
+  const orderId = target.dataset.orderid;
+  const orderName = target.dataset.name;
+  if (
+    confirm(
+      `Are you sure you want ${orderName}'s order deleted? Click Ok to confirm`
+    )
+  ) {
+    showAlert('success', 'Processing...');
+    updateHideOrder(orderId, target);
+  } else {
+    return false;
+  }
+});
+
+$('.restore-order-btn').on('click', function (e) {
+  e.preventDefault();
+  const target = e.target || e.srcElement;
+  const orderId = target.dataset.orderid;
+  const orderName = target.dataset.name;
+  if (
+    confirm(
+      `Are you sure you want to restore ${orderName}'s order? Click Ok to confirm`
+    )
+  ) {
+    showAlert('success', 'Processing...');
+    updateRestoreOrder(orderId, target);
+  } else {
+    return false;
+  }
+});
+
+$('.delete_product_btn').on('click', function (e) {
+  e.preventDefault();
+  const target = e.target || e.srcElement;
+  const productId = target.dataset.productid;
+  const productName = target.dataset.name;
+  if (
+    confirm(`Are you sure you want ${productName} deleted? Click Ok to confirm`)
+  ) {
+    showAlert('success', 'Processing...');
+    deleteProduct(productId, target);
   } else {
     return false;
   }

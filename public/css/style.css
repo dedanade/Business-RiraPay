@@ -167,17 +167,24 @@ td a:hover {
 }
 
 tr.order-table-row .create-tags-pencil {
-  display: none;
+  visibility: hidden;
 }
 tr.order-table-row:hover .create-tags-pencil {
-  display: block;
+  visibility: visible;
 }
 
 tr.product_table_row .product_action_list {
-  display: none;
+  visibility: hidden;
 }
+tr.product_table_row .delete_product_btn {
+  visibility: hidden;
+}
+
 tr.product_table_row:hover .product_action_list {
-  display: block;
+  visibility: visible;
+}
+tr.product_table_row:hover .delete_product_btn {
+  visibility: visible;
 }
 .product_action_list a:hover {
   text-decoration: underline;
@@ -185,7 +192,9 @@ tr.product_table_row:hover .product_action_list {
 #card-border {
   width: 30em;
 }
-
+.delete_product_btn:hover {
+  cursor: pointer;
+}
 #footer {
   border-top: 1.5px solid #ededed;
   margin-top: 150px;

@@ -1,107 +1,5 @@
 extends base
 
-mixin largeOrderTable(textHeader, ordersArray)                
-    h4= `${textHeader}:`
-    table.table.table-condensed.table-hover                       
-        thead
-            tr
-                th
-                th Date
-                th Product Name
-                th Status
-                th Order No
-                th Customer
-                th State
-                th Quantity
-                th Amount
-                th Phone
-                th Tags
-                th Action
-                
-
-        tbody
-            each order in ordersArray 
-                each product in order.product
-                    //- -console.log(order.product);
-
-                    -const ordersDate = moment(order.createdAt).format('DD/MMM');
-                    -const orderTotal = order.total.toLocaleString()
-                    -const shtOrderState = order.state.split(" ").splice(0,1).join(" ")
-                    -const shtOrderName = order.name.split(" ").splice(0,2).join(" ")
-                    -const shtProductName = product.productName.split(" ").splice(0,3).join(" ")
-                    -const tags = order.tags.join(",");
-                    -var OrderId = order._id;
-
-                    if (order.altPhone)
-                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\nAlternative Number: ${order.altPhone}\n\n${product.delInfo}`;
-                    else
-                        -var copiedInfo= `Product Name: ${product.productName}\n\nName: ${order.name}\n\nAddress: ${order.address}\n\nState: ${order.state}\n\nArea: ${order.area}\n\nQuantity: ${order.qty}\n\nAmount Receiving: ₦${orderTotal}\n\nPhone Number: ${order.phone}\n\n${product.delInfo}`;
-
-
-                    section
-                        tr.table-row.order-table-row(style= 'height: 65px')
-                            td
-                                if (order.status === "Incomplete")
-                                    i.Processed_order_icon.fas.fa-circle
-                                else 
-                                    if (order.status.split(/\W+/).length === 2)
-                                        -const st = order.status.replace(' ', '_');
-                                            i.fas.fa-circle(class=`${st}_order_icon`)
-                                    else
-                                        i.fas.fa-circle(class=`${order.status}_order_icon`)                                
-                            td
-                                a.py-2()=ordersDate
-                            td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)= shtProductName
-                            td
-                                a.order_status_text.py-2(href=`/myorder/${product._id}/${order._id}`)= order.status
-                            td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)= order.orderNum
-                            td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=shtOrderName
-                            td
-                                a.py-2(href=`/myorder/${product._id}/${order._id}`)=shtOrderState
-                            td
-                                a.py-2()=order.qty
-                            td
-                                a.py-2()=`₦${orderTotal}`
-                            td
-                                a.py-2.lg-table-phoneNum(style='color: #0073aa; letter-spacing: 1.5px;' name='orderPhonea' href=`tel:${order.phone}`)= order.phone
-                            td
-                                .d-flex
-                                    a.p-order-tags.mr-4.py-2(style='font-size: 0.9rem; font-weight: 500;')=order.tags
-                                    .tag-edit-btn(style='position: relative;')
-                                        button.create-tags-pencil(style='border: 0;border-color: transparent; background-color: transparent; position: absolute; top: 0; right: 0; font-size: 13px;')
-                                            i.lni.lni-pencil
-                                form.allorders-tags-form(data-orderid= order._id style='font-size: 1rem; display: none;')
-                                    input.form-control.input-order-tags( type='text', value=tags)
-                                    .d-flex
-                                        p.ml-1.my-1.p-0.suggested-tag-input( style='font-size: 0.8rem; background-color: black; color: white') Not Picking
-                                        p.ml-1.my-1.p-0.suggested-tag-input( style='font-size: 0.8rem; background-color: black; color: white') Not Reachable
-                                    .text-center
-                                        button.btn.rira-color-btn.my-2.mr-2(type='submit') save
-                                        button.btn.btn-secondary.my-2.cancel-tags-form(type='button') cancel
-                            td
-                                .d-flex.py-1
-                                    button.clipboard-btn(style='border: 0;border-color: transparent; background-color: transparent;' data-clipboard-text=`${copiedInfo}` data-toggle="tooltip" data-placement="top" title="Copy delivery info")
-                                        i.far.fa-copy
-                                    if (order.paidOnline === true)
-                                        .btn-group.dropleft
-                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                                i.lni.lni-menu
-                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                                a.change-order-status.dropdown-item( type='button' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Delivered Online') Mark as Delivered Online 
-                                    else
-                                        .btn-group.dropleft
-                                            button(style='border: 0;border-color: transparent; background-color: transparent;' data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                                                i.lni.lni-menu
-                                            .dropdown-menu(style='min-width: 0px; padding: .3rem 0;')
-                                                a.schedule-modal-button.dropdown-item(type='button', href='#' data-toggle='modal', data-target=`#schedule-modal` data-orderid =`${order._id}`) Schedule Order
-                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Processed' ) Mark as Processed 
-                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Shipped' ) Mark as Shipped 
-                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Canceled') Mark as Canceled 
-                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Delivered') Mark as Delivered 
-                                                a.change-order-status.dropdown-item( type='button' href='#' data-orderid=`${order._id}` data-name=`${order.name}` data-status = 'Remitted') Mark as Remitted 
 mixin miniOrderTable(textheader, orderArray)
     ul.list-group.my-2
         li.d-flex.justify-content-between
@@ -176,6 +74,8 @@ mixin miniOrderTable(textheader, orderArray)
                             .text-center                                        
                                 button.btn.btn-secondary.my-2.mr-2.cancel-tags-form( type='button') cancel
                                 button.btn.rira-color-btn.my-2(type='submit') save
+include _largeOrderTable
+include _largeProductTable
 block Indexcss
 block content
 block script
@@ -237,48 +137,11 @@ block script
             .row
                 .col-12                        
                     .card-body.py-5.mx-2
-                            ul.list-group
-                                li.d-flex.justify-content-between
-                                    h4.d-flex.justify-content-between Latest Products:  
-                                    h6
-                                        a(href='/createproduct') Create New Product
+                        +largeProductTable(busAccountProducts, 'Latest Product')
                         
-                            table.table.table-condensed.table-hover                       
-                                thead
-                                    tr
-                                        th Product Name
-                                        th Stock
-                                        th Amount
-                                        th Date
-
-                                tbody
-                                    each product in businessAccount.products.reverse().slice(0, 10)
-                                        - const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
-                                        -const productprice = product.price.toLocaleString()
-
-                                        tr.table-row.product_table_row(style='height: 3.7rem;')
-                                    
-                                            td
-                                                a(href=`/myproduct/${product.slug}/${product._id}` style='color: black;')=product.productName
-                                                .product_action_list
-                                                    .d-flex
-                                                        a(href=`/edit/${product.slug}/${product._id}` style='font-size: 0.8rem; color: blue') Edit 
-                                                        a.mx-1(href=`/${product.slug}/entries/${product._id}` style='font-size: 0.8rem; color: blue') Entries 
-                                                        a.mx-1(href=`/myproduct/${product.slug}/${product._id}` style='font-size: 0.8rem; color: blue') View 
-                                                        a.mx-1.cloneProduct(href="#" data-productid= product._id style='font-size: 0.8rem; color: blue') Duplicate 
-
-                                            td
-                                                a()=product.stock                                
-                                            td
-                                                a()= `₦${productprice}`
-                                            td
-                                                a()=Date
-                                                
-                                                    
-                                    
-                            .text-center.mb-3
-                                h6
-                                    a(href='/allproducts') View All Products
+                        .text-center.mb-3
+                            h6
+                                a(href='/products') View All Products
     section.large-view-table.my-5
         .large-container.mb-5
             .row
@@ -291,7 +154,7 @@ block script
                                     
                         .text-center.mb-3
                             h6
-                                a(href='/allorders') View All orders
+                                a(href='/orders') View All orders
                     if (!busAccountOrders.length)
                         .text-center
                             p.mt-2(style='font-size: 1.2rem;') You don't have an order for now. Create a new product and share the link to your customers to pay through RiraPay

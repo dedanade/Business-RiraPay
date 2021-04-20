@@ -87,7 +87,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
 
   businessUser.emailToken = null;
   businessUser.isEmailVerified = true;
-  await businessUser.save();
+  await businessUser.save({ validateBeforeSave: false });
 
   res.redirect('/dashboard');
 });

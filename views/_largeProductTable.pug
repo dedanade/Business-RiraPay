@@ -1,0 +1,41 @@
+mixin largeProductTable(productArray, textHeader)
+    ul.list-group
+        li.d-flex.justify-content-between
+            h4.d-flex.justify-content-between #{textHeader}  
+            h6
+                a(href='/createproduct') Create New Product
+    table.table.table-condensed.table-hover                       
+        thead
+            tr
+                th Product Name
+                th Stock
+                th Amount
+                th Date
+                th 
+
+        tbody
+            each product in productArray
+                - const Date = moment(product.date).format('dddd, MMMM Do YYYY, h:mm:ss a');
+                - const productprice = product.price.toLocaleString()
+
+                tr.table-row.product_table_row
+            
+                    td
+                        a(href=`/myproduct/${product.slug}/${product._id}` style='color: black;')=product.productName
+                        .d-flex.product_action_list
+                            a(href=`/edit/${product.slug}/${product._id}` style='font-size: 0.8rem; color: #0073aa; width: auto;') Edit 
+                            a.mx-2(href=`orders?product=${product.productName}` style='font-size: 0.8rem; color: #0073aa; width: auto;') Entries 
+                            a.mr-2(href=`/myproduct/${product.slug}/${product._id}` style='font-size: 0.8rem; color: #0073aa; width: auto;') View 
+                            a.mr-2.cloneProduct(href="#" data-productid= product._id style='font-size: 0.8rem; color: #0073aa; width: auto;') Duplicate 
+
+                    td
+                        a()=product.stock                                
+                    td
+                        if (product.price > 0)
+                            a()= `₦${productprice}`
+                        else 
+                            a()= `Variant`
+                    td
+                        a()=Date
+                    td  
+                        span.delete_product_btn.my-auto.far.fa-trash-alt(href="#" data-name= product.productName data-productid= product._id style='font-size: 0.9rem')                                    

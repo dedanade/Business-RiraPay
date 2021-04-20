@@ -28,12 +28,12 @@ router.get(
   viewController.getBusDashboard
 );
 router.get(
-  '/allproducts',
+  '/products',
   authBusinessController.protectBusiness,
   viewController.allProducts
 );
 router.get(
-  '/allorders',
+  '/orders',
   authBusinessController.protectBusiness,
   viewController.allBusOrders
 );

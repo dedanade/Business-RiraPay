@@ -88,7 +88,7 @@ exports.updateShiping = catchAsync(async (req, res, next) => {
 });
 
 exports.updateOnlineDelivery = catchAsync(async (req, res, next) => {
-  const order = await Order.findById(req.params.OrderId);
+  const order = await Order.findById(req.params.orderId);
 
   order.status = 'Delivered';
   order.deliveredAt = Date.now();
@@ -100,6 +100,32 @@ exports.updateOnlineDelivery = catchAsync(async (req, res, next) => {
   const url = `${req.protocol}://${req.get('host')}/dashboard`;
 
   await new AllEmail.OrderEmail(order, url, product).sendDeliveryEmail();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      order,
+    },
+  });
+});
+exports.updateHideOrder = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.orderId);
+
+  order.active = false;
+  await order.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      order,
+    },
+  });
+});
+exports.updateRestoreOrder = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.orderId);
+
+  order.active = true;
+  await order.save();
+
   res.status(200).json({
     status: 'success',
     data: {

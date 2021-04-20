@@ -3,10 +3,6 @@ const orderController = require('../controllers/orderController');
 const authBusinessController = require('../controllers/authBusinessController');
 
 const router = express.Router();
-
-router.route('/').get(orderController.getAllOrders);
-router.route('/deliver/:orderId').get(orderController.updateOnlineDelivery);
-
 router
   .route('/status/:orderId')
   .patch(
@@ -20,6 +16,22 @@ router
   .patch(
     authBusinessController.protectBusiness,
     orderController.updateSchedule
+  );
+router.route('/').get(orderController.getAllOrders);
+router
+  .route('/deliver/:orderId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.updateOnlineDelivery
+  );
+router
+  .route('/hide/:orderId')
+  .get(authBusinessController.protectBusiness, orderController.updateHideOrder);
+router
+  .route('/restore/:orderId')
+  .get(
+    authBusinessController.protectBusiness,
+    orderController.updateRestoreOrder
   );
 
 // // FETCH Weekly, LIFETIME AND MONTHLY SALES

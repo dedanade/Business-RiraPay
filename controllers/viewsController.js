@@ -27,7 +27,15 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
     _id: businessUser.businessAccount,
   });
 
-  const busAccountOrders = await Order.find({ _id: businessAccount.orders })
+  const busAccountOrders = await Order.find({
+    _id: businessAccount.orders,
+    active: true,
+  })
+    .sort({ _id: -1 })
+    .limit(10);
+  const busAccountProducts = await Product.find({
+    _id: businessAccount.products,
+  })
     .sort({ _id: -1 })
     .limit(10);
   // Date Calculation
@@ -85,6 +93,7 @@ exports.getBusDashboard = catchAsync(async (req, res, next) => {
   res.status(200).render('busDashBoard', {
     title: 'Business DashBoard',
     busAccountOrders,
+    busAccountProducts,
     businessUser,
     businessAccount,
     schdToday: scheduledOrderToday,
@@ -144,10 +153,15 @@ exports.allProducts = catchAsync(async (req, res, next) => {
   });
   const businessAccount = await BusinessAccount.findById({
     _id: businessUser.businessAccount,
-  }).populate('orders');
+  });
+  const busAccountProducts = await Product.find({
+    _id: businessAccount.products,
+  })
+    .sort({ _id: -1 })
+    .limit(10);
   res.status(200).render('allProducts', {
     title: 'All Products',
-    businessAccount,
+    busAccountProducts,
   });
 });
 
@@ -159,11 +173,82 @@ exports.allBusOrders = catchAsync(async (req, res, next) => {
     _id: businessUser.businessAccount,
   }).populate('orders');
 
-  if (req.query.search) {
+  if (req.query.product && req.query.status) {
+    var queryStatus = req.query.status;
+    var queryProduct = req.query.product;
+    var product = await Product.findOne({
+      productName: queryProduct,
+    }).populate('orders');
+    if (queryStatus === 'Trashed') {
+      var busOrders = await Order.find({
+        _id: product.orders,
+        active: false,
+      })
+        .limit(req.query.limit)
+        .sort({ _id: -1 })
+        .skip(req.skip)
+        .lean()
+        .exec();
+    } else {
+      var busOrders = await Order.find({
+        _id: product.orders,
+        status: queryStatus,
+        active: true,
+      })
+        .limit(req.query.limit)
+        .sort({ _id: -1 })
+        .skip(req.skip)
+        .lean()
+        .exec();
+    }
+    var busOrdersCount = await Order.countDocuments({
+      _id: product.orders,
+      status: queryStatus,
+    });
+    const salesorders = await Order.find({
+      _id: product.orders,
+      createdAt: {
+        $gte: startToday,
+        $lte: endToday,
+      },
+    });
+    const arraySalesOrder = [];
+
+    salesorders.forEach((e) => {
+      arraySalesOrder.push(e.total);
+    });
+
+    var sumOfCartSalesToday = arraySalesOrder
+      .reduce((a, b) => a + b, 0)
+      .toLocaleString();
+
+    // Transactions Today
+
+    const transactionToday = await Order.find({
+      _id: product.orders,
+      status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
+      paidAt: {
+        $gte: startToday,
+        $lte: endToday,
+      },
+    });
+
+    const ArrayTranToday = [];
+
+    transactionToday.forEach((e) => {
+      ArrayTranToday.push(e.total);
+    });
+
+    var sumOfcartTranToday = ArrayTranToday.reduce(
+      (a, b) => a + b,
+      0
+    ).toLocaleString();
+  } else if (req.query.search) {
     var querySearch = req.query.search;
     var busOrders = await Order.find({
       _id: businessAccount.orders,
       $text: { $search: `\"${req.query.search}\"` },
+      active: true,
     })
       .sort({ _id: -1 })
       .skip(req.skip)
@@ -172,9 +257,93 @@ exports.allBusOrders = catchAsync(async (req, res, next) => {
     var busOrdersCount = await Order.countDocuments({
       _id: busOrders,
     });
+  } else if (req.query.product) {
+    var queryProduct = req.query.product;
+    var product = await Product.findOne({
+      productName: queryProduct,
+    }).populate('orders');
+    var busOrders = await Order.find({
+      _id: product.orders,
+      active: true,
+    })
+      .limit(req.query.limit)
+      .sort({ _id: -1 })
+      .skip(req.skip)
+      .lean()
+      .exec();
+    var busOrdersCount = await Order.countDocuments({
+      _id: product.orders,
+    });
+    // SALES TODAY
+    const salesorders = await Order.find({
+      _id: product.orders,
+      createdAt: {
+        $gte: startToday,
+        $lte: endToday,
+      },
+    });
+    const arraySalesOrder = [];
+
+    salesorders.forEach((e) => {
+      arraySalesOrder.push(e.total);
+    });
+
+    var sumOfCartSalesToday = arraySalesOrder
+      .reduce((a, b) => a + b, 0)
+      .toLocaleString();
+
+    // Transactions Today
+
+    const transactionToday = await Order.find({
+      _id: product.orders,
+      status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
+      paidAt: {
+        $gte: startToday,
+        $lte: endToday,
+      },
+    });
+
+    const ArrayTranToday = [];
+
+    transactionToday.forEach((e) => {
+      ArrayTranToday.push(e.total);
+    });
+
+    var sumOfcartTranToday = ArrayTranToday.reduce(
+      (a, b) => a + b,
+      0
+    ).toLocaleString();
+  } else if (req.query.status) {
+    var queryStatus = req.query.status;
+    if (queryStatus === 'Trashed') {
+      var busOrders = await Order.find({
+        _id: businessAccount.orders,
+        active: false,
+      })
+        .limit(req.query.limit)
+        .sort({ _id: -1 })
+        .skip(req.skip)
+        .lean()
+        .exec();
+    } else {
+      var busOrders = await Order.find({
+        _id: businessAccount.orders,
+        active: false,
+      })
+        .limit(req.query.limit)
+        .sort({ _id: -1 })
+        .skip(req.skip)
+        .lean()
+        .exec();
+    }
+    var busOrdersCount = await Order.countDocuments({
+      _id: businessAccount.orders,
+      status: queryStatus,
+    });
   } else {
     var busOrders = await Order.find({
       _id: businessAccount.orders,
+      active: true,
     })
       .limit(req.query.limit)
       .sort({ _id: -1 })
@@ -206,6 +375,11 @@ exports.allBusOrders = catchAsync(async (req, res, next) => {
     currentPage,
     pages,
     querySearch,
+    queryStatus,
+    queryProduct,
+    product,
+    salesToday: sumOfCartSalesToday,
+    transToday: sumOfcartTranToday,
   });
 });
 
@@ -248,113 +422,6 @@ exports.getMyProduct = catchAsync(async (req, res, next) => {
     product,
     businessAccount,
     protocol,
-  });
-});
-exports.getProductOrders = catchAsync(async (req, res, next) => {
-  const product = await Product.findOne({
-    _id: req.params.productId,
-  }).populate('orders');
-  const businessUser = await BusinessUser.findOne({
-    _id: req.businessUser.id,
-  });
-
-  const businessAccount = await BusinessAccount.findById({
-    _id: businessUser.businessAccount,
-  });
-  if (!product) {
-    return next(
-      new AppError('There is no product with that name and ID.', 404)
-    );
-  }
-
-  if (req.query.search) {
-    var querySearch = req.query.search;
-    var productOrders = await Order.find({
-      _id: product.orders,
-      $text: { $search: `\"${req.query.search}\"` },
-    })
-      .sort({ _id: -1 })
-      .skip(req.skip)
-      .lean()
-      .exec();
-    var productOrdersCount = await Order.countDocuments({
-      _id: product.orders,
-    });
-  } else {
-    var productOrders = await Order.find({ _id: product.orders })
-      .limit(req.query.limit)
-      .sort({ _id: -1 })
-      .skip(req.skip)
-      .lean()
-      .exec();
-    var productOrdersCount = await Order.countDocuments({
-      _id: product.orders,
-    });
-  }
-  const { paginate } = res.locals;
-  const pageCount = Math.ceil(productOrdersCount / req.query.limit);
-  const currentPage = req.query.page;
-  const pages = paginate.getArrayPages(10, pageCount, req.query.page);
-  const scheduledOrderToday = await Order.find({
-    _id: product.orders,
-    scheduledAt: {
-      $gte: startToday,
-      $lte: endToday,
-    },
-  });
-  // Sales Today Calculation
-  const salesorders = await Order.find({
-    _id: product.orders,
-    createdAt: {
-      $gte: startToday,
-      $lte: endToday,
-    },
-  });
-  const arraySalesOrder = [];
-
-  salesorders.forEach((e) => {
-    arraySalesOrder.push(e.total);
-  });
-
-  const sumOfCartSalesToday = arraySalesOrder
-    .reduce((a, b) => a + b, 0)
-    .toLocaleString();
-
-  // Transactions Today
-
-  const transactionToday = await Order.find({
-    _id: product.orders,
-    status: ['Paid', 'Shipped', 'Delivered', 'Completed', 'Canceled'],
-    paidAt: {
-      $gte: startToday,
-      $lte: endToday,
-    },
-  });
-
-  const ArrayTranToday = [];
-
-  transactionToday.forEach((e) => {
-    ArrayTranToday.push(e.total);
-  });
-
-  const sumOfcartTranToday = ArrayTranToday.reduce(
-    (a, b) => a + b,
-    0
-  ).toLocaleString();
-
-  res.status(200).render('productOrders', {
-    title: `All ${product.productName} orders`,
-    product,
-    productOrders,
-    schdToday: scheduledOrderToday,
-    pageCount,
-    itemCount: productOrdersCount,
-    currentPage,
-    pages,
-    businessAccount,
-    querySearch,
-    salesToday: sumOfCartSalesToday,
-    transToday: sumOfcartTranToday,
   });
 });
 

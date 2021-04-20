@@ -142,7 +142,54 @@ export const updateStatusOrder = async (OrderId, status, target) => {
       } else {
         icon.classList.add(`${status}_order_icon`);
       }
-      console.log(icon);
+    }
+  } catch (err) {
+    showAlert(
+      'error',
+      'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
+    );
+    if (err.response) console.log(`🔥🔥🔥 ${err.response.data.message}`);
+    else console.log(err);
+  }
+};
+export const updateHideOrder = async (OrderId, target) => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `/api/v1/orders/hide/${OrderId}`,
+      data: {
+        status,
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', `Order has been Deleted`);
+      const tda = target.closest('tr');
+      tda.style.display = 'none';
+    }
+  } catch (err) {
+    showAlert(
+      'error',
+      'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
+    );
+    if (err.response) console.log(`🔥🔥🔥 ${err.response.data.message}`);
+    else console.log(err);
+  }
+};
+export const updateRestoreOrder = async (OrderId, target) => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `/api/v1/orders/restore/${OrderId}`,
+      data: {
+        status,
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', `Order has been Deleted`);
+      const tda = target.closest('tr');
+      tda.style.display = 'none';
     }
   } catch (err) {
     showAlert(
@@ -292,6 +339,28 @@ export const updateSchedule = async (
     showAlert(
       'error',
       'Opps! Unable to update order. Try again later. If the error persist, kindly contact us ASAP'
+    );
+    if (err.response) console.log(`🔥🔥🔥 ${err.response.data.message}`);
+    else console.log(err);
+  }
+};
+
+export const deleteProduct = async (productId, target) => {
+  try {
+    const res = await axios({
+      method: 'DELETE',
+      url: `/api/v1/products/${productId}`,
+      data: {},
+    });
+    if (res.status === 204) {
+      showAlert('success', `Product has been Deleted`);
+      const tda = target.closest('tr');
+      tda.style.display = 'none';
+    }
+  } catch (err) {
+    showAlert(
+      'error',
+      'Opps! Unable to Delete Product. Reload this page and Try again later. If the error persist, kindly contact us ASAP'
     );
     if (err.response) console.log(`🔥🔥🔥 ${err.response.data.message}`);
     else console.log(err);
